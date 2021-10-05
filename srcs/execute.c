@@ -1,44 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/05 14:34:03 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/05 14:35:47 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_loop(void)
+int		ms_execute(char **args)
 {
-	char	*line;
-	char	**args;
-	int		status;
-
-	status = 1;
-	while (status)
-	{
-		line = readline("\e[1;34mMinishell> \e[0m");
-		if (line)
-		{
-			args = ms_parser(line);
-			if (!args)
-				return (ft_cleaner(line, NULL, ERROR));
-			status = ms_execute(args);
-		}
-		else
-			printf("\n");
-		ft_cleaner(line, args, 0);
-	}
-	return (0);
-}
-
-int	main(void)
-{
-	if (ms_loop() == ERROR)
-		return (1);
+	(void)args;
+	sleep(10);
+	printf("\n");
 	return (0);
 }

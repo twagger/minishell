@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/05 12:22:14 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/05 14:35:26 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,24 +16,14 @@
 OS			=  $(shell uname -s)
 
 ifneq (,$(findstring xterm,${TERM}))
-	BLACK        := $(shell tput -Txterm setaf 0)
-	RED          := $(shell tput -Txterm setaf 1)
 	GREEN        := $(shell tput -Txterm setaf 2)
 	YELLOW       := $(shell tput -Txterm setaf 3)
-	LIGHTPURPLE  := $(shell tput -Txterm setaf 4)
-	PURPLE       := $(shell tput -Txterm setaf 5)
 	BLUE         := $(shell tput -Txterm setaf 6)
-	WHITE        := $(shell tput -Txterm setaf 7)
 	RESET		 := $(shell tput -Txterm sgr0)
 else
-	BLACK        := ""
-	RED          := ""
 	GREEN        := ""
 	YELLOW       := ""
-	LIGHTPURPLE  := ""
-	PURPLE       := ""
 	BLUE         := ""
-	WHITE        := ""
 	RESET        := ""
 endif
 
@@ -47,7 +37,11 @@ AR			= ar rcs
 ################################################################################
 #                                 SOURCES                                      #
 ################################################################################
-SRCS		= srcs/main.c
+SRCS		= srcs/main.c \
+			  srcs/parse.c \
+			  srcs/execute.c \
+			  srcs/cleaner.c
+
 OBJS		= $(SRCS:.c=.o)
 
 ################################################################################
@@ -59,7 +53,7 @@ LFT			= libft.a
 ################################################################################
 #                                 DIRECTORIES                                  #
 ################################################################################
-HEADERS		= includes/
+HEADERS		= includes/ 
 LFTDIR		= libft/
 
 ################################################################################
@@ -67,6 +61,7 @@ LFTDIR		= libft/
 ################################################################################
 CFLAGS		:= -Wall -Wextra -Werror
 LFTFLAGS	:= -L. -lft
+LADDFLAGS	:= -lreadline
 
 ifeq ($(DEBUG), true)
 	CFLAGS	+= -fsanitize=address -g3 -O0
@@ -80,7 +75,7 @@ endif
 
 $(NAME):	$(LFT) $(OBJS)
 			@printf  "$(BLUE)Creating $(RESET) $(YELLOW)[$(NAME)]$(RESET)" 
-			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(HEADERS) $(LFTFLAGS)
+			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
 			@echo " : $(GREEN)OK !$(RESET)"
 
 all:		$(NAME)

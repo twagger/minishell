@@ -1,44 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/05 14:34:03 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/05 14:05:59 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/05 14:18:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_loop(void)
+int	ft_cleaner(char *line, char **args, int exit_code)
 {
-	char	*line;
-	char	**args;
-	int		status;
-
-	status = 1;
-	while (status)
+	int	i;
+	free(line);
+	if (args)
 	{
-		line = readline("\e[1;34mMinishell> \e[0m");
-		if (line)
-		{
-			args = ms_parser(line);
-			if (!args)
-				return (ft_cleaner(line, NULL, ERROR));
-			status = ms_execute(args);
-		}
-		else
-			printf("\n");
-		ft_cleaner(line, args, 0);
+		i = -1;
+		while (args[++i])
+			free(args[i]);
 	}
-	return (0);
-}
-
-int	main(void)
-{
-	if (ms_loop() == ERROR)
-		return (1);
-	return (0);
+	return (exit_code);
 }
