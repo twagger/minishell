@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 15:45:38 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/05 14:05:59 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/12 15:47:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-** Basic parser to allow Tom to work on exec
-*/
-
-char	**ms_parser(char *line)
+int	ft_cleaner(char *line, char **args, int exit_code)
 {
-	char	**res;
+	int	i;
 
-	res = ft_split(line, ' ');
-	return (res);
+	free(line);
+	if (args)
+	{
+		i = -1;
+		while (args[++i])
+			free(args[i]);
+	}
+	return (exit_code);
 }

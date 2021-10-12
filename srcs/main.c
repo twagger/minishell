@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/05 15:04:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/12 12:39:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ms_loop(void)
 	status = 1;
 	while (status)
 	{
-		line = readline("\e[1;34mMinishell> \e[0m");
+		line = readline("\x1B[32mMinishell> \e[0m");
 		if (line)
 		{
 			args = ms_parser(line);

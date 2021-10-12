@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/12 15:32:41 by twagner          ###   ########.fr        #
+#    Created: 2021/10/12 11:42:26 by twagner           #+#    #+#              #
+#    Updated: 2021/10/12 16:46:06 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,34 +37,46 @@ AR			= ar rcs
 ################################################################################
 #                                 SOURCES                                      #
 ################################################################################
-SRCS		= srcs/main.c \
-			  srcs/parse.c \
-			  srcs/execute.c \
-			  srcs/utils/cleaner.c \
-			  srcs/utils/path.c 
+SCD		= srcs/cd.c
+SECHO	= srcs/echo.c
+SPWD	= srcs/pwd.c
+SEXPORT	= srcs/export.c
+SUNSET	= srcs/unset.c
+SENV	= srcs/env.c
+SEXIT	= srcs/exit.c
 
-OBJS		= $(SRCS:.c=.o)
-
-################################################################################
-#                           EXECUTABLES & LIBRARIES                            #
-################################################################################
-NAME		= minishell
-LFT			= libft.a
-BUILTINS	= builtins
+OCD		= $(SCD:.c=.o)
+OECHO	= $(SECHO:.c=.o)
+OPWD	= $(SPWD:.c=.o)
+OEXPORT	= $(SEXPORT:.c=.o)
+OUNSET	= $(SUNSET:.c=.o)
+OENV	= $(SENV:.c=.o)
+OEXIT	= $(SEXIT:.c=.o)
 
 ################################################################################
 #                                 DIRECTORIES                                  #
 ################################################################################
-HEADERS		= includes/ 
-LFTDIR		= libft/
-BUILTINSDIR	= srcs/builtins/
+HEADERS		= ../../includes/
+LFTDIR		= ../../
+LFTDIRH		= ../../libft/
+
+################################################################################
+#                           EXECUTABLES & LIBRARIES                            #
+################################################################################
+PCD		= cd
+PECHO	= echo
+PPWD	= pwd
+PEXPORT	= export
+PUNSET	= unset
+PENV	= env
+PEXIT	= exit
+LFT		= $(LFTDIR)libft.a
 
 ################################################################################
 #                                     FLAGS                                    #
 ################################################################################
 CFLAGS		:= -Wall -Wextra -Werror
-LFTFLAGS	:= -L. -lft
-LADDFLAGS	:= -lreadline
+LFTFLAGS	:= -L$(LFTDIR) -lft
 
 ifeq ($(DEBUG), true)
 	CFLAGS	+= -fsanitize=address -g3 -O0
@@ -74,39 +86,37 @@ endif
 #                                    RULES                                     #
 ################################################################################
 .c.o:
-			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I$(HEADERS) -I$(LFTDIR)
+			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I$(HEADERS) -I$(LFTDIRH)
 
-$(NAME):	$(LFT) $(BUILTINS) $(OBJS)
-			@printf  "$(BLUE)Creating $(RESET) $(YELLOW)[$(NAME)]$(RESET)" 
-			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
-			@echo " : $(GREEN)OK !$(RESET)"
+$(PCD):		$(LFT) $(OCD)
+			@$(CC) $(CFLAGS) $(OCD) -o $(PCD) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
 
-$(BUILTINS):	
-			@printf  "$(BLUE)Creating $(RESET) $(YELLOW)[Builtins]$(RESET)" 	
-			@make all -s -C $(BUILTINSDIR)
-			@echo " : $(GREEN)OK !$(RESET)"
+$(PECHO):	$(LFT) $(OECHO)
+			@$(CC) $(CFLAGS) $(OECHO) -o $(PECHO) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
 
-all:		$(NAME)
+$(PPWD):	$(LFT) $(OPWD)
+			@$(CC) $(CFLAGS) $(OPWD) -o $(PPWD) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
+
+$(PEXPORT):	$(LFT) $(OEXPORT)
+			@$(CC) $(CFLAGS) $(OEXPORT) -o $(PEXPORT) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
+
+$(PUNSET):	$(LFT) $(OUNSET)
+			@$(CC) $(CFLAGS) $(OUNSET) -o $(PUNSET) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
+
+$(PENV):	$(LFT) $(OENV)
+			@$(CC) $(CFLAGS) $(OENV) -o $(PENV) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
+
+$(PEXIT):	$(LFT) $(OEXIT)
+			@$(CC) $(CFLAGS) $(OEXIT) -o $(PEXIT) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
+
+all:		$(PCD) $(PECHO) $(PPWD) $(PEXPORT) $(PUNSET) $(PENV) $(PEXIT)
 
 clean:
-			@printf "$(BLUE)Cleaning $(RESET) $(YELLOW)[objects & libraries]$(RESET)"
-			@$(RM) $(OBJS) $(LFT)
-			@make clean -s -C $(BUILTINSDIR)
-			@echo " : $(GREEN)OK !$(RESET)"
+			@$(RM) $(OCD) $(OECHO) $(OPWD) $(OEXPORT) $(OUNSET) $(OENV) $(OEXIT)
 
 fclean:		clean
-			@printf "$(BLUE)Cleaning $(RESET) $(YELLOW)[executable(s)]$(RESET)"
-			@$(RM) $(NAME)
-			@make fclean -s -C $(BUILTINSDIR)
-			@echo " : $(GREEN)OK !$(RESET)"
+			@$(RM) $(PCD) $(PECHO) $(PPWD) $(PEXPORT) $(PUNSET) $(PENV) $(PEXIT)
 
 re:			fclean all
-
-$(LFT):	
-			@printf "$(BLUE)Compiling$(RESET) $(YELLOW)[$(LFT)]$(RESET)"
-			@make -s -C $(LFTDIR)
-			@make clean -s -C $(LFTDIR)
-			@mv $(LFTDIR)$(LFT) .
-			@echo " : $(GREEN)OK !$(RESET)"
 
 .PHONY:		all clean fclean c.o re
