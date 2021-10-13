@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 12:39:33 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/13 14:37:57 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	ms_loop(void)
 	while (status)
 	{
 		line = readline("\x1B[32mMinishell> \e[0m");
+		printf("line:%s\n", line);
 		if (line)
 		{
 			args = ms_parser(line);
