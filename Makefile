@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
+#    By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/12 15:32:41 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/15 12:45:12 by wlo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ BUILTINSDIR	= srcs/builtins/
 ################################################################################
 #                                     FLAGS                                    #
 ################################################################################
-CFLAGS		:= -Wall -Wextra -Werror
+CFLAGS		:= -Wall -Wextra -Werror -fsanitize=address -g3 -O0
 LFTFLAGS	:= -L. -lft
 LADDFLAGS	:= -lreadline
 
