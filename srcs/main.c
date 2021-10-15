@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:22:49 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:39:48 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	ms_is_builtin(char *command)
 	return (0);
 }
 
-int	ms_loop(void)
+int	ms_loop(char **envp)
 {
 	char	*line;
 	char	**args;
@@ -41,7 +41,7 @@ int	ms_loop(void)
 			if (!args)
 				return (ft_cleaner(line, NULL, ERROR));
 			if (ms_is_builtin(args[0]))
-				status = ms_execute_nofork(args);
+				status = ms_execute_nofork(args, envp);
 			else
 				status = ms_execute(args);
 		}
@@ -52,9 +52,11 @@ int	ms_loop(void)
 	return (0);
 }
 
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
-	if (ms_loop() == ERROR)
+	(void)ac;
+	(void)av;
+	if (ms_loop(envp) == ERROR)
 		return (1);
 	return (0);
 }

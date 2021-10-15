@@ -6,13 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:23:19 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:33:09 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:40:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_execute_nofork(char **args)
+int	ms_execute_nofork(char **args, char **envp)
 {
 	int	ac;
 	int	ret;
@@ -28,7 +28,7 @@ int	ms_execute_nofork(char **args)
 	if (ft_strncmp(args[0], "echo", 3) == 0)
 		ret = ms_echo(ac, args);
 	if (ft_strncmp(args[0], "env", 4) == 0)
-		ret = ms_env(ac, args);
+		ret = ms_env(ac, args, envp);
 	if (ft_strncmp(args[0], "export", 7) == 0)
 		ret = ms_export(ac, args);
 	if (ft_strncmp(args[0], "unset", 6) == 0)

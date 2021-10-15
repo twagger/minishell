@@ -6,11 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:26:49 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:46:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ms_unset(int ac, char **av)
+#include "minishell.h"
+
+int	ms_unset(int ac, char **av, char **envp)
 {
 	(void)ac;
 	(void)av;

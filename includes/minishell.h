@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:25:44 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:47:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 */
 char	**ms_parser(char *line);
 int		ms_execute(char **args);
-int		ms_execute_nofork(char **args);
+int		ms_execute_nofork(char **args, char **envp);
 
 /*
 ** UTILS
@@ -50,9 +50,9 @@ int		ms_getbin_path(char **bin);
 int		ms_echo(int ac, char **av);
 int		ms_cd(int ac, char **av);
 int		ms_pwd(int ac, char **av);
-int		ms_env(int ac, char **av);
-int		ms_export(int ac, char **av);
-int		ms_unset(int ac, char **av);
+int		ms_env(int ac, char **av, char **envp);
+int		ms_export(int ac, char **av, char **envp);
+int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
 
 

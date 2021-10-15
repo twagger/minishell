@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:28:42 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:42:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,14 @@ static int	ms_env_arg_errors(int ac, char **av)
 	return (0);
 }
 
-int	ms_env(int ac, char **av)
+int	ms_env(int ac, char **av, char **envp)
 {
 	if (ms_env_arg_errors(ac, av) == ERROR)
 		return (1);
-	
+	while (*envp)
+	{
+		printf("%s\n", *envp);
+		++envp;
+	}
 	return (1);
 }

@@ -6,9 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:26:26 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:46:45 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 int	ms_exit(int ac, char **av)
 {
