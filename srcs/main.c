@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/13 14:37:57 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/15 14:07:12 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ms_loop(void)
 			args = ms_parser(line);
 			if (!args)
 				return (ft_cleaner(line, NULL, ERROR));
-			status = ms_execute(args);
+			//status = ms_execute(args);
 		}
 		else
 			printf("\n");
@@ -36,6 +36,7 @@ int	ms_loop(void)
 	}
 	return (0);
 }
+
 
 int	main(void)
 {
