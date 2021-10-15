@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 15:46:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/15 12:26:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	main(int ac, char **av)
+int	ms_unset(int ac, char **av)
 {
 	(void)ac;
 	(void)av;

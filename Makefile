@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/12 15:32:41 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/15 12:29:02 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,15 @@ SRCS		= srcs/main.c \
 			  srcs/parse.c \
 			  srcs/execute.c \
 			  srcs/utils/cleaner.c \
-			  srcs/utils/path.c 
+			  srcs/utils/path.c  \
+			  srcs/execute_nofork.c \
+			  srcs/builtins/cd.c \
+			  srcs/builtins/env.c \
+			  srcs/builtins/pwd.c \
+			  srcs/builtins/echo.c \
+			  srcs/builtins/exit.c \
+			  srcs/builtins/unset.c \
+			  srcs/builtins/export.c 
 
 OBJS		= $(SRCS:.c=.o)
 
@@ -50,14 +58,12 @@ OBJS		= $(SRCS:.c=.o)
 ################################################################################
 NAME		= minishell
 LFT			= libft.a
-BUILTINS	= builtins
 
 ################################################################################
 #                                 DIRECTORIES                                  #
 ################################################################################
 HEADERS		= includes/ 
 LFTDIR		= libft/
-BUILTINSDIR	= srcs/builtins/
 
 ################################################################################
 #                                     FLAGS                                    #
@@ -76,14 +82,9 @@ endif
 .c.o:
 			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I$(HEADERS) -I$(LFTDIR)
 
-$(NAME):	$(LFT) $(BUILTINS) $(OBJS)
+$(NAME):	$(LFT) $(OBJS)
 			@printf  "$(BLUE)Creating $(RESET) $(YELLOW)[$(NAME)]$(RESET)" 
 			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(HEADERS) $(LFTFLAGS) $(LADDFLAGS)
-			@echo " : $(GREEN)OK !$(RESET)"
-
-$(BUILTINS):	
-			@printf  "$(BLUE)Creating $(RESET) $(YELLOW)[Builtins]$(RESET)" 	
-			@make all -s -C $(BUILTINSDIR)
 			@echo " : $(GREEN)OK !$(RESET)"
 
 all:		$(NAME)
@@ -91,13 +92,11 @@ all:		$(NAME)
 clean:
 			@printf "$(BLUE)Cleaning $(RESET) $(YELLOW)[objects & libraries]$(RESET)"
 			@$(RM) $(OBJS) $(LFT)
-			@make clean -s -C $(BUILTINSDIR)
 			@echo " : $(GREEN)OK !$(RESET)"
 
 fclean:		clean
 			@printf "$(BLUE)Cleaning $(RESET) $(YELLOW)[executable(s)]$(RESET)"
 			@$(RM) $(NAME)
-			@make fclean -s -C $(BUILTINSDIR)
 			@echo " : $(GREEN)OK !$(RESET)"
 
 re:			fclean all

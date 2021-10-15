@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 11:44:33 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 17:16:29 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/15 12:26:31 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int	main(int ac, char **av)
+int	ms_export(int ac, char **av)
 {
+	(void)ac;
 	(void)av;
-	if (ac > 1)
-	{
-		printf("usage: pwd\n");
-		return (1);
-	}
-	printf("%s\n", getcwd(NULL, 0));
 	return (0);
 }

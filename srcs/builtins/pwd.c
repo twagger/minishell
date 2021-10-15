@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 17:12:30 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/12 11:44:33 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/15 12:26:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	main(int ac, char **av)
+#include "minishell.h"
+
+int	ms_pwd(int ac, char **av)
 {
-	(void)ac;
 	(void)av;
-	return (0);
+	if (ac > 1)
+	{
+		printf("usage: pwd\n");
+		return (1);
+	}
+	printf("%s\n", getcwd(NULL, 0));
+	return (1);
 }
