@@ -6,13 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:39:48 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/19 12:50:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ms_is_builtin(char *command)
+/*static int	ms_is_builtin(char *command)
 {
 	if (ft_strncmp(command, "cd", ft_strlen(command)) == 0 || \
 		ft_strncmp(command, "env", ft_strlen(command)) == 0 || \
@@ -23,33 +23,33 @@ static int	ms_is_builtin(char *command)
 		ft_strncmp(command, "unset", ft_strlen(command)) == 0)
 		return (1);
 	return (0);
-}
+}*/
 
 int	ms_loop(char **envp)
 {
 	char	*line;
-	char	**args;
+	t_node	*ast;
 	int		status;
 
-	status = 1;
-	while (status)
+	status = 0;
+	while (!status)
 	{
 		line = readline("\x1B[32mMinishell> \e[0m");
 		if (line)
 		{
-			args = ms_parser(line);
-			if (!args)
-				return (ft_cleaner(line, NULL, ERROR));
-			if (ms_is_builtin(args[0]))
-				status = ms_execute_nofork(args, envp);
-			else
-				status = ms_execute(args);
+			ast = ms_parser(line, envp);
+			if (!ast)
+			{
+				free(line);
+				return (ERROR);
+			}
+			status = ms_execute_ast(ast, envp);
 		}
 		else
 			printf("\n");
-		ft_cleaner(line, args, 0);
+		free(line);
 	}
-	return (0);
+	return (status);
 }
 
 int	main(int ac, char **av, char **envp)

@@ -6,25 +6,16 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:32:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/12 15:47:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/16 11:47:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ms_get_path(void)
-{
-	char	*step_1;
-	char	*step_2;
-	char	*step_3;
-
-	step_1 = ft_strjoin(getcwd(NULL, 0), BUILTINS_PATH);
-	step_2 = ft_strjoin(step_1, ":");
-	step_3 = ft_strjoin(step_2, getenv("PATH"));
-	free(step_1);
-	free(step_2);
-	return (step_3);
-}
+/*
+** Concat a directory and a binary name, test if the binary is in the dir.
+** If it is not, returns null, then, returns the full path to the bin.
+*/
 
 char	*ms_build_bin_path(char *path, char *bin)
 {
@@ -44,6 +35,11 @@ char	*ms_build_bin_path(char *path, char *bin)
 	free(bin_path);
 	return (NULL);
 }
+
+/*
+** For every dir, try to build a path with the binary.
+** If the binary is found, return the full path, if not, return bin name
+*/
 
 char	*ms_getgood_path(char **dir, char *bin)
 {
@@ -68,20 +64,21 @@ char	*ms_getgood_path(char **dir, char *bin)
 	return (bin);
 }
 
+/*
+** Function to return the best possible path for an executable (*bin).
+*/
+
 int	ms_getbin_path(char **bin)
 {
 	char	*path;
 	char	**dir;
 
-	if (!bin)
-		return (ERROR);
-	path = ms_get_path();
+	if (ft_strchr(*bin, '/'))
+		return (0);
+	path = getenv("PATH");
 	dir = ft_split(path, ':');
 	if (!dir)
-	{	
-		free(path);
 		return (ERROR);
-	}
 	*bin = ms_getgood_path(dir, *bin);
 	return (0);
 }

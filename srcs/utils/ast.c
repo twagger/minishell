@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/16 10:10:04 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/17 11:04:45 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/17 11:06:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_unset(int ac, char **av, char **envp)
+t_node	*ms_create_node(void *data, int type)
 {
-	(void)ac;
-	(void)av;
-	(void)envp;
+	t_node	*new;
 
-	//Parcourir envp pour voir si la variable est dans la liste
-	//Si pas dans la liste, return
-	//Si dans la liste
-	//malloc un char ** de la taille de envp - 1 + NULL
-	//strdup tous les elements de envp SAUF celui a supprimer
-	//free envp si ce n'est pas l'original
-	//retourner le nouveau char **
-
-	return (0);
+	new = (t_node *)malloc(sizeof(*new));
+	if (!new)
+		return (NULL);
+	new->left = NULL;
+	new->right = NULL;
+	new->data = data;
+	new->type = type;
+	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 12:42:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/16 14:54:48 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,5 @@ int	ms_env(int ac, char **av, char **envp)
 		printf("%s\n", *envp);
 		++envp;
 	}
-	return (1);
+	return (0);
 }
