@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 16:01:07 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/19 17:19:19 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,44 @@
 /*
 ** Basic parser to allow Tom to work on exec
 */
+/*
+** AST NODE TYPES
+*/
+typedef enum e_token_types
+{
+	WORD,
+	AND_IF,
+	OR_IF,
+	DLESS,
+	DGREAT,
+	PIPE,
+	RED_TO,
+	RED_FROM,
+} 	e_token_types;
+
+typedef struct s_token
+{
+	int				type;
+	void			*value;
+	struct s_token	*next;
+}	t_token;
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int			i;
+
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	if (s1[i] == '\0' || s2[i] == '\0')
+		return (s1[i] - s2[i]);
+	return (0);
+}
+
 int		check_special_char(char *c, char *line)
 {
 	int sq;
@@ -41,147 +79,116 @@ int		check_special_char(char *c, char *line)
 	return (0);
 }
 
-int	ft_strnchr(const char *s, char c, int index)
+e_token_types catego_toketype(char *content)
 {
-	int i;
-	int count;
-
-	i = 0;
-	count = 0;
-	while (i <= index)
-	{
-		if (s[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
+	if (!ft_strcmp(content , "|"))
+		return (PIPE);
+	else if (!ft_strcmp(content , "&&"))
+		return (AND_IF);
+	else if (!ft_strcmp(content , "||"))
+		return (OR_IF);
+	else if (!ft_strcmp(content , "<<"))
+		return (DLESS);
+	else if (!ft_strcmp(content , ">>"))
+		return (DGREAT);
+	else if (!ft_strcmp(content , ">"))
+		return (RED_TO);
+	else if (!ft_strcmp(content , "<"))
+		return (RED_FROM);
+	else 
+		return (WORD);
 }
-int	env_len(char *c)
-{
-	int len;
 
-	len = 0;
-	while(c[len])
+void	ft_tokenadd_back(t_token **lst, t_token *new)
+{
+	t_token	*current;
+
+	if (!(*lst))
 	{
-		if(ft_isalnum(c[len]) || c[len] == '_')
-			len++;
-		else 
-			return (len);
+		(*lst) = new;
+		return ;
 	}
-	return (len);
-}
-int ft_strchr_index(char *s, char c)
-{
-	int len;
-
-	len= -1;
-	while (s[++len])
+	current = (*lst);
+	while (current->next != 0)
 	{
-		if (s[len] == c)
-			return (len);
+		current = current->next;
 	}
-	return (0);
+	current->next = new;
 }
-char *replcace_var_2(char *cmd, char *var, char *newvar, int index)
+t_token	*ft_newtoken(void *content)
 {
-	char *newcmd;
-	int len;
-	int i;
-	int y;
+	t_token		*re;
 
-	len = ft_strlen(cmd) - ft_strlen(var) - 1 + ft_strlen(newvar);
-	newcmd =  malloc((len + 1) * sizeof(char));
-	if (!newcmd)
+	re = (t_token *)malloc(sizeof(t_token));
+	if (!re)
 		return (0);
-	i = 0;
-	y = 0;
-	while(y < index)
-	{
-		if(cmd[y] == '"' || cmd[y] == '\'')
-		{
-			y++;
-			continue ;
-		}
-		newcmd[i] = cmd[y];
-		i++;
-		y++;
-	}
-	while(*newvar)
-	{
-		newcmd[i] = *newvar;
-		newvar++;
-		i++;
-	}
-	newcmd[i] = '\0';
-	//free(cmd);
-	return newcmd;
+	re->value = content;
+	re->type = (int)catego_toketype(content); 
+	re->next = 0;
+	return (re);
 }
 
-char	*replace_var(char *c, char *cmd, int index)
+void printf_out(t_token *all)
 {
-	int		len;
-	char	*var;
-	char	*newvar;
-	int		i;
-
-	len = env_len(c);
-	var = malloc((len + 1) * sizeof(char));
-	if (!var)
-		return (0);
-	i = -1;
-	while(++i < len)
+	while(all->next)
 	{
-		var[i] = c[i];
+		printf("int :%d\n", all->type);
+		printf("value:%s\n", all->value);
+		all = all->next;
 	}
-	var[i] = '\0';
-	newvar = getenv(var);
-	cmd = replcace_var_2(cmd, var, newvar, index);
-	// free(newvar);
-	// free(var);
-	return cmd;
+	printf("int :%d\n", all->type);
+	printf("value:%s\n", all->value);
 }
-char *check_if_envvar(char *cmd)
-{
-	int i;
-	char *new;
 
-	i = -1;
-	while(cmd[++i])
-	{
-		if(cmd[i] == '$')
-		{
-			if((ft_strnchr(cmd, '\'', i+1) % 2))
-				continue ;
-			else
-			{
-				if (cmd[i+1])
-					new = replace_var(&cmd[i+1], cmd, i);
-			}
-		}
-	}
-	if (new)
-		return(new);
-	return cmd;
-}
-char	**ms_parser(char *line)
+t_token	*ms_tokenizer(char *line)
 {
 	char	**res;
 	int		i;
+	t_token *token;
+	t_token *current;
 
-	i = -1;
-	res = ft_split(line, '|');
-	while(res[++i])
+	token = 0;
+	i = 0;
+	res = ft_split(line, ' ');
+	while(res[i])
 	{
 		if(check_special_char(res[i], line))
 			return (0);
-		res[i] = check_if_envvar(res[i]);
-		printf("res:%s\n", res[i]);
+		current = ft_newtoken(res[i]);
+		//res[i] = check_if_envvar(res[i]);
+		ft_tokenadd_back(&token, current);
+		i++;
 	}
-	return (res);
+	printf_out(token);
+	return (token);
 }
+
+// char	**ms_parser(char *line)
+// {
+// 	char	**res;
+// 	int		i;
+
+// 	i = -1;
+// 	if (!ms_tokenizer(line))
+// 		return NULL;
+// 	res = ft_split(line, '|');
+// 	while(res[++i])
+// 	{
+// 		if(check_special_char(res[i], line))
+// 			return (0);
+// 		res[i] = check_if_envvar(res[i]);
+// 		printf("res:%s\n", res[i]);
+// 	}
+// 	return (res);
+// }
 int main()
 {
-	char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
-	ms_parser(input);
+	// char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
+	// ms_parser(input);
+	if (!ms_tokenizer("echo      \"hello       how are you?\" || "))
+	{	
+		printf("Error occured\n");
+		return 1;
+	}
 	return 0;
 }
