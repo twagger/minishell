@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 12:38:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/19 15:40:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ t_node	*ms_create_node(void *data, int type);
 */
 int		ft_cleaner(char *line, char **args, int exit_code);
 int		ms_getbin_path(char **bin);
+char	**ms_init_arg_array();
+int		ms_add_one_arg(char **array, char *data);
+void	ms_free_arg_array(char **array);
+void	ms_empty_arg_array(char **array);
 
 /*
 ** BUILTINS

@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/19 12:52:27 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/19 15:34:52 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ SRCS		= srcs/main.c \
 			  srcs/parse.c \
 			  srcs/execute.c \
 			  srcs/utils/ast.c \
-			  srcs/utils/path.c
+			  srcs/utils/path.c \
+			  srcs/utils/arg_array.c
 
 OBJS		= $(SRCS:.c=.o)
 

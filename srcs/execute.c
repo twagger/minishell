@@ -6,52 +6,40 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 13:11:33 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/19 16:24:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ms_visit(t_node	*node, char **args, char **envp)
+int	ms_visit(t_node	*node, char **args, char **envp)
 {
 	if (!node)
-		return ;
+		return (0);
 	ms_visit(node->left, args, envp);
-	// in-order ok pour &&  | post-order pour le reste 
 	ms_visit(node->right, args, envp);
 	if (node->type == TOK_WORD)
 	{
-		printf("WORD : %s\n", node->data);
-		// add the word to an arg list that will be given to execve as second parameter
+		ms_add_one_arg(args, node->data);
 	}
 	else if (node->type == TOK_NAME)
 	{
-		printf("NAME : %s\n", node->data);
-		// check if the name is a builtin > if it is, execute the builtin
-		// if it is not a builtin > launch execve with the node data as first parameter and arglist as second parameter
-		// clean the args
+		if (ms_getbin_path((char **)&node->data) == ERROR)
+			return (ERROR);
+		if (execve((char *)node->data, args, NULL) == ERROR)
+			perror("Minishell");
+		ms_empty_arg_array(args);
 	}
-	else if (node->type == TOK_FILE)
-	{
-		printf("FILE : %s\n", node->data);
-	}
-	else if (node->type == TOK_GREAT)
-	{
-		printf("GREAT : %s\n", node->data);
-	}
-	else if (node->type == TOK_AND_IF)
-	{
-		printf("AND_IF : %s\n", node->data);
-	}
+	return (0);
 }
 
 int	ms_execute_ast(t_node *ast, char **envp)
 {
 	char **args;
 	
-	args = NULL;
-	// inialize an arglist
 	(void)envp;
-	ms_visit(ast, args, envp);
-	return (1);
+	args = ms_init_arg_array();
+	if (ms_visit(ast, args, envp) == ERROR)
+		return (1);
+	return (0);
 }
