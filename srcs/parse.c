@@ -133,11 +133,11 @@ void printf_out(t_token *all)
 	while(all->next)
 	{
 		printf("int :%d\n", all->type);
-		printf("value:|%s|\n", all->value);
+		printf("value:|%s|\n", (char *)all->value);
 		all = all->next;
 	}
 	printf("int :%d\n", all->type);
-	printf("value:|%s|\n", all->value);
+	printf("value:|%s|\n", (char *)all->value);
 }
 
 t_token	*ms_tokenizer(char *line)
@@ -186,6 +186,7 @@ int main()
 	// char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
 	// ms_parser(input);
 	ms_tokenizer("echo \' how are you? \' \' \"$USER\"  a\' || && >> file \'$USER\' ");
+	ms_tokenizer("echo \" how are you? \" \" \'$USER\'  a\" || && >> file \"$USER\" ");
 	// if (!ms_tokenizer("echo      \"hello       how are you?\" ||  p"))
 	// {	
 	// 	printf("Error occured\n");

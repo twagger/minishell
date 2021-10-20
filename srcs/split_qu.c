@@ -100,7 +100,6 @@ int	int_word(char *s, char c, int index, char ***arr)
 	while (*s && i < len_ws)
 		(*arr)[index][i++] = *s++;
 	(*arr)[index][i] = '\0';
-	printf("word:%s\n", (*arr)[index]);
 	return (len_ws);
 }
 
@@ -109,7 +108,6 @@ int	int_quote(char *s, char c,int index, char ***arr)
 	int	len;
 	int	i;
 
-	printf("s:|%s|\n", s);
 	len = len_w_qu(s, c);
 	(*arr)[index] = (char *)malloc((len + 1) * sizeof(char));
 	if (!(*arr)[index])
@@ -118,7 +116,6 @@ int	int_quote(char *s, char c,int index, char ***arr)
 	while (*s && i < len)
 		(*arr)[index][i++] = *s++;
 	(*arr)[index][i] = '\0';
-	printf("qout:%s\n", (*arr)[index]);
 	return (len + 1);
 }
 
@@ -134,8 +131,7 @@ void	ft_split_2_qu(char ***arr, char *s, char c, int count_ws)
 	state = 0;
 	while (index < count_ws)
 	{
-		while (*s && (((if_sep(*s, '\'' == 1) || if_sep(*s, '\"') == 1)) 
-				|| if_sep(*s, c) == 1))
+		while (*s && (if_sep(*s, '\'') == 1 || if_sep(*s, '\"') == 1 || if_sep(*s, c) == 1))
 		{
 			if(if_sep(*s, '\'') == 1)
 			{
@@ -162,6 +158,7 @@ void	ft_split_2_qu(char ***arr, char *s, char c, int count_ws)
 		else
 		{
 			len = int_quote(s, '\"', index, arr);
+			//replace var
 			state = 0;
 		}
 		s = s + len;
