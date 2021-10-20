@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 17:19:19 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/20 16:32:45 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ t_token	*ms_tokenizer(char *line)
 
 	token = 0;
 	i = 0;
-	res = ft_split(line, ' ');
+	res = ft_split_qu(line, ' ');
 	while(res[i])
 	{
 		if(check_special_char(res[i], line))
@@ -185,10 +185,11 @@ int main()
 {
 	// char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
 	// ms_parser(input);
-	if (!ms_tokenizer("echo      \"hello       how are you?\" || "))
-	{	
-		printf("Error occured\n");
-		return 1;
-	}
+	ms_tokenizer("echo \"how are you? \"\"firend\" || && >> file \'$USER\' ");
+	// if (!ms_tokenizer("echo      \"hello       how are you?\" ||  p"))
+	// {	
+	// 	printf("Error occured\n");
+	// 	return 1;
+	// }
 	return 0;
 }
