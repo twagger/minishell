@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/20 16:32:45 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/20 18:10:28 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,11 @@ void printf_out(t_token *all)
 	while(all->next)
 	{
 		printf("int :%d\n", all->type);
-		printf("value:%s\n", all->value);
+		printf("value:|%s|\n", all->value);
 		all = all->next;
 	}
 	printf("int :%d\n", all->type);
-	printf("value:%s\n", all->value);
+	printf("value:|%s|\n", all->value);
 }
 
 t_token	*ms_tokenizer(char *line)
@@ -185,7 +185,7 @@ int main()
 {
 	// char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
 	// ms_parser(input);
-	ms_tokenizer("echo \"how are you? \"\"firend\" || && >> file \'$USER\' ");
+	ms_tokenizer("echo \' how are you? \' \' \"$USER\"  a\' || && >> file \'$USER\' ");
 	// if (!ms_tokenizer("echo      \"hello       how are you?\" ||  p"))
 	// {	
 	// 	printf("Error occured\n");
