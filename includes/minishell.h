@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/15 11:41:03 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/21 14:59:00 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 ** CORE FUNCTIONS
 */
 char	**ms_parser(char *line);
+char	**ft_split_qu(char *s, char c);
+char	*check_if_envvar(char *cmd);
+int		check_special_char(char *c, char *line);
 int		ms_execute(char **args);
 
 /*

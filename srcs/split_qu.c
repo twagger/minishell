@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2021/10/20 18:16:46 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/21 15:38:57 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int	int_quote(char *s, char c,int index, char ***arr)
 	while (*s && i < len)
 		(*arr)[index][i++] = *s++;
 	(*arr)[index][i] = '\0';
+	//printf("qoute:%s\n", (*arr)[index]);
 	return (len + 1);
 }
 
@@ -159,6 +160,7 @@ void	ft_split_2_qu(char ***arr, char *s, char c, int count_ws)
 		{
 			len = int_quote(s, '\"', index, arr);
 			//replace var
+			(*arr)[index] = check_if_envvar((*arr)[index]);
 			state = 0;
 		}
 		s = s + len;
@@ -175,7 +177,7 @@ char	**ft_split_qu(char *s, char c)
 	if (!s)
 		return (0);
 	count_ws = count_w_qu(s, c);
-	printf("count:%d\n", count_ws);
+	//printf("count:%d\n", count_ws);
 	arr = (char **)malloc((count_ws + 1) * sizeof(char *));
 	if (!arr)
 		return (0);

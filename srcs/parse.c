@@ -6,7 +6,7 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/20 18:10:28 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/21 15:38:58 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,32 +50,6 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	if (s1[i] == '\0' || s2[i] == '\0')
 		return (s1[i] - s2[i]);
-	return (0);
-}
-
-int		check_special_char(char *c, char *line)
-{
-	int sq;
-	int dq;
-
-	sq = 0;
-	dq = 0;
-	while(*c)
-	{
-		if (*c == '\\' || *c == ';')
-			return (1);
-		c++;
-	}
-	while(*line)
-	{
-		if (*line == '\'')
-			sq++;
-		else if (*line == '\"')
-			dq++;
-		line++;
-	}
-	if (sq % 2 || dq % 2)
-		return (1);
 	return (0);
 }
 

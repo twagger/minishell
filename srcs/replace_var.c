@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_old.c                                        :+:      :+:    :+:   */
+/*   replace_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 17:10:22 by wlo              ###   ########.fr       */
+/*   Updated: 2021/10/21 15:38:19 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,11 @@ int	env_len(char *c)
 		if(ft_isalnum(c[len]) || c[len] == '_')
 			len++;
 		else 
-			return (0);
+			return (len);
 	}
 	return (len);
 }
+
 int ft_strchr_index(char *s, char c)
 {
 	int len;
@@ -84,6 +85,7 @@ int ft_strchr_index(char *s, char c)
 	}
 	return (0);
 }
+
 char *replcace_var_2(char *cmd, char *var, char *newvar, int index)
 {
 	char *newcmd;
@@ -99,11 +101,6 @@ char *replcace_var_2(char *cmd, char *var, char *newvar, int index)
 	y = 0;
 	while(y < index)
 	{
-		if(cmd[y] == '"' || cmd[y] == '\'')
-		{
-			y++;
-			continue ;
-		}
 		newcmd[i] = cmd[y];
 		i++;
 		y++;
@@ -114,8 +111,14 @@ char *replcace_var_2(char *cmd, char *var, char *newvar, int index)
 		newvar++;
 		i++;
 	}
+	while(cmd[y + ft_strlen(var) + 1])
+	{
+		newcmd[i] = cmd[y + ft_strlen(var) +  1];
+		i++;
+		y++;
+	}
 	newcmd[i] = '\0';
-	//free(cmd);
+	free(cmd);
 	return newcmd;
 }
 
@@ -140,8 +143,8 @@ char	*replace_var(char *c, char *cmd, int index)
 	var[i] = '\0';
 	newvar = getenv(var);
 	cmd = replcace_var_2(cmd, var, newvar, index);
-	// free(newvar);
-	// free(var);
+	//free(newvar);
+	free(var);
 	return cmd;
 }
 char *check_if_envvar(char *cmd)
@@ -154,38 +157,34 @@ char *check_if_envvar(char *cmd)
 	{
 		if(cmd[i] == '$')
 		{
-			if((ft_strnchr(cmd, '\'', i+1) % 2))
-				continue ;
-			else
-			{
-				if (cmd[i+1])
-					new = replace_var(&cmd[i+1], cmd, i);
-			}
+			if (cmd[i+1])
+				new = replace_var(&cmd[i+1], cmd, i);
 		}
 	}
 	if (new)
 		return(new);
 	return cmd;
 }
-char	**ms_parser(char *line)
-{
-	char	**res;
-	int		i;
 
-	i = -1;
-	res = ft_split(line, '|');
-	while(res[++i])
-	{
-		if(check_special_char(res[i], line))
-			return (0);
-		res[i] = check_if_envvar(res[i]);
-		printf("res:%s\n", res[i]);
-	}
-	return (res);
-}
-int main()
-{
-	char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
-	ms_parser(input);
-	return 0;
-}
+// char	**ms_parser(char *line)
+// {
+// 	char	**res;
+// 	int		i;
+
+// 	i = -1;
+// 	res = ft_split(line, '|');
+// 	while(res[++i])
+// 	{
+// 		if(check_special_char(res[i], line))
+// 			return (0);
+// 		res[i] = check_if_envvar(res[i]);
+// 		printf("res:%s\n", res[i]);
+// 	}
+// 	return (res);
+// }
+// int main()
+// {
+// 	char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
+// 	ms_parser(input);
+// 	return 0;
+// }
