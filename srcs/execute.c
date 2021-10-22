@@ -6,26 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 12:00:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/22 15:37:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ms_is_builtin(char *command)
-{
-	if (ft_strncmp(command, "cd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "env", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "echo", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "pwd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "exit", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "export", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "unset", ft_strlen(command)) == 0)
-		return (1);
-	return (0);
-}
-
-static int	ms_execute_builtin(char **args, char **envp)
+int	ms_execute_builtin(char **args, char **envp)
 {
 	int	ac;
 	int	ret;
@@ -53,15 +40,11 @@ static int	ms_execute_builtin(char **args, char **envp)
 
 static int	ms_command_launcher(char **args, char **envp)
 {
-	if (ms_is_builtin(args[0]))
-		ms_execute_builtin(args, envp);
-	else
-	{
-		if (ms_getbin_path(&args[0]) == ERROR)
-			return (ERROR);
-		if (execve(args[0], args, NULL) == ERROR)
-			perror("Minishell");
-	}
+	(void)envp;
+	if (ms_getbin_path(&args[0]) == ERROR)
+		return (ERROR);
+	if (execve(args[0], args, NULL) == ERROR)
+		perror("Minishell");
 	return (EXIT_SUCCESS);
 }
 

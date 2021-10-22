@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 11:30:33 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/22 15:35:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_node
 */
 t_node	*ms_parser(char *line, char **envp);
 int		ms_execute(char **args, char **envp);
+int		ms_execute_builtin(char **args, char **envp);
 int		ms_execute_ast(t_node *ast, char **envp);
 
 /*
