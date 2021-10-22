@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 16:09:51 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/22 11:58:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_node	*ms_parser(char *line, char **envp)
 	root->right->left = ms_create_node((void*)ft_strdup("tutu"), TOK_WORD);
 	root->right->left->left = ms_create_node((void*)ft_strdup("titi"), TOK_WORD);
 	root->right->left->left->left = ms_create_node((void*)ft_strdup("tata"), TOK_WORD);*/
-	root = ms_create_node((void*)ft_strdup("touch"), TOK_NAME);
+	root = ms_create_node((void*)ft_strdup("echo"), TOK_NAME);
 	root->left = ms_create_node((void*)ft_strdup("tutu"), TOK_WORD);
 	root->left->left = ms_create_node((void*)ft_strdup("tata"), TOK_WORD);
 	root->left->left->left = ms_create_node((void*)ft_strdup("titi"), TOK_WORD);

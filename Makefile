@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/19 15:34:52 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/22 11:48:10 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,9 +40,16 @@ AR			= ar rcs
 SRCS		= srcs/main.c \
 			  srcs/parse.c \
 			  srcs/execute.c \
+			  srcs/interpreter.c \
 			  srcs/utils/ast.c \
 			  srcs/utils/path.c \
-			  srcs/utils/arg_array.c
+			  srcs/utils/arg_array.c \
+			  srcs/builtins/cd.c \
+			  srcs/builtins/echo.c \
+			  srcs/builtins/env.c \
+			  srcs/builtins/exit.c \
+			  srcs/builtins/pwd.c \
+			  srcs/builtins/unset.c
 
 OBJS		= $(SRCS:.c=.o)
 

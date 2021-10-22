@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/19 15:40:04 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/22 11:30:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef enum e_ast_node_types
 	TOK_ASSIGNMENT_WORD,
 	TOK_NEWLINE,
 	TOK_IO_NUMBER
-} 	t_ast_node_types;
+}	t_ast_node_types;
 
 /*
 ** DATA STRUCTURES
@@ -66,7 +66,7 @@ typedef struct s_node
 ** CORE FUNCTIONS
 */
 t_node	*ms_parser(char *line, char **envp);
-int		ms_execute(char **args);
+int		ms_execute(char **args, char **envp);
 int		ms_execute_ast(t_node *ast, char **envp);
 
 /*
@@ -79,10 +79,10 @@ t_node	*ms_create_node(void *data, int type);
 */
 int		ft_cleaner(char *line, char **args, int exit_code);
 int		ms_getbin_path(char **bin);
-char	**ms_init_arg_array();
-int		ms_add_one_arg(char **array, char *data);
+char	**ms_init_arg_array(void);
+char	**ms_add_one_arg(char **array, char *data);
+char	**ms_add_command(char **array, char *cmd);
 void	ms_free_arg_array(char **array);
-void	ms_empty_arg_array(char **array);
 
 /*
 ** BUILTINS
@@ -94,6 +94,5 @@ int		ms_env(int ac, char **av, char **envp);
 //int		ms_export(int ac, char **av, char **envp, t_param *prm);
 int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
-
 
 #endif
