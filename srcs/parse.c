@@ -159,8 +159,8 @@ int main()
 {
 	// char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
 	// ms_parser(input);
-	ms_tokenizer("echo \' how are you? \' \' \"$USER\"  a\' || && >> file \'$USER\' ");
-	ms_tokenizer("echo \" how are you? \" \" \'$USER\'  a\" || && >> file \"$USER\" ");
+	ms_tokenizer("echo toto tutu titi");
+	//ms_tokenizer("echo \" how are you? \" \" \'$USER\'  a\" || && >> file \"$USER\" ");
 	// if (!ms_tokenizer("echo      \"hello       how are you?\" ||  p"))
 	// {	
 	// 	printf("Error occured\n");

@@ -93,6 +93,8 @@ int	int_word(char *s, char c, int index, char ***arr)
 	int	i;
 
 	len_ws = len_w_qu(s, c);
+	if (!len_ws)
+		len_ws = len_w_qu(s, '\0');
 	(*arr)[index] = (char *)malloc((len_ws + 1) * sizeof(char));
 	if (!(*arr)[index])
 		return (0);
@@ -100,6 +102,7 @@ int	int_word(char *s, char c, int index, char ***arr)
 	while (*s && i < len_ws)
 		(*arr)[index][i++] = *s++;
 	(*arr)[index][i] = '\0';
+	//printf("here\n");
 	return (len_ws);
 }
 
@@ -164,6 +167,7 @@ void	ft_split_2_qu(char ***arr, char *s, char c, int count_ws)
 			state = 0;
 		}
 		s = s + len;
+		//printf("index:%s\n",(*arr)[index]);
 		index++;
 	}
 	(*arr)[index] = 0;
@@ -177,7 +181,7 @@ char	**ft_split_qu(char *s, char c)
 	if (!s)
 		return (0);
 	count_ws = count_w_qu(s, c);
-	//printf("count:%d\n", count_ws);
+	printf("count:%d\n", count_ws);
 	arr = (char **)malloc((count_ws + 1) * sizeof(char *));
 	if (!arr)
 		return (0);
