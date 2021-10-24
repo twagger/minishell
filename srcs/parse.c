@@ -6,19 +6,19 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 11:58:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/23 10:37:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+#include "ast.h"
 /*
 ** Fake parser to allow Tom to work on exec
 ** Always return the same tree on this command : echo "Test" > toto && touch tata titi tutu
 ** tThis is quick qnd dirty (memleaks included :))
 */
 
-t_node	*ms_parser(char *line, char **envp)
+t_node	*ms_parser_old(char *line, char **envp)
 {
 	t_node	*root;
 
@@ -33,9 +33,10 @@ t_node	*ms_parser(char *line, char **envp)
 	root->right->left = ms_create_node((void*)ft_strdup("tutu"), TOK_WORD);
 	root->right->left->left = ms_create_node((void*)ft_strdup("titi"), TOK_WORD);
 	root->right->left->left->left = ms_create_node((void*)ft_strdup("tata"), TOK_WORD);*/
-	root = ms_create_node((void*)ft_strdup("echo"), TOK_NAME);
+	root = ms_create_node((void*)ft_strdup("touch"), TOK_NAME);
 	root->left = ms_create_node((void*)ft_strdup("tutu"), TOK_WORD);
 	root->left->left = ms_create_node((void*)ft_strdup("tata"), TOK_WORD);
 	root->left->left->left = ms_create_node((void*)ft_strdup("titi"), TOK_WORD);
+	//root->left->left->left = ms_create_node((void*)ft_strdup("|"), TOK_PIPE);
 	return (root);
 }

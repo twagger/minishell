@@ -6,13 +6,15 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 12:01:09 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/23 10:02:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "ast.h"
+#include "token.h"
 
-static int	ms_loop(char **envp)
+/*static int	ms_loop(char **envp)
 {
 	char	*line;
 	t_node	*ast;
@@ -31,6 +33,46 @@ static int	ms_loop(char **envp)
 				return (ERROR);
 			}
 			status = ms_execute_ast(ast, envp);
+		}
+		else
+			printf("\n");
+		free(line);
+	}
+	return (status);
+}*/
+void printf_out(t_token *all)
+{
+	while(all->next)
+	{
+		printf("int :%d\n", all->type);
+		printf("value:|%s|\n", (char *)all->value);
+		all = all->next;
+	}
+	printf("int :%d\n", all->type);
+	printf("value:|%s|\n", (char *)all->value);
+}
+
+static int	ms_loop(char **envp)
+{
+	char	*line;
+	t_token	*tok_list;
+	int		status;
+
+	(void)envp;
+	status = EXIT_SUCCESS;
+	while (status == EXIT_SUCCESS)
+	{
+		line = readline("\x1B[32mMinishell> \e[0m");
+		if (line)
+		{
+			tok_list = ms_tokenizer(line);
+			if (!tok_list)
+			{
+				free(line);
+				return (ERROR);
+			}
+			
+			printf_out(tok_list);
 		}
 		else
 			printf("\n");
