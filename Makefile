@@ -6,7 +6,7 @@
 #    By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/15 12:45:12 by wlo              ###   ########.fr        #
+#    Updated: 2021/10/25 16:25:45 by wlo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,11 @@ SRCS		= srcs/main.c \
 			  srcs/parse.c \
 			  srcs/execute.c \
 			  srcs/utils/cleaner.c \
-			  srcs/utils/path.c 
+			  srcs/utils/path.c \
+			  srcs/replace_var.c \
+			  srcs/replace_var2.c \
+			  srcs/split_qu.c \
+			  srcs/split_qu2.c
 
 OBJS		= $(SRCS:.c=.o)
 
