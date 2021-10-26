@@ -6,14 +6,14 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:56:18 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/26 11:36:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
 
-static e_token_types catego_toketype(char *content)
+static t_token_types catego_toketype(char *content)
 {
 	if (!ft_strcmp(content , "|"))
 		return (PIPE);

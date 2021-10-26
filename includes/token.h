@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:15:58 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/24 11:17:40 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/26 11:29:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@
 */
 typedef enum e_token_types
 {
-	0 WORD = 0,
-	1 ASSIGNMENT_WORD,
-	2 NEWLINE,
-	3 IO_NUMBER,
-	4 AND_IF,
-	5 OR_IF,
-	6 DLESS,
-	7 DGREAT,
-	8 PIPE,
-	9 RED_TO,
-	10 RED_FROM
-} 	e_token_types;
+	WORD = 0,
+	ASSIGNMENT_WORD,
+	NEWLINE,
+	IO_NUMBER,
+	AND_IF,
+	OR_IF,
+	DLESS,
+	DGREAT,
+	PIPE,
+	RED_TO,
+	RED_FROM
+}	t_token_types;
 
 typedef struct s_token
 {
@@ -45,6 +45,6 @@ typedef struct s_token
 t_token	*ms_tokenizer(char *line);
 char	**ft_split_qu(char *s, char c);
 int		check_special_char(char *c, char *line);
-char 	*check_if_envvar(char *cmd);
+char	*check_if_envvar(char *cmd);
 
 #endif

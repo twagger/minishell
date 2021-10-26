@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/10/23 09:51:38 by twagner          ###   ########.fr        #
+#    Updated: 2021/10/26 15:20:52 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,9 @@ SRCS		= srcs/main.c \
 			  srcs/parser/lexer/lexer.c \
 			  srcs/parser/lexer/split_qu.c \
 			  srcs/parser/lexer/replace_var.c \
+			  srcs/parser/parser/transitions.c \
+			  srcs/parser/parser/stack.c \
+			  srcs/parser/parser/parser.c \
 			  srcs/interpreter.c \
 			  srcs/utils/ast.c \
 			  srcs/utils/path.c \

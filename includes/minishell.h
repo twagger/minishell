@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:22:48 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/26 09:57:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <dirent.h>
 # include <errno.h>
 # include <string.h>
+# include <fcntl.h>
+# include <unistd.h>
 # include "libft.h"
 
 /*

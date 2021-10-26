@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:19:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:21:47 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/26 15:19:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct s_node
 /*
 ** BINARY TREE (AST) FUNCTIONS
 */
-t_node	*ms_parser(char *line, char **envp);
 t_node	*ms_create_node(void *data, int type);
 int		ms_execute_ast(t_node *ast, char **envp);
 
