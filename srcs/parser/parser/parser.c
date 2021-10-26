@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/26 17:19:48 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/26 17:35:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	ms_lr_parse(int state, t_token *input, t_stack *stack, t_trans **table)
 	{
 		if (ms_reduce(&stack, table, num_trans) == ERROR)
 			return (ERROR);
-		return (0);
+		return (0); // verifier si le reduce se fait qu niveau 0 de profondeur ou si le return se fait quand input pas vide
 	}
 	num_trans = ms_match_token(stack->type, state, table);
 	printf("TOK : %i - STATE : %i - NEXT STATE  : %i\n", stack->type, state, table[num_trans]->next);
