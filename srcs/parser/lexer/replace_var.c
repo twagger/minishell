@@ -6,74 +6,32 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:45:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/29 09:27:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		check_special_char(char *c, char *line)
-{
-	int sq;
-	int dq;
-
-	sq = 0;
-	dq = 0;
-	while(*c)
-	{
-		if (*c == '\\' || *c == ';')
-			return (1);
-		c++;
-	}
-	while(*line)
-	{
-		if (*line == '\'')
-			sq++;
-		else if (*line == '\"')
-			dq++;
-		line++;
-	}
-	if (sq % 2 || dq % 2)
-		return (1);
-	return (0);
-}
-
-int	ft_strnchr(const char *s, char c, int index)
-{
-	int i;
-	int count;
-
-	i = 0;
-	count = 0;
-	while (i <= index)
-	{
-		if (s[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
-}
-
 int	env_len(char *c)
 {
-	int len;
+	int	len;
 
 	len = 0;
-	while(c[len])
+	while (c[len])
 	{
-		if(ft_isalnum(c[len]) || c[len] == '_')
+		if (ft_isalnum(c[len]) || c[len] == '_')
 			len++;
-		else 
+		else
 			return (len);
 	}
 	return (len);
 }
 
-int ft_strchr_index(char *s, char c)
+int	ft_strchr_index(char *s, char c)
 {
-	int len;
+	int	len;
 
-	len= -1;
+	len = -1;
 	while (s[++len])
 	{
 		if (s[len] == c)
@@ -82,40 +40,31 @@ int ft_strchr_index(char *s, char c)
 	return (0);
 }
 
-char *replcace_var_2(char *cmd, char *var, char *newvar, int index)
+char	*replcace_var_2(char *cmd, char *var, char *newvar, int index)
 {
-	char *newcmd;
-	int len;
-	int i;
-	int y;
+	char	*newcmd;
+	int		len;
+	int		i;
+	int		y;
 
 	len = ft_strlen(cmd) - ft_strlen(var) - 1 + ft_strlen(newvar);
-	newcmd =  malloc((len + 1) * sizeof(char));
+	newcmd = malloc((len + 1) * sizeof(char));
 	if (!newcmd)
 		return (0);
 	i = 0;
 	y = 0;
-	while(y < index)
-	{
-		newcmd[i] = cmd[y];
-		i++;
-		y++;
-	}
-	while(*newvar)
+	while (y < index)
+		newcmd[i++] = (cmd)[y++];
+	while (newvar && *newvar)
 	{
 		newcmd[i] = *newvar;
 		newvar++;
 		i++;
 	}
-	while(cmd[y + ft_strlen(var) + 1])
-	{
-		newcmd[i] = cmd[y + ft_strlen(var) +  1];
-		i++;
-		y++;
-	}
+	while (cmd[y + ft_strlen(var) + 1])
+		newcmd[i++] = cmd[(y++) + ft_strlen(var) + 1];
 	newcmd[i] = '\0';
-	free(cmd);
-	return newcmd;
+	return (newcmd);
 }
 
 char	*replace_var(char *c, char *cmd, int index)
@@ -132,56 +81,36 @@ char	*replace_var(char *c, char *cmd, int index)
 	if (!var)
 		return (0);
 	i = -1;
-	while(++i < len)
+	while (++i < len)
 	{
 		var[i] = c[i];
 	}
 	var[i] = '\0';
 	newvar = getenv(var);
 	cmd = replcace_var_2(cmd, var, newvar, index);
-	//free(newvar);
 	free(var);
-	return cmd;
+	return (cmd);
 }
 
-char *check_if_envvar(char *cmd)
+char	*check_if_envvar(char *cmd)
 {
-	int i;
-	char *new;
+	int		i;
+	char	*new;
 
 	i = -1;
-	while(cmd[++i])
+	new = NULL;
+	while (cmd[++i])
 	{
-		if(cmd[i] == '$')
+		if (cmd[i] == '$')
 		{
-			if (cmd[i+1])
-				new = replace_var(&cmd[i+1], cmd, i);
+			if (cmd[i + 1])
+				new = replace_var(&cmd[i + 1], cmd, i);
 		}
 	}
 	if (new)
-		return(new);
-	return cmd;
+	{
+		free(cmd);
+		return (new);
+	}
+	return (cmd);
 }
-
-// char	**ms_parser(char *line)
-// {
-// 	char	**res;
-// 	int		i;
-
-// 	i = -1;
-// 	res = ft_split(line, '|');
-// 	while(res[++i])
-// 	{
-// 		if(check_special_char(res[i], line))
-// 			return (0);
-// 		res[i] = check_if_envvar(res[i]);
-// 		printf("res:%s\n", res[i]);
-// 	}
-// 	return (res);
-// }
-// int main()
-// {
-// 	char *input = "echo \"$VSCODE_GIT_ASKPASS_MAIN\" |  echo '$USER' \"$USER '$USER'\"";
-// 	ms_parser(input);
-// 	return 0;
-// }

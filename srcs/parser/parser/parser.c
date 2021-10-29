@@ -6,28 +6,20 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/26 17:35:17 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/29 15:07:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lr_parser.h"
+#include "token.h"
 
 /*
 ** LR Parser
-** - Etat courant = 0
-** - regarder le premier mot de la liste chainee des tokens (input)
-** - regarder si le mot est defini comme "event" sur l'etat courant
-** - si oui, realiser l'action associee et changer d'etat
-** - lorsqu'on fait une reduction, revenir a l'etat d'avant pour savoir ou aller ensuite
-** - lorsqu'on fait une reduction, creer un noeud de la branche du parsing tree
-** 	> On doit pouvoir creer l'ast directement avec de bonnes regles ici
-*/
-
-/*
-** Search in the transitions on the current state the one matching the token
-** as the event and return the transition num in the transition array.
-** If the token is not matching, that means that the grammar is not respected.
+**  input : chained listof tokens from lexer
+** 	table : table of transitions from automaton parsing
+**  stack : simple chained list
+**  output: parsing tree
 */
 
 // command to test : echo 'toto' > file && cat 'file'
@@ -54,19 +46,19 @@ int	ms_match_token(int token, int curr_state, t_trans **trans)
 	return (ERROR);
 }
 
-int ms_shift(t_token **tok_list, t_stack **stack)
+int ms_shift(t_token *tok, t_stack **stack, int state)
 {
-	t_stack	*curr;
-	t_token	*curr_tok;
-	
-	curr_tok = *tok_list;
-	curr = ms_new_stack_item(ft_strdup(curr_tok->value), curr_tok->type);
-	if (!curr)
+	t_stack	*new;
+	char	*value;
+
+	if (tok)
+		value = ft_strdup(tok->value);
+	else
+		value = NULL;	
+	new = ms_new_stack_item(value, tok->type, state);
+	if (!new)
 		return (ERROR);
-	ms_add_front(stack, curr);
-	*tok_list = (*tok_list)->next;
-	free(curr_tok->value);
-	free(curr_tok);
+	ms_add_front(stack, new);
 	return (EXIT_SUCCESS);
 }
 
@@ -74,69 +66,78 @@ int	ms_reduce(t_stack **stack, t_trans **table, int	num_trans)
 {
 	int		i;
 	t_stack	*popped;
+	t_stack	*state;
 	t_stack	*reduction;
-	t_stack	*begin;
-	
-	begin = *stack;
-	while (*stack)
-	{
-		printf("%i | BEFORE | STACK : %i - %s\n", num_trans, (*stack)->type, (*stack)->data);
-		*stack = (*stack)->next;
-	}
-	*stack = begin;
+	t_trans	*trans;
+
+	trans = table[num_trans];
 	i = -1;
-	while (++i < table[num_trans]->nb_reduce)
+	state = ms_pop_stack(stack);
+	while (++i < trans->nb_reduce)
 	{
 		popped = ms_pop_stack(stack);
 		free(popped);
 		popped = NULL;
 	}
-	reduction = ms_new_stack_item(NULL, table[num_trans]->next);
+	ms_add_front(stack, state);
+	reduction = ms_new_stack_item(NULL, trans->next, -1);
 	if (!reduction)
 		return (ERROR);
 	ms_add_front(stack, reduction);
-	begin = *stack;
-	while (*stack)
-	{
-		printf("%i | AFTER | STACK : %i - %s\n", num_trans, (*stack)->type, (*stack)->data);
-		*stack = (*stack)->next;
-	}
-	*stack = begin;
-	return (0);
+	printf("REDUCTION : %i\n", reduction->type);
+	return (EXIT_SUCCESS);
 }
 
-int	ms_lr_parse(int state, t_token *input, t_stack *stack, t_trans **table)
+int	ms_lr_parse(t_token *input, t_trans **table)
 {
-	int	num_trans;
+	t_token	*tok;
+	int		state;
+	int		num_trans;
+	t_stack *stack;
+	t_stack	*initial;
 
-	if (!input)
-		return (0);
-	num_trans = ms_match_token(input->type, state, table);
-	if (num_trans == ERROR)
+	stack = NULL;
+	initial = ms_new_stack_item(NULL, -1, 0);
+	if (!initial)
 		return (ERROR);
-	if (table[num_trans]->action == SHIFT)
+	ms_add_front(&stack, initial);
+	while (1)
 	{
-		if (ms_shift(&input, &stack) == ERROR)
+		state = stack->state;
+		tok = input;
+		num_trans = ms_match_token(tok->type, state, table);
+		if (num_trans == ERROR)
 			return (ERROR);
-		if (ms_lr_parse(table[num_trans]->next, input, stack, table) == ERROR)
+		if (table[num_trans]->action == SHIFT)
+		{
+			if (ms_shift(tok, &stack, -1) == ERROR)
+				return (ERROR);
+			if (ms_shift(NULL, &stack, table[num_trans]->next) == ERROR)
+				return (ERROR);
+			input = input->next;
+		}
+		else if (table[num_trans]->action == REDUCE)
+		{
+			if (ms_reduce(&stack, table, num_trans) == ERROR)
+				return (ERROR);
+		}
+		else if (table[num_trans]->action == ACCEPT)
+			break ;
+		else
 			return (ERROR);
 	}
-	else if (table[num_trans]->action == REDUCE)
-	{
-		if (ms_reduce(&stack, table, num_trans) == ERROR)
-			return (ERROR);
-		return (0); // verifier si le reduce se fait qu niveau 0 de profondeur ou si le return se fait quand input pas vide
-	}
-	num_trans = ms_match_token(stack->type, state, table);
-	printf("TOK : %i - STATE : %i - NEXT STATE  : %i\n", stack->type, state, table[num_trans]->next);
-	if (ms_lr_parse(table[num_trans]->next, input, stack, table) == ERROR)
-		return (ERROR);
-	return (0);
+	return (ACCEPT);
 }
 
 int	ms_parser(t_token *tok_list, t_trans **trans)
 {
-	if (ms_lr_parse(0, tok_list, NULL, trans) == ERROR)
+	t_token	*tok_end;
+
+	tok_end = ft_newtoken(NULL);
+	if (!tok_end)
+		return (ERROR);
+	ft_tokenadd_back(&tok_list, tok_end);
+	if (ms_lr_parse(tok_list, trans) == ERROR)
 		return (ERROR);
 	return (EXIT_SUCCESS);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack.c                                            :+:      :+:    :+:   */
+/*   stack_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/26 16:53:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/29 14:20:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lr_parser.h"
 
-t_stack	*ms_new_stack_item(void *content, int type)
+t_stack	*ms_new_stack_item(void *content, int type, int state)
 {
 	t_stack	*new;
 
@@ -20,6 +20,7 @@ t_stack	*ms_new_stack_item(void *content, int type)
 	if (!new)
 		return (NULL);
 	new->type = type;
+	new->state = state;
 	new->data = content;
 	new->next = NULL;
 	return (new);
