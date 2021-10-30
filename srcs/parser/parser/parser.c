@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 15:08:25 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 15:17:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 ** output: parsing tree
 */
 
-int	ms_match_token(t_token *tok, t_stack *stack, int state, t_trans **trans)
+static int	ms_get_trans(t_token *tok, t_stack *stack, int st, t_trans **trans)
 {
 	int	i;
 	int	def;
@@ -37,7 +37,7 @@ int	ms_match_token(t_token *tok, t_stack *stack, int state, t_trans **trans)
 	i = -1;
 	while (trans[++i])
 	{
-		if (trans[i]->state == state)
+		if (trans[i]->state == st)
 		{
 			if (trans[i]->event == tok_type)
 				return (i);
@@ -56,7 +56,7 @@ int	ms_match_token(t_token *tok, t_stack *stack, int state, t_trans **trans)
 ** and push the next state on the top of the stack
 */
 
-int	ms_shift(t_token **input, t_stack **stack, int state)
+static int	ms_shift(t_token **input, t_stack **stack, int state)
 {
 	t_stack	*s_tok;
 	t_stack	*s_state;
@@ -86,7 +86,7 @@ int	ms_shift(t_token **input, t_stack **stack, int state)
 ** top of the stack
 */
 
-int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
+static int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
 {
 	int		num_state;
 	t_stack	*reduction;
@@ -98,39 +98,39 @@ int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
 	if (!reduction)
 		return (ERROR);
 	ms_add_front(stack, reduction);
-	num_trans = ms_match_token(NULL, *stack, num_state, table);
+	num_trans = ms_get_trans(NULL, *stack, num_state, table);
 	if (num_trans == ERROR)
 		return (ERROR);
 	state = ms_new_stack_item(NULL, -1, table[num_trans]->next);
 	if (!state)
 		return (ERROR);
 	ms_add_front(stack, state);
-	printf(" --> %i\n", reduction->type);
+	printf("%i\n", reduction->type);
 	return (EXIT_SUCCESS);
 }
 
-int	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack)
+static int	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack)
 {
-	int		num_trans;
+	int		i_trans;
 
 	if (ms_add_front(stack, ms_new_stack_item(NULL, -1, 0)) == ERROR)
 		return (ERROR);
 	while (1)
 	{
-		num_trans = ms_match_token(input, NULL, (*stack)->state, table);
-		if (num_trans == ERROR)
+		i_trans = ms_get_trans(input, NULL, (*stack)->state, table);
+		if (i_trans == ERROR)
 			return (ERROR);
-		if (table[num_trans]->action == SHIFT)
+		if (table[i_trans]->action == SHIFT)
 		{
-			if (ms_shift(&input, stack, table[num_trans]->next) == ERROR)
+			if (ms_shift(&input, stack, table[i_trans]->next) == ERROR)
 				return (ERROR);
 		}
-		else if (table[num_trans]->action == REDUCE)
+		else if (table[i_trans]->action == REDUCE)
 		{
-			if (ms_reduce(stack, table, num_trans) == ERROR)
+			if (ms_reduce(stack, table, i_trans) == ERROR)
 				return (ERROR);
 		}
-		else if (table[num_trans]->action == ACCEPT)
+		else if (table[i_trans]->action == ACCEPT)
 			break ;
 		else
 			return (ERROR);
@@ -149,6 +149,9 @@ int	ms_parser(t_token *tok_list, t_trans **table)
 		return (ERROR);
 	ft_tokenadd_back(&tok_list, tok_end);
 	if (ms_lr_parse(tok_list, table, &stack) == ERROR)
+	{
+		ms_free_stack(&stack);
 		return (ERROR);
+	}
 	return (EXIT_SUCCESS);
 }
