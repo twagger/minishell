@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 14:59:08 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 15:08:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,30 @@
 
 /*
 ** LR Parser
-**  input : chained listof tokens from lexer
-** 	table : table of transitions from automaton parsing
-**  stack : simple chained list
-**  output: parsing tree
+** input : chained list of tokens from lexer
+** table : table of transitions from automaton parsing
+** stack : simple chained list
+** output: parsing tree
 */
 
-int	ms_match_token(int token, int curr_state, t_trans **trans)
+int	ms_match_token(t_token *tok, t_stack *stack, int state, t_trans **trans)
 {
 	int	i;
 	int	def;
+	int	tok_type;
 
-	i = -1;
 	def = -1;
+	tok_type = -1;
+	if (tok)
+		tok_type = tok->type;
+	if (stack)
+		tok_type = stack->type;
+	i = -1;
 	while (trans[++i])
 	{
-		if (trans[i]->state == curr_state)
+		if (trans[i]->state == state)
 		{
-			if (trans[i]->event == token)
+			if (trans[i]->event == tok_type)
 				return (i);
 			else if (trans[i]->event == DEFAULT)
 				def = i;
@@ -46,8 +52,8 @@ int	ms_match_token(int token, int curr_state, t_trans **trans)
 
 /*
 ** SHIFT
-**	Push the token on the top of the input into the stack
-**	and push the next state on the top of the stack
+** Push the token on the top of the input into the stack
+** and push the next state on the top of the stack
 */
 
 int	ms_shift(t_token **input, t_stack **stack, int state)
@@ -75,9 +81,9 @@ int	ms_shift(t_token **input, t_stack **stack, int state)
 
 /*
 ** REDUCE
-**	Pop the token and rules out of the stack and replace them with
-**	the corresponding production. Then add the next state on the 
-**	top of the stack
+** Pop the token and rules out of the stack and replace them with
+** the corresponding production. Then add the next state on the 
+** top of the stack
 */
 
 int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
@@ -92,7 +98,7 @@ int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
 	if (!reduction)
 		return (ERROR);
 	ms_add_front(stack, reduction);
-	num_trans = ms_match_token((*stack)->type, num_state, table);
+	num_trans = ms_match_token(NULL, *stack, num_state, table);
 	if (num_trans == ERROR)
 		return (ERROR);
 	state = ms_new_stack_item(NULL, -1, table[num_trans]->next);
@@ -106,16 +112,12 @@ int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
 int	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack)
 {
 	int		num_trans;
-	int		tok_type;
 
 	if (ms_add_front(stack, ms_new_stack_item(NULL, -1, 0)) == ERROR)
 		return (ERROR);
 	while (1)
 	{
-		tok_type = -1;
-		if (input)
-			tok_type = input->type;
-		num_trans = ms_match_token(tok_type, (*stack)->state, table);
+		num_trans = ms_match_token(input, NULL, (*stack)->state, table);
 		if (num_trans == ERROR)
 			return (ERROR);
 		if (table[num_trans]->action == SHIFT)
