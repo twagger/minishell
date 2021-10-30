@@ -6,12 +6,25 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 10:30:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 10:49:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
+
+void	ms_free_tokens(t_token *token)
+{
+	t_token	*next;
+
+	while (token)
+	{
+		next = token->next;
+		free(token->value);
+		free(token);
+		token = next;
+	}
+}
 
 t_token_types	catego_toketype(char *content)
 {

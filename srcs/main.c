@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 11:14:05 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 14:35:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,56 +15,19 @@
 #include "token.h"
 #include "lr_parser.h"
 
-/*static int	ms_loop(char **envp)
-{
-	char	*line;
-	t_node	*ast;
-	int		status;
-
-	status = EXIT_SUCCESS;
-	while (status == EXIT_SUCCESS)
-	{
-		line = readline("\x1B[32mMinishell> \e[0m");
-		if (line)
-		{
-			ast = ms_parser(line, envp);
-			if (!ast)
-			{
-				free(line);
-				return (ERROR);
-			}
-			status = ms_execute_ast(ast, envp);
-		}
-		else
-			printf("\n");
-		free(line);
-	}
-	return (status);
-}*/
-void	printf_out(t_token *all)
-{
-	while (all->next)
-	{
-		printf("int :%d\n", all->type);
-		printf("value:|%s|\n", (char *)all->value);
-		all = all->next;
-}
-	printf("int :%d\n", all->type);
-	printf("value:|%s|\n", (char *)all->value);
-}
-
 static int	ms_loop(char **envp)
 {
 	char	*line;
 	t_token	*tok_list;
-	t_trans	**trans;
+	t_trans	**table;
 	int		status;
 
 	(void)envp;
-	trans = ms_init_state_machine();
-	if (!trans)
-		return (ERROR);
+	tok_list = NULL;
 	status = EXIT_SUCCESS;
+	table = ms_init_parsing_table();
+	if (!table)
+		status = ERROR;	
 	while (status == EXIT_SUCCESS)
 	{
 		line = readline("\x1B[32mMinishell> \e[0m");
@@ -72,17 +35,15 @@ static int	ms_loop(char **envp)
 		{
 			tok_list = ms_tokenizer(line);
 			if (!tok_list)
-			{
-				free(line);
-				return (ERROR);
-			}
-			printf_out(tok_list);
-			ms_parser(tok_list, trans);
+				status = ERROR;
+			status = ms_parser(tok_list, table);
 		}
 		else
 			printf("\n");
 		free(line);
 	}
+	ms_free_tokens(tok_list);
+	ms_free_table(table);
 	return (status);
 }
 

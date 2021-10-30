@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:15:58 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 10:33:18 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 09:35:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
 t_token	*ft_newtoken(void *content);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
+void	ms_free_tokens(t_token *tokens);
 
 #endif
