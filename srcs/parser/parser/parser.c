@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/31 11:43:11 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 11:47:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,12 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 	t_token	*tok_end;
 	t_stack	*stack;
 	t_node	*ast;
+
+	// peut etre prevoir une structure intermediaire pour la construction de l'ast a passer au parser avec :
+	// -> un tableau de pointeurs sur node s (tampon)
+	// -> un pointeur sur node (arbre droit)
+	// -> un pointeur sur node (arbre gauche)
+	// et a la fin la fonction renvoie l'arbre gauche
 
 	ast = NULL;
 	stack = NULL;
