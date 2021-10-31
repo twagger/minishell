@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 14:37:17 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 11:41:07 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LR_PARSER_H
 # include "minishell.h"
 # include "token.h"
+# include "ast.h"
 
 /*
 ** LR_PARSER DEFINES
@@ -49,6 +50,7 @@ typedef enum e_rules
 /*
 ** LR_PARSER STRUCTURES
 */
+
 typedef struct s_trans
 {
 	int	state;
@@ -69,13 +71,14 @@ typedef struct s_stack
 /*
 ** LR_PARSER FUNCTIONS
 */
+
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
 t_stack	*ms_new_stack_item(void *content, int type, int state);
-void	ms_pop_stack(t_stack **stack, int nb);
+t_stack	**ms_pop_stack(t_stack **stack, int nb);
 int		ms_add_front(t_stack **stack, t_stack *item);
 void	ms_free_stack_item(t_stack *stack);
 void	ms_free_stack(t_stack **stack);
-int		ms_parser(t_token *tok_list, t_trans **table);
+t_node	*ms_parser(t_token *tok_list, t_trans **table);
 
 #endif

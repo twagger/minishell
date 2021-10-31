@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 10:32:25 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 09:23:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,14 @@
 /*
 ** CORE FUNCTIONS
 */
+
 int		ms_execute(char **args, char **envp);
 int		ms_execute_builtin(char **args, char **envp);
 
 /*
 ** UTILS
 */
+
 int		ft_cleaner(char *line, char **args, int exit_code);
 int		ms_getbin_path(char **bin);
 char	**ms_init_arg_array(void);
@@ -52,6 +54,7 @@ void	ms_free_arg_array(char **array);
 /*
 ** BUILTINS
 */
+
 int		ms_echo(int ac, char **av);
 int		ms_cd(int ac, char **av);
 int		ms_pwd(int ac, char **av);

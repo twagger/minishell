@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:15:58 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 09:35:43 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/30 16:01:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 /*
 ** TOKEN STRUCTURES
 */
+
 typedef enum e_token_types
 {
 	END = -2,
@@ -43,6 +44,7 @@ typedef struct s_token
 /*
 ** TOKEN FUNCTIONS
 */
+
 t_token	*ms_tokenizer(char *line);
 char	**ft_split_qu(char *s, char c);
 int		check_special_char(char *c, char *line);

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:19:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/26 15:19:36 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 10:24:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,6 @@
 /*
 ** BINARY TREE (AST) STRUCTURE
 */
-typedef enum e_ast_node_types
-{
-	TOK_WORD,
-	TOK_NAME,
-	TOK_FILE,
-	TOK_LESS,
-	TOK_GREAT,
-	TOK_DLESS,
-	TOK_DGREAT,
-	TOK_PIPE,
-	TOK_AND_IF,
-	TOK_OR_IF,
-	TOK_ASSIGNMENT_WORD,
-	TOK_NEWLINE,
-	TOK_IO_NUMBER
-}	t_ast_node_types;
 
 typedef struct s_node
 {
@@ -42,10 +26,23 @@ typedef struct s_node
 	struct s_node	*right;
 }					t_node;
 
+typedef enum e_ast_types
+{
+	AST_OPE = 0,
+	AST_CMD,
+	AST_PIPE,
+	AST_AND_IF,
+	AST_OR_IF,
+	AST_DLESS,
+	AST_DGREAT,
+	AST_RED_TO,
+	AST_RED_FROM
+}	t_ast_types;
+
 /*
 ** BINARY TREE (AST) FUNCTIONS
 */
+
 t_node	*ms_create_node(void *data, int type);
-int		ms_execute_ast(t_node *ast, char **envp);
 
 #endif

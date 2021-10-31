@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:47:15 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 10:24:27 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 		return (args);
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
-	if (node->type == TOK_WORD)
+	if (node->type == AST_OPE)
 		args = ms_add_one_arg(args, node->data);
-	else if (node->type == TOK_NAME)
+	else if (node->type == AST_CMD)
 	{
 		args = ms_add_command(args, node->data);
 		if (!args)

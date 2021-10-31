@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 14:29:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 11:18:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,19 @@ t_stack	*ms_new_stack_item(void *content, int type, int state)
 	return (new);
 }
 
-void	ms_pop_stack(t_stack **stack, int nb)
+t_stack	**ms_pop_stack(t_stack **stack, int nb)
 {
 	int		i;
 	t_stack	*next;
+	t_stack	**popped;
 
+	popped = NULL;
 	if (stack)
 	{
+		popped = (t_stack **)malloc(sizeof(*popped) * (nb + 1));
+		if (!popped)
+			return (NULL);
+		popped[nb] = NULL;
 		i = 0;
 		while (i < nb)
 		{
@@ -40,11 +46,12 @@ void	ms_pop_stack(t_stack **stack, int nb)
 			free(*stack);
 			*stack = next;
 			next = (*stack)->next;
-			free(*stack);
+			popped[i] = *stack;
 			*stack = next;
 			++i;
 		}
 	}
+	return (popped);
 }
 
 int	ms_add_front(t_stack **stack, t_stack *item)

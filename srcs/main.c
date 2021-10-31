@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 14:35:25 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 11:40:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static int	ms_loop(char **envp)
 	t_token	*tok_list;
 	t_trans	**table;
 	int		status;
+	t_node	*ast;
 
 	(void)envp;
 	tok_list = NULL;
@@ -36,7 +37,9 @@ static int	ms_loop(char **envp)
 			tok_list = ms_tokenizer(line);
 			if (!tok_list)
 				status = ERROR;
-			status = ms_parser(tok_list, table);
+			ast = ms_parser(tok_list, table);
+			if (!ast)
+				status = ERROR;
 		}
 		else
 			printf("\n");

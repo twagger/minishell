@@ -6,13 +6,14 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 15:17:29 by twagner          ###   ########.fr       */
+/*   Updated: 2021/10/31 11:43:11 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lr_parser.h"
 #include "token.h"
+#include "ast.h"
 
 /*
 ** LR Parser
@@ -22,7 +23,14 @@
 ** output: parsing tree
 */
 
-static int	ms_get_trans(t_token *tok, t_stack *stack, int st, t_trans **trans)
+/*
+** PARSING TABLE SEARCH
+** Search for the right action or goto to do according to the current 
+** state, stack and input
+*/
+
+static int	\
+	ms_get_table_index(t_token *token, t_stack *stack, int s, t_trans **trans)
 {
 	int	i;
 	int	def;
@@ -30,14 +38,14 @@ static int	ms_get_trans(t_token *tok, t_stack *stack, int st, t_trans **trans)
 
 	def = -1;
 	tok_type = -1;
-	if (tok)
-		tok_type = tok->type;
+	if (token)
+		tok_type = token->type;
 	if (stack)
 		tok_type = stack->type;
 	i = -1;
 	while (trans[++i])
 	{
-		if (trans[i]->state == st)
+		if (trans[i]->state == s)
 		{
 			if (trans[i]->event == tok_type)
 				return (i);
@@ -86,51 +94,67 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** top of the stack
 */
 
-static int	ms_reduce(t_stack **stack, t_trans **table, int num_trans)
+static int	\
+	ms_reduce(t_stack **stack, t_trans **table, int i_table, t_node **ast)
 {
 	int		num_state;
 	t_stack	*reduction;
 	t_stack	*state;
+	t_stack	**popped;
 
-	ms_pop_stack(stack, table[num_trans]->nb_reduce);
+	(void)ast;
+	popped = ms_pop_stack(stack, table[i_table]->nb_reduce);
+	if (!popped)
+		return (ERROR);
 	num_state = (*stack)->state;
-	reduction = ms_new_stack_item(NULL, table[num_trans]->next, -1);
+	reduction = ms_new_stack_item(NULL, table[i_table]->next, -1);
 	if (!reduction)
 		return (ERROR);
 	ms_add_front(stack, reduction);
-	num_trans = ms_get_trans(NULL, *stack, num_state, table);
-	if (num_trans == ERROR)
+	i_table = ms_get_table_index(NULL, *stack, num_state, table);
+	if (i_table == ERROR)
 		return (ERROR);
-	state = ms_new_stack_item(NULL, -1, table[num_trans]->next);
+	state = ms_new_stack_item(NULL, -1, table[i_table]->next);
 	if (!state)
 		return (ERROR);
 	ms_add_front(stack, state);
-	printf("%i\n", reduction->type);
+	// envoyer un tableau avec les elements popped + le type de la reduction a la fonction de construction de l'arbre
+	//  creer un fichier ast builder pour contenir les fonctions de construction de l'arbre
+	printf("%i ", reduction->type);
+	while (*popped)
+	{
+		printf("%s ", (*popped)->data);
+		// free la popped stack
+		free(*popped);
+		++popped;
+	}
+	printf("\n");
 	return (EXIT_SUCCESS);
 }
 
-static int	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack)
+static int	\
+	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack, t_node **ast)
 {
-	int		i_trans;
+	int		i_table;
 
 	if (ms_add_front(stack, ms_new_stack_item(NULL, -1, 0)) == ERROR)
 		return (ERROR);
 	while (1)
 	{
-		i_trans = ms_get_trans(input, NULL, (*stack)->state, table);
-		if (i_trans == ERROR)
+		i_table = ms_get_table_index(input, NULL, (*stack)->state, table);
+		if (i_table == ERROR)
 			return (ERROR);
-		if (table[i_trans]->action == SHIFT)
+		if (table[i_table]->action == SHIFT)
 		{
-			if (ms_shift(&input, stack, table[i_trans]->next) == ERROR)
+			if (ms_shift(&input, stack, table[i_table]->next) == ERROR)
 				return (ERROR);
 		}
-		else if (table[i_trans]->action == REDUCE)
+		else if (table[i_table]->action == REDUCE)
 		{
-			if (ms_reduce(stack, table, i_trans) == ERROR)
+			if (ms_reduce(stack, table, i_table, ast) == ERROR)
 				return (ERROR);
 		}
-		else if (table[i_trans]->action == ACCEPT)
+		else if (table[i_table]->action == ACCEPT)
 			break ;
 		else
 			return (ERROR);
@@ -138,20 +162,22 @@ static int	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack)
 	return (ACCEPT);
 }
 
-int	ms_parser(t_token *tok_list, t_trans **table)
+t_node	*ms_parser(t_token *tok_list, t_trans **table)
 {
 	t_token	*tok_end;
 	t_stack	*stack;
+	t_node	*ast;
 
+	ast = NULL;
 	stack = NULL;
 	tok_end = ft_newtoken(NULL);
 	if (!tok_end)
-		return (ERROR);
+		return (NULL);
 	ft_tokenadd_back(&tok_list, tok_end);
-	if (ms_lr_parse(tok_list, table, &stack) == ERROR)
+	if (ms_lr_parse(tok_list, table, &stack, &ast) == ERROR)
 	{
 		ms_free_stack(&stack);
-		return (ERROR);
+		return (NULL);
 	}
-	return (EXIT_SUCCESS);
+	return (ast);
 }

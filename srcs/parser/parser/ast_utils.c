@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast.c                                              :+:      :+:    :+:   */
+/*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/17 11:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/23 09:47:45 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
+/*   Updated: 2021/10/31 09:25:13 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "ast.h"
+
+// ajouter free ast
 
 t_node	*ms_create_node(void *data, int type)
 {
@@ -20,9 +21,9 @@ t_node	*ms_create_node(void *data, int type)
 	new = (t_node *)malloc(sizeof(*new));
 	if (!new)
 		return (NULL);
-	new->left = NULL;
-	new->right = NULL;
 	new->data = data;
 	new->type = type;
+	new->left = NULL;
+	new->right = NULL;
 	return (new);
 }
