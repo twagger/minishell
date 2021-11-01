@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/31 11:47:57 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/01 21:21:48 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,15 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** top of the stack
 */
 
-static int	\
-	ms_reduce(t_stack **stack, t_trans **table, int i_table, t_node **ast)
+static int	ms_reduce\
+	(t_stack **stack, t_trans **table, int i_table, t_ast_builder **builder)
 {
 	int		num_state;
 	t_stack	*reduction;
 	t_stack	*state;
 	t_stack	**popped;
 
-	(void)ast;
+	(void)builder;
 	popped = ms_pop_stack(stack, table[i_table]->nb_reduce);
 	if (!popped)
 		return (ERROR);
@@ -123,7 +123,7 @@ static int	\
 	printf("%i ", reduction->type);
 	while (*popped)
 	{
-		printf("%s ", (*popped)->data);
+		printf("%s ", (char *)(*popped)->data);
 		// free la popped stack
 		free(*popped);
 		++popped;
@@ -132,8 +132,8 @@ static int	\
 	return (EXIT_SUCCESS);
 }
 
-static int	\
-	ms_lr_parse(t_token *input, t_trans **table, t_stack **stack, t_node **ast)
+static int	ms_lr_parse\
+	(t_token *input, t_trans **table, t_stack **stack, t_ast_builder **builder)
 {
 	int		i_table;
 
@@ -151,7 +151,7 @@ static int	\
 		}
 		else if (table[i_table]->action == REDUCE)
 		{
-			if (ms_reduce(stack, table, i_table, ast) == ERROR)
+			if (ms_reduce(stack, table, i_table, builder) == ERROR)
 				return (ERROR);
 		}
 		else if (table[i_table]->action == ACCEPT)
@@ -164,26 +164,27 @@ static int	\
 
 t_node	*ms_parser(t_token *tok_list, t_trans **table)
 {
-	t_token	*tok_end;
-	t_stack	*stack;
-	t_node	*ast;
+	t_token			*tok_end;
+	t_stack			*stack;
+	t_ast_builder	*builder;
+	t_node			*ast;
 
-	// peut etre prevoir une structure intermediaire pour la construction de l'ast a passer au parser avec :
-	// -> un tableau de pointeurs sur node s (tampon)
-	// -> un pointeur sur node (arbre droit)
-	// -> un pointeur sur node (arbre gauche)
-	// et a la fin la fonction renvoie l'arbre gauche
-
-	ast = NULL;
+	builder = ms_create_ast_builder();
+	if (!builder)
+		return (NULL);
 	stack = NULL;
 	tok_end = ft_newtoken(NULL);
-	if (!tok_end)
-		return (NULL);
-	ft_tokenadd_back(&tok_list, tok_end);
-	if (ms_lr_parse(tok_list, table, &stack, &ast) == ERROR)
+	if (tok_end)
 	{
-		ms_free_stack(&stack);
-		return (NULL);
+		ft_tokenadd_back(&tok_list, tok_end);
+		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
+		{
+			ms_free_ast_builder(&builder, LEFT);
+			builder->left = NULL;
+		}
 	}
+	ast = builder->left;
+	ms_free_stack(&stack);
+	ms_free_ast_builder(&builder, TEMP_AND_RIGHT);
 	return (ast);
 }
