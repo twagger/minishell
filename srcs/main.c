@@ -6,14 +6,14 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/31 11:40:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 09:29:24 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "ast.h"
 #include "token.h"
-#include "lr_parser.h"
+#include "parser.h"
 
 static int	ms_loop(char **envp)
 {

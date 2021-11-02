@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/31 11:18:36 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 10:28:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lr_parser.h"
+#include "parser.h"
 
 t_stack	*ms_new_stack_item(void *content, int type, int state)
 {
@@ -72,7 +72,7 @@ void	ms_free_stack_item(t_stack *stack)
 	}
 }
 
-void	ms_free_stack(t_stack **stack)
+int	ms_free_stack(t_stack **stack, int return_code)
 {
 	if (stack)
 	{
@@ -82,4 +82,5 @@ void	ms_free_stack(t_stack **stack)
 			++stack;
 		}
 	}
+	return (return_code);
 }

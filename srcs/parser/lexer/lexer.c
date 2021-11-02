@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 10:49:17 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 10:28:13 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,23 @@ void	ms_free_tokens(t_token *token)
 t_token_types	catego_toketype(char *content)
 {
 	if (!content)
-		return (END);
+		return (T_END);
 	if (!ft_strcmp(content, "|"))
-		return (PIPE);
+		return (T_PIPE);
 	else if (!ft_strcmp(content, "&&"))
-		return (AND_IF);
+		return (T_AND_IF);
 	else if (!ft_strcmp(content, "||"))
-		return (OR_IF);
+		return (T_OR_IF);
 	else if (!ft_strcmp(content, "<<"))
-		return (DLESS);
+		return (T_DLESS);
 	else if (!ft_strcmp(content, ">>"))
-		return (DGREAT);
+		return (T_DGREAT);
 	else if (!ft_strcmp(content, ">"))
-		return (RED_TO);
+		return (T_RED_TO);
 	else if (!ft_strcmp(content, "<"))
-		return (RED_FROM);
+		return (T_RED_FROM);
 	else
-		return (WORD);
+		return (T_WORD);
 }
 
 void	ft_tokenadd_back(t_token **lst, t_token *new)

@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:53:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/30 14:37:07 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 10:28:59 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lr_parser.h"
+#include "parser.h"
 
 static int	ms_free_line_args(char *line, char **args, int code)
 {

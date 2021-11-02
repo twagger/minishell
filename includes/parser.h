@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lr_parser.h                                        :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/31 11:41:07 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 10:27:03 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LR_PARSER_H
-# define LR_PARSER_H
+#ifndef PARSER_H
+# define PARSER_H
 # include "minishell.h"
 # include "token.h"
 # include "ast.h"
 
 /*
-** LR_PARSER DEFINES
+** PARSER DEFINES
 */
 # define NB_TRANS 172
 # define ACTION 114
@@ -31,24 +31,24 @@
 
 typedef enum e_rules
 {
-	AND_OR = 100,
-	PIPE_SEQUENCE,
-	SIMPLE_COMMAND,
-	CMD_NAME,
-	CMD_WORD,
-	CMD_PREFIX,
-	CMD_SUFFIX,
-	IO_REDIRECT,
-	IO_FILE,
-	FILENAME,
-	IO_HERE,
-	HERE_END,
-	NEWLINE_LIST,
-	LINEBREAK
+	R_AND_OR = 100,
+	R_PIPE_SEQUENCE,
+	R_SIMPLE_COMMAND,
+	R_CMD_NAME,
+	R_CMD_WORD,
+	R_CMD_PREFIX,
+	R_CMD_SUFFIX,
+	R_IO_REDIRECT,
+	R_IO_FILE,
+	R_FILENAME,
+	R_IO_HERE,
+	R_HERE_END,
+	R_NEWLINE_LIST,
+	R_LINEBREAK
 }	t_rules;
 
 /*
-** LR_PARSER STRUCTURES
+** PARSER STRUCTURES
 */
 
 typedef struct s_trans
@@ -69,7 +69,7 @@ typedef struct s_stack
 }	t_stack;
 
 /*
-** LR_PARSER FUNCTIONS
+** PARSER FUNCTIONS
 */
 
 t_trans	**ms_init_parsing_table(void);
@@ -78,7 +78,7 @@ t_stack	*ms_new_stack_item(void *content, int type, int state);
 t_stack	**ms_pop_stack(t_stack **stack, int nb);
 int		ms_add_front(t_stack **stack, t_stack *item);
 void	ms_free_stack_item(t_stack *stack);
-void	ms_free_stack(t_stack **stack);
+int		ms_free_stack(t_stack **stack, int return_code);
 t_node	*ms_parser(t_token *tok_list, t_trans **table);
 
 #endif

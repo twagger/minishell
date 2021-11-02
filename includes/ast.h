@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:19:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/01 20:59:27 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 15:17:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 /*
 ** BINARY TREE (AST) PARAMS
 */
-# define ALL 0
-# define LEFT 1
-# define RIGHT 2
-# define TEMP 3
-# define TEMP_AND_RIGHT 4
+# define LEFT 0
+# define RIGHT 1
+# define TEMP 2
+# define TEMP_AND_RIGHT 3
+# define ALL 4
 
 /*
 ** BINARY TREE (AST) STRUCTURE
@@ -37,23 +37,34 @@ typedef struct s_node
 
 typedef struct s_ast_builder
 {
-	t_node	**temp;
-	t_node	*left;
-	t_node	*right;	
+	int		current_branch;
+	t_node	*buffer;
+	t_node	*branch[2];
 }			t_ast_builder;
 
 typedef enum e_ast_types
 {
-	AST_OPE = 0,
-	AST_CMD,
-	AST_PIPE,
-	AST_AND_IF,
-	AST_OR_IF,
-	AST_DLESS,
-	AST_DGREAT,
-	AST_RED_TO,
-	AST_RED_FROM
+	A_CMD = 0,
+	A_OPE,
+	A_FILE,
+	A_HERE,
+	A_AND_IF = 4,
+	A_OR_IF,
+	A_DLESS,
+	A_DGREAT,
+	A_PIPE,
+	A_RED_TO,
+	A_RED_FROM
 }	t_ast_types;
+
+typedef enum e_ast_build
+{
+	B_PUT_TO_BUFFER = 0,
+	B_DO_NOTHING,
+	B_SWITCH_BRANCH,
+	B_APPLY_RULE,
+	B_BUFFER_THEN_RULE = 100
+}	t_ast_build;
 
 /*
 ** BINARY TREE (AST) FUNCTIONS

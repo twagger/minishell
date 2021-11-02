@@ -6,12 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/01 21:21:48 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/02 15:32:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "lr_parser.h"
+#include "parser.h"
 #include "token.h"
 #include "ast.h"
 
@@ -29,8 +29,8 @@
 ** state, stack and input
 */
 
-static int	\
-	ms_get_table_index(t_token *token, t_stack *stack, int s, t_trans **trans)
+static int	ms_get_table_index(\
+	t_token *token, t_stack *stack, int s, t_trans **trans)
 {
 	int	i;
 	int	def;
@@ -94,8 +94,8 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** top of the stack
 */
 
-static int	ms_reduce\
-	(t_stack **stack, t_trans **table, int i_table, t_ast_builder **builder)
+static int	ms_reduce(\
+	t_stack **stack, t_trans **table, int i_table, t_ast_builder **builder)
 {
 	int		num_state;
 	t_stack	*reduction;
@@ -109,31 +109,37 @@ static int	ms_reduce\
 	num_state = (*stack)->state;
 	reduction = ms_new_stack_item(NULL, table[i_table]->next, -1);
 	if (!reduction)
-		return (ERROR);
+		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, reduction);
 	i_table = ms_get_table_index(NULL, *stack, num_state, table);
 	if (i_table == ERROR)
-		return (ERROR);
+		return (ms_free_stack(popped, ERROR));
 	state = ms_new_stack_item(NULL, -1, table[i_table]->next);
 	if (!state)
-		return (ERROR);
+		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
-	// envoyer un tableau avec les elements popped + le type de la reduction a la fonction de construction de l'arbre
-	//  creer un fichier ast builder pour contenir les fonctions de construction de l'arbre
-	printf("%i ", reduction->type);
+	/*if (ms_ast_builder(builder, &popped, reduction->type) == ERROR)
+		return (ms_free_stack(&popped, ERROR));
+	*/
+	printf("%i : ", reduction->type);
 	while (*popped)
 	{
-		printf("%s ", (char *)(*popped)->data);
-		// free la popped stack
-		free(*popped);
+		printf("%i ", (*popped)->type);
 		++popped;
 	}
 	printf("\n");
+	/**/
 	return (EXIT_SUCCESS);
 }
 
-static int	ms_lr_parse\
-	(t_token *input, t_trans **table, t_stack **stack, t_ast_builder **builder)
+/*
+** PARSE
+** Read the input, find the right transition to apply from the parsing
+** table for the current state, then shift or reduce until error or accept.
+*/
+
+static int	ms_lr_parse(\
+	t_token *input, t_trans **table, t_stack **stack, t_ast_builder **builder)
 {
 	int		i_table;
 
@@ -180,11 +186,10 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
 		{
 			ms_free_ast_builder(&builder, LEFT);
-			builder->left = NULL;
+			builder->branch[LEFT] = NULL;
 		}
 	}
-	ast = builder->left;
-	ms_free_stack(&stack);
+	ast = builder->branch[LEFT];
 	ms_free_ast_builder(&builder, TEMP_AND_RIGHT);
 	return (ast);
 }
