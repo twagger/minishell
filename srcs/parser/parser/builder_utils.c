@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 10:22:47 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 12:03:15 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 12:06:19 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,13 @@ t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove)
 	new_buf = (t_node **)malloc(sizeof(*new_buf) * i);
 	if (!new_buf)
 		return (NULL);
-	new_buf[--i] = NULL;
-	j = i;
-	while (j >= 0)
+	new_buf[i - 1] = NULL;
+	j = -1;
+	i = -1;
+	while ((*builder)->buffer[++j])
 	{
-		if (j == to_remove)
-			--j;
-		else
-			new_buf[i--] = (*builder)->buffer[j--];
+		if (j != to_remove)
+			new_buf[++i] = (*builder)->buffer[j];
 	}
 	popped = (*builder)->buffer[to_remove];
 	free((*builder)->buffer);
