@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:54:42 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 12:13:27 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,17 @@ typedef struct s_stack
 /*
 ** PARSER FUNCTIONS
 */
-int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
+t_node	*ms_parser(t_token *tok_list, t_trans **table);
+
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
+
 t_stack	*ms_new_stack_item(void *content, int type, int state);
 t_stack	**ms_pop_stack(t_stack **stack, int nb);
 int		ms_add_front(t_stack **stack, t_stack *item);
 void	ms_free_stack_item(t_stack *stack);
 int		ms_free_stack(t_stack **stack, int return_code);
-t_node	*ms_parser(t_token *tok_list, t_trans **table);
+
+int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
 
 #endif

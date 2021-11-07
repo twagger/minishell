@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:15:58 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/06 15:07:34 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 12:14:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_token
 */
 
 t_token	*ms_tokenizer(char *line);
+
 char	**ft_split_qu(char *s, char c);
 int		check_special_char(char *c, char *line);
 int		count_w_qu(char *s, char c);
@@ -52,6 +53,7 @@ int		int_word(char *s, char c, int index, char ***arr);
 char	*check_if_envvar(char *cmd);
 int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
+
 t_token	*ft_newtoken(void *content);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 void	ms_free_tokens(t_token *tokens);
