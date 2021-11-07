@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 16:19:13 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 19:08:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ static int	ms_apply_reduction(\
 		return (ERROR);
 	if (ms_build_subtree(builder, popped, reduction, &node) == ERROR)
 		return (ERROR);
-	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left))
+	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left)\
+		|| ((*builder)->ast && (*builder)->ast == node->right))
 		(*builder)->ast = node;
 	else
 	{

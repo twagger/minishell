@@ -6,13 +6,24 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 15:35:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 19:11:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
 #include "parser.h"
+
+void	printf_out(t_token *all)
+{
+	printf("----------\nLEXER\n----------\n");
+	while (all)
+	{
+		printf("int : %d - value : %s\n", all->type, (char *)all->value);
+		all = all->next;
+	}
+	printf("----------\n"); 
+}
 
 static int	ms_loop(char **envp)
 {
@@ -36,10 +47,15 @@ static int	ms_loop(char **envp)
 			tok_list = ms_tokenizer(line);
 			if (!tok_list)
 				status = ERROR;
+			printf_out(tok_list);
+			printf("PARSER\n----------\n");
 			ast = ms_parser(tok_list, table);
 			if (!ast)// || (ast && ms_execute_ast(ast, envp) == ERROR))
 				status = ERROR;
-			ms_visit_ast(ast, POST_ORDER);
+			printf("----------\n");
+			printf("TREE\n----------\n");
+			ms_visit_ast(ast, IN_ORDER);
+			printf("----------\n");
 		}
 		else
 			printf("\n");

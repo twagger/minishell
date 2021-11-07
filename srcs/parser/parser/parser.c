@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 15:54:38 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 18:58:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ static int	ms_reduce(\
 	t_stack	*state;
 	t_stack	**popped;
 
-	(void)builder;
 	popped = ms_pop_stack(stack, table[i_table]->nb_reduce);
 	if (!popped)
 		return (ERROR);
@@ -117,19 +116,16 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
+	/* UNCOMMENT TO SHOW REDUCTIONS LIST */
+	printf("%i : ", reduction->type);
+	int i;
+	i = -1;
+	while (popped[++i])
+		printf("%i ", popped[i]->type);
+	printf("\n");
 	/* UNCOMMENT TO BUILD AST */
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
-	/* UNCOMMENT TO SHOW REDUCTIONS LIST */
-	/*
-	printf("%i : ", reduction->type);
-	while (*popped)
-	{
-		printf("%i ", (*popped)->type);
-		++popped;
-	}
-	printf("\n");
-	*/
 	return (EXIT_SUCCESS);
 }
 
