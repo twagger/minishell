@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 10:22:47 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:57:11 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 12:03:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	ms_buffer_add_back(t_ast_builder **builder, t_node *new)
 t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove)
 {
 	int		i;
+	int		j;
 	t_node	*popped;
 	t_node	**new_buf;
 
@@ -45,10 +46,13 @@ t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove)
 	if (!new_buf)
 		return (NULL);
 	new_buf[--i] = NULL;
-	while (--i >= 0)
+	j = i;
+	while (j >= 0)
 	{
-		if (i != to_remove)
-			new_buf[i] = (*builder)->buffer[i];
+		if (j == to_remove)
+			--j;
+		else
+			new_buf[i--] = (*builder)->buffer[j--];
 	}
 	popped = (*builder)->buffer[to_remove];
 	free((*builder)->buffer);
