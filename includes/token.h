@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:15:58 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 10:27:55 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/06 15:07:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ typedef enum e_token_types
 	T_END = -2,
 	T_WORD = 0,
 	T_ASSIGNMENT_WORD,
-	T_NEWLINE,
 	T_IO_NUMBER,
 	T_AND_IF,
 	T_OR_IF,

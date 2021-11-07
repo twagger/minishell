@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 15:32:01 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 10:26:19 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,142 +14,150 @@
 #include "parser.h"
 #include "ast.h"
 
-static int	ms_get_ast_type(int type, int reduction)
-{
-	if (type == T_WORD)
-	{
-		if (reduction == R_CMD_NAME)
-			return (A_CMD);
-		if (reduction == R_CMD_WORD)
-			return (A_OPE);
-		if (reduction == R_FILENAME)
-			return (A_FILE);
-		if (reduction == R_HERE_END)
-			return (A_HERE);
-	}
-	if (type > 3)
-		return (type);
-	return (ERROR);
-}
-
-static int	ms_build_action(t_stack **popped, int reduction)
-{
-	int	nb_popped;
-	int	terminal_index;
-
-	nb_popped = 0;
-	terminal_index = -1;
-	while (popped[nb_popped])
-	{
-		if (popped[nb_popped]->type < 100)
-			terminal_index = nb_popped;
-		++nb_popped;
-	}
-	if (nb_popped == 1 && popped[0]->type < 100)
-		return (B_PUT_TO_BUFFER);
-	if (nb_popped == 1 && popped[0]->type >= 100 && (reduction == R_AND_OR \
-		|| reduction == R_PIPE_SEQUENCE))
-		return (B_SWITCH_BRANCH);
-	if (nb_popped > 1 && terminal_index != -1)
-		return (B_BUFFER_THEN_RULE + terminal_index);
-	if (nb_popped > 1 && terminal_index == -1)
-		return (B_APPLY_RULE);
-	return (B_DO_NOTHING);
-}
+/*
+** BUFFER THE TERM
+** Put the popped term in the stack until it is reduced and can join the tree
+*/
 
 static int	ms_stack_to_buffer(\
 	t_stack	*item, int reduction, t_ast_builder **builder)
 {
 	t_node	*new;
+	t_node	**new_buf;
 
-	(void)builder;
-	new = (t_node *)malloc(sizeof(*new));
-	if (!new)
+	new = ms_create_node(ft_strdup(item->data), item->type, reduction);
+	if (!new || (new && !new->data))
 		return (ERROR);
-	new->type = ms_get_ast_type(item->type, reduction);
-	new->data = ft_strdup(item->data);
-	if (!new->data)
+	ms_buffer_add_back(&(*builder)->buffer, new);
+	if (!(*builder)->buffer)
 	{
-		free(new);
+		ms_free_tree(new);
 		return (ERROR);
 	}
-	new->left = (*builder)->buffer;
-	(*builder)->buffer = new;
-	free(item->data);
-	free(item);
+	ms_free_stack_item(item);
 	return (EXIT_SUCCESS);
 }
 
-void	ms_apply_rule(t_ast_builder **builder, int reduction)
-{
-	t_node	*next;
-	int		curr_branch;
+/*
+** FIND THE TERM IN THE BUFFER OR AST ROOT
+** Search and return the last node that has been reduced to the searched rule
+*/
 
-	curr_branch = (*builder)->current_branch;
-	if (reduction == R_AND_OR || reduction == R_PIPE_SEQUENCE)
+t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
+{
+	int		i;
+
+	i = -1;
+	while ((*builder)->buffer[++i])
 	{
-		(*builder)->buffer->left = (*builder)->branch[LEFT];
-		(*builder)->buffer->right = (*builder)->branch[RIGHT];
-		(*builder)->branch[LEFT] = (*builder)->buffer;
-		(*builder)->buffer = NULL;
-		(*builder)->branch[RIGHT] = NULL;
-	}
-	else if (reduction == R_SIMPLE_COMMAND)
-	{
-		while ((*builder)->buffer)
+		if ((*builder)->buffer[i]->reduc == reduc)
 		{
-			next = (*builder)->buffer->left;
-			(*builder)->buffer->left = (*builder)->branch[curr_branch];
-			(*builder)->branch[curr_branch] = (*builder)->buffer;
-			(*builder)->buffer = next;
+			if (action == KEEP)
+				return ((*builder)->buffer[i]);
+			else if (action == POP)
+				return (ms_buffer_remove(&(*builder)->buffer, i));
 		}
 	}
-	else if (reduction == R_CMD_PREFIX)
-	{
-		
-	}
-	else if (reduction == R_CMD_SUFFIX)
-	{
-		
-	}
-	else if (reduction == R_IO_REDIRECT)
-	{
-		
-	}
-	else if (reduction == R_IO_FILE)
-	{
-		
-	}
-	else if (reduction == R_HERE_END)
-	{
-		
-	}
+	if ((*builder)->ast->reduc == reduc)
+		return ((*builder)->ast);
+	return (NULL);
 }
+
+/*
+** BUILD THE TREE
+** This function connects the right nodes under the current reduction node to 
+** create a tree. The tree it then pushed to the ast or stays in the buffer.
+*/
+
+static int	ms_apply_reduction(\
+	t_ast_builder **builder, t_stack **popped, int reduction, int nb)
+{
+	int		i;
+	t_node	*node;
+	t_node	*child;
+
+	
+	if (nb == 1)
+	{
+		node = ms_get_popped(builder, popped[0]->type, KEEP);
+		if (!node)
+			return (ERROR);
+		node->reduc = reduction;
+		return (EXIT_SUCCESS);
+	}
+	node = ms_create_node(NULL, -1, reduction);
+	if (!node)
+		return (ERROR);
+	i = -1;
+	while (++i < nb)
+	{
+		if (popped[i]->type >= 100)
+			child = ms_get_popped(builder, popped[i]->type, POP);
+		else
+			child = ms_create_node(ft_strdup(popped[i]->data), popped[i]->type, -1);
+		if (!child)
+			return (ERROR);
+		if (i == 0)
+			node->right = child;
+		if (i == 1 && nb == 2)
+			node->left = child;
+		if (i == 1 && nb == 3)
+		{
+			child->right = node->right;
+			child->reduc = reduction;
+			free(node);
+			node = child;
+		}
+		if (i == 2)
+			node->left = child;
+	} // attach the tree to the ast if possible or let it in buffer
+	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left))
+		(*builder)->ast = node;
+	else
+	{
+		ms_buffer_add_back(&(*builder)->buffer, node);
+		if (!(*builder)->buffer)
+			return (ERROR);
+	}
+	return (EXIT_SUCCESS);
+}
+
+/*
+** SIMPLIFY THE TREE
+** This function simplifies the tree by removing useless nodes and promoting
+** and flagging operator nodes
+*/
+
+static int	ms_simplify_tree(t_ast_builder **builder)
+{
+	(void)builder;
+	return (0);
+}
+
+/*
+** BUILDER
+** Get a list of popped terms (terminal or not) and a reduction code and 
+** build a binary tree from bottom - left to top.
+*/
 
 int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduction)
 {
-	int	res;
+	int	nb;
 
-	res = ms_build_action(popped, reduction);
-	if (res == B_PUT_TO_BUFFER)
+	nb = 0;
+	while (popped[nb])
+		++nb;
+	if (nb == 1 && popped[0]->type < 100)
 	{
 		if (ms_stack_to_buffer(popped[0], reduction, builder) == ERROR)
 			return (ERROR);
 	}
-	else if (res == B_SWITCH_BRANCH)
+	else
 	{
-		if ((*builder)->current_branch == RIGHT)
-			(*builder)->current_branch = LEFT;
-		else
-			(*builder)->current_branch = RIGHT;
-	}
-	else if (res >= B_APPLY_RULE)
-		ms_apply_rule(builder, reduction);
-	else if (res >= B_BUFFER_THEN_RULE)
-	{
-		if (ms_stack_to_buffer(popped[100 - res], reduction, builder) == ERROR)
+		if (ms_apply_reduction(builder, popped, reduction, nb) == ERROR)
 			return (ERROR);
-		ms_apply_rule(builder, reduction);
+		if (ms_simplify_tree(builder) == ERROR)
+			return (ERROR);
 	}
 	return (EXIT_SUCCESS);
 }

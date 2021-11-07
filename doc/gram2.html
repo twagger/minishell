@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:bison="https://www.gnu.org/software/bison/">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>gram2.y - GNU Bison XML Automaton Report</title>
+    <style type="text/css">
+      body {
+        font-family: "Nimbus Sans L", Arial, sans-serif;
+        font-size: 9pt;
+      }
+      a:link {
+        color: #1f00ff;
+        text-decoration: none;
+      }
+      a:visited {
+        color: #1f00ff;
+        text-decoration: none;
+      }
+      a:hover {
+        color: red;
+      }
+      #menu a {
+        text-decoration: underline;
+      }
+      .i {
+        font-style: italic;
+      }
+      .pre {
+        font-family: monospace;
+        white-space: pre;
+      }
+      ol.decimal {
+        list-style-type: decimal;
+      }
+      ol.lower-alpha {
+        list-style-type: lower-alpha;
+      }
+      .dot {
+        color: #cc0000;
+      }
+      #footer {
+        margin-top: 3.5em;
+        font-size: 7pt;
+      }
+      </style>
+  </head>
+  <body><h1>GNU Bison XML Automaton Report</h1><p>
+    input grammar: <span class="i">gram2.y</span></p>
+
+<h3>Table of Contents</h3><ul id="menu"><li><a href="#reductions">Reductions</a><ul class="lower-alpha"><li><a href="#nonterminals_useless_in_grammar">Nonterminals useless in grammar</a></li><li><a href="#terminals_unused_in_grammar">Terminals unused in grammar</a></li><li><a href="#rules_useless_in_grammar">Rules useless in grammar</a></li></ul></li><li><a href="#conflicts">Conflicts</a></li><li><a href="#grammar">Grammar</a><ul class="lower-alpha"><li><a href="#grammar">Itemset</a></li><li><a href="#terminals">Terminal symbols</a></li><li><a href="#nonterminals">Nonterminal symbols</a></li></ul></li><li><a href="#automaton">Automaton</a></li></ul><h2><a name="reductions" id="reductions"></a> Reductions</h2><h3><a name="nonterminals_useless_in_grammar" id="nonterminals_useless_in_grammar"></a> Nonterminals useless in grammar</h3>
+
+<h3><a name="terminals_unused_in_grammar" id="terminals_unused_in_grammar"></a> Terminals unused in grammar</h3>
+
+<p class="pre">   NEWLINE
+
+
+</p><h3><a name="rules_useless_in_grammar" id="rules_useless_in_grammar"></a> Rules useless in grammar</h3>
+<h2><a name="conflicts" id="conflicts"></a> Conflicts</h2>
+
+<h2><a name="grammar" id="grammar"></a> Grammar</h2>
+<p class="pre">
+  <a name="rule_0" id="rule_0">  0</a> <span class="i">$accept</span> → <span class="i">and_or</span> <b>$end</b>
+
+  <a name="rule_1" id="rule_1">  1</a> <span class="i">and_or</span> → <span class="i">pipe_sequence</span>
+  <a name="rule_2" id="rule_2">  2</a>        | <span class="i">and_or</span> <b>AND_IF</b> <span class="i">pipe_sequence</span>
+  <a name="rule_3" id="rule_3">  3</a>        | <span class="i">and_or</span> <b>OR_IF</b> <span class="i">pipe_sequence</span>
+
+  <a name="rule_4" id="rule_4">  4</a> <span class="i">pipe_sequence</span> → <span class="i">simple_command</span>
+  <a name="rule_5" id="rule_5">  5</a>               | <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="i">simple_command</span>
+
+  <a name="rule_6" id="rule_6">  6</a> <span class="i">simple_command</span> → <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a name="rule_7" id="rule_7">  7</a>                | <span class="i">cmd_prefix</span> <span class="i">cmd_word</span>
+  <a name="rule_8" id="rule_8">  8</a>                | <span class="i">cmd_prefix</span>
+  <a name="rule_9" id="rule_9">  9</a>                | <span class="i">cmd_name</span> <span class="i">cmd_suffix</span>
+  <a name="rule_10" id="rule_10"> 10</a>                | <span class="i">cmd_name</span>
+
+  <a name="rule_11" id="rule_11"> 11</a> <span class="i">cmd_name</span> → <b>WORD</b>
+
+  <a name="rule_12" id="rule_12"> 12</a> <span class="i">cmd_word</span> → <b>WORD</b>
+
+  <a name="rule_13" id="rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="i">io_redirect</span>
+  <a name="rule_14" id="rule_14"> 14</a>            | <span class="i">cmd_prefix</span> <span class="i">io_redirect</span>
+  <a name="rule_15" id="rule_15"> 15</a>            | <b>ASSIGNMENT_WORD</b>
+  <a name="rule_16" id="rule_16"> 16</a>            | <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b>
+
+  <a name="rule_17" id="rule_17"> 17</a> <span class="i">cmd_suffix</span> → <span class="i">io_redirect</span>
+  <a name="rule_18" id="rule_18"> 18</a>            | <span class="i">cmd_suffix</span> <span class="i">io_redirect</span>
+  <a name="rule_19" id="rule_19"> 19</a>            | <b>WORD</b>
+  <a name="rule_20" id="rule_20"> 20</a>            | <span class="i">cmd_suffix</span> <b>WORD</b>
+
+  <a name="rule_21" id="rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="i">io_file</span>
+  <a name="rule_22" id="rule_22"> 22</a>             | <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a name="rule_23" id="rule_23"> 23</a>             | <span class="i">io_here</span>
+  <a name="rule_24" id="rule_24"> 24</a>             | <b>IO_NUMBER</b> <span class="i">io_here</span>
+
+  <a name="rule_25" id="rule_25"> 25</a> <span class="i">io_file</span> → <b>RET_TO</b> <span class="i">filename</span>
+  <a name="rule_26" id="rule_26"> 26</a>         | <b>RET_FROM</b> <span class="i">filename</span>
+  <a name="rule_27" id="rule_27"> 27</a>         | <b>DGREAT</b> <span class="i">filename</span>
+
+  <a name="rule_28" id="rule_28"> 28</a> <span class="i">filename</span> → <b>WORD</b>
+
+  <a name="rule_29" id="rule_29"> 29</a> <span class="i">io_here</span> → <b>DLESS</b> <span class="i">here_end</span>
+
+  <a name="rule_30" id="rule_30"> 30</a> <span class="i">here_end</span> → <b>WORD</b>
+</p>
+
+<h3><a name="terminals" id="terminals"></a> Terminals, with rules where they appear</h3>
+
+<ul>
+  <li><b>$end</b> (0) <a href="#rule_0">0</a></li>
+  <li><b>error</b> (256)</li>
+  <li><b>WORD</b> (258) <a href="#rule_11">11</a> <a href="#rule_12">12</a> <a href="#rule_19">19</a> <a href="#rule_20">20</a> <a href="#rule_28">28</a> <a href="#rule_30">30</a></li>
+  <li><b>ASSIGNMENT_WORD</b> (259) <a href="#rule_15">15</a> <a href="#rule_16">16</a></li>
+  <li><b>RET_TO</b> (260) <a href="#rule_25">25</a></li>
+  <li><b>RET_FROM</b> (261) <a href="#rule_26">26</a></li>
+  <li><b>PIPE</b> (262) <a href="#rule_5">5</a></li>
+  <li><b>NEWLINE</b> (263)</li>
+  <li><b>IO_NUMBER</b> (264) <a href="#rule_22">22</a> <a href="#rule_24">24</a></li>
+  <li><b>AND_IF</b> (265) <a href="#rule_2">2</a></li>
+  <li><b>OR_IF</b> (266) <a href="#rule_3">3</a></li>
+  <li><b>DLESS</b> (267) <a href="#rule_29">29</a></li>
+  <li><b>DGREAT</b> (268) <a href="#rule_27">27</a></li>
+</ul>
+
+<h3><a name="nonterminals" id="nonterminals"></a> Nonterminals, with rules where they appear</h3>
+
+<ul>
+  <li><b>$accept</b> (14)
+    <ul>
+      <li>on left: <a href="#rule_0">0</a></li>
+    </ul>
+  </li>
+  <li><b>and_or</b> (15)
+    <ul>
+      <li>on left: <a href="#rule_1">1</a> <a href="#rule_2">2</a> <a href="#rule_3">3</a></li>
+      <li>on right: <a href="#rule_0">0</a> <a href="#rule_2">2</a> <a href="#rule_3">3</a></li>
+    </ul>
+  </li>
+  <li><b>pipe_sequence</b> (16)
+    <ul>
+      <li>on left: <a href="#rule_4">4</a> <a href="#rule_5">5</a></li>
+      <li>on right: <a href="#rule_1">1</a> <a href="#rule_2">2</a> <a href="#rule_3">3</a> <a href="#rule_5">5</a></li>
+    </ul>
+  </li>
+  <li><b>simple_command</b> (17)
+    <ul>
+      <li>on left: <a href="#rule_6">6</a> <a href="#rule_7">7</a> <a href="#rule_8">8</a> <a href="#rule_9">9</a> <a href="#rule_10">10</a></li>
+      <li>on right: <a href="#rule_4">4</a> <a href="#rule_5">5</a></li>
+    </ul>
+  </li>
+  <li><b>cmd_name</b> (18)
+    <ul>
+      <li>on left: <a href="#rule_11">11</a></li>
+      <li>on right: <a href="#rule_9">9</a> <a href="#rule_10">10</a></li>
+    </ul>
+  </li>
+  <li><b>cmd_word</b> (19)
+    <ul>
+      <li>on left: <a href="#rule_12">12</a></li>
+      <li>on right: <a href="#rule_6">6</a> <a href="#rule_7">7</a></li>
+    </ul>
+  </li>
+  <li><b>cmd_prefix</b> (20)
+    <ul>
+      <li>on left: <a href="#rule_13">13</a> <a href="#rule_14">14</a> <a href="#rule_15">15</a> <a href="#rule_16">16</a></li>
+      <li>on right: <a href="#rule_6">6</a> <a href="#rule_7">7</a> <a href="#rule_8">8</a> <a href="#rule_14">14</a> <a href="#rule_16">16</a></li>
+    </ul>
+  </li>
+  <li><b>cmd_suffix</b> (21)
+    <ul>
+      <li>on left: <a href="#rule_17">17</a> <a href="#rule_18">18</a> <a href="#rule_19">19</a> <a href="#rule_20">20</a></li>
+      <li>on right: <a href="#rule_6">6</a> <a href="#rule_9">9</a> <a href="#rule_18">18</a> <a href="#rule_20">20</a></li>
+    </ul>
+  </li>
+  <li><b>io_redirect</b> (22)
+    <ul>
+      <li>on left: <a href="#rule_21">21</a> <a href="#rule_22">22</a> <a href="#rule_23">23</a> <a href="#rule_24">24</a></li>
+      <li>on right: <a href="#rule_13">13</a> <a href="#rule_14">14</a> <a href="#rule_17">17</a> <a href="#rule_18">18</a></li>
+    </ul>
+  </li>
+  <li><b>io_file</b> (23)
+    <ul>
+      <li>on left: <a href="#rule_25">25</a> <a href="#rule_26">26</a> <a href="#rule_27">27</a></li>
+      <li>on right: <a href="#rule_21">21</a> <a href="#rule_22">22</a></li>
+    </ul>
+  </li>
+  <li><b>filename</b> (24)
+    <ul>
+      <li>on left: <a href="#rule_28">28</a></li>
+      <li>on right: <a href="#rule_25">25</a> <a href="#rule_26">26</a> <a href="#rule_27">27</a></li>
+    </ul>
+  </li>
+  <li><b>io_here</b> (25)
+    <ul>
+      <li>on left: <a href="#rule_29">29</a></li>
+      <li>on right: <a href="#rule_23">23</a> <a href="#rule_24">24</a></li>
+    </ul>
+  </li>
+  <li><b>here_end</b> (26)
+    <ul>
+      <li>on left: <a href="#rule_30">30</a></li>
+      <li>on right: <a href="#rule_29">29</a></li>
+    </ul>
+  </li>
+</ul><h2><a name="automaton" id="automaton"></a> Automaton</h2>
+
+<h3><a name="state_0" id="state_0"></a>State 0</h3>
+
+<p class="pre">  <a href="#rule_0">  0</a> <span class="i">$accept</span> → <span class="dot">•</span> <span class="i">and_or</span> <b>$end</b>
+  <a href="#rule_1">  1</a> <span class="i">and_or</span> → <span class="dot">•</span> <span class="i">pipe_sequence</span>
+  <a href="#rule_2">  2</a>        | <span class="dot">•</span> <span class="i">and_or</span> <b>AND_IF</b> <span class="i">pipe_sequence</span>
+  <a href="#rule_3">  3</a>        | <span class="dot">•</span> <span class="i">and_or</span> <b>OR_IF</b> <span class="i">pipe_sequence</span>
+  <a href="#rule_4">  4</a> <span class="i">pipe_sequence</span> → <span class="dot">•</span> <span class="i">simple_command</span>
+  <a href="#rule_5">  5</a>               | <span class="dot">•</span> <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="i">simple_command</span>
+  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span>
+  <a href="#rule_8">  8</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span>
+  <a href="#rule_9">  9</a>                | <span class="dot">•</span> <span class="i">cmd_name</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_10"> 10</a>                | <span class="dot">•</span> <span class="i">cmd_name</span>
+  <a href="#rule_11"> 11</a> <span class="i">cmd_name</span> → <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_14"> 14</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">io_redirect</span>
+  <a href="#rule_15"> 15</a>            | <span class="dot">•</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_16"> 16</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD             <a href="#state_1">shift, and go to state 1</a>
+    ASSIGNMENT_WORD  <a href="#state_2">shift, and go to state 2</a>
+    RET_TO           <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM         <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER        <a href="#state_5">shift, and go to state 5</a>
+    DLESS            <a href="#state_6">shift, and go to state 6</a>
+    DGREAT           <a href="#state_7">shift, and go to state 7</a>
+
+    and_or          <a href="#state_8">go to state 8</a>
+    pipe_sequence   <a href="#state_9">go to state 9</a>
+    simple_command  <a href="#state_10">go to state 10</a>
+    cmd_name        <a href="#state_11">go to state 11</a>
+    cmd_prefix      <a href="#state_12">go to state 12</a>
+    io_redirect     <a href="#state_13">go to state 13</a>
+    io_file         <a href="#state_14">go to state 14</a>
+    io_here         <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_1" id="state_1"></a>State 1</h3>
+
+<p class="pre">  <a href="#rule_11"> 11</a> <span class="i">cmd_name</span> → <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_11">reduce using rule 11</a> (cmd_name)
+</p>
+
+<h3><a name="state_2" id="state_2"></a>State 2</h3>
+
+<p class="pre">  <a href="#rule_15"> 15</a> <span class="i">cmd_prefix</span> → <b>ASSIGNMENT_WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_15">reduce using rule 15</a> (cmd_prefix)
+</p>
+
+<h3><a name="state_3" id="state_3"></a>State 3</h3>
+
+<p class="pre">  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <b>RET_TO</b> <span class="dot">•</span> <span class="i">filename</span>
+  <a href="#rule_28"> 28</a> <span class="i">filename</span> → <span class="dot">•</span> <b>WORD</b>
+
+    WORD  <a href="#state_16">shift, and go to state 16</a>
+
+    filename  <a href="#state_17">go to state 17</a>
+</p>
+
+<h3><a name="state_4" id="state_4"></a>State 4</h3>
+
+<p class="pre">  <a href="#rule_26"> 26</a> <span class="i">io_file</span> → <b>RET_FROM</b> <span class="dot">•</span> <span class="i">filename</span>
+  <a href="#rule_28"> 28</a> <span class="i">filename</span> → <span class="dot">•</span> <b>WORD</b>
+
+    WORD  <a href="#state_16">shift, and go to state 16</a>
+
+    filename  <a href="#state_18">go to state 18</a>
+</p>
+
+<h3><a name="state_5" id="state_5"></a>State 5</h3>
+
+<p class="pre">  <a href="#rule_22"> 22</a> <span class="i">io_redirect</span> → <b>IO_NUMBER</b> <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_24"> 24</a>             | <b>IO_NUMBER</b> <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    RET_TO    <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM  <a href="#state_4">shift, and go to state 4</a>
+    DLESS     <a href="#state_6">shift, and go to state 6</a>
+    DGREAT    <a href="#state_7">shift, and go to state 7</a>
+
+    io_file  <a href="#state_19">go to state 19</a>
+    io_here  <a href="#state_20">go to state 20</a>
+</p>
+
+<h3><a name="state_6" id="state_6"></a>State 6</h3>
+
+<p class="pre">  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <b>DLESS</b> <span class="dot">•</span> <span class="i">here_end</span>
+  <a href="#rule_30"> 30</a> <span class="i">here_end</span> → <span class="dot">•</span> <b>WORD</b>
+
+    WORD  <a href="#state_21">shift, and go to state 21</a>
+
+    here_end  <a href="#state_22">go to state 22</a>
+</p>
+
+<h3><a name="state_7" id="state_7"></a>State 7</h3>
+
+<p class="pre">  <a href="#rule_27"> 27</a> <span class="i">io_file</span> → <b>DGREAT</b> <span class="dot">•</span> <span class="i">filename</span>
+  <a href="#rule_28"> 28</a> <span class="i">filename</span> → <span class="dot">•</span> <b>WORD</b>
+
+    WORD  <a href="#state_16">shift, and go to state 16</a>
+
+    filename  <a href="#state_23">go to state 23</a>
+</p>
+
+<h3><a name="state_8" id="state_8"></a>State 8</h3>
+
+<p class="pre">  <a href="#rule_0">  0</a> <span class="i">$accept</span> → <span class="i">and_or</span> <span class="dot">•</span> <b>$end</b>
+  <a href="#rule_2">  2</a> <span class="i">and_or</span> → <span class="i">and_or</span> <span class="dot">•</span> <b>AND_IF</b> <span class="i">pipe_sequence</span>
+  <a href="#rule_3">  3</a>        | <span class="i">and_or</span> <span class="dot">•</span> <b>OR_IF</b> <span class="i">pipe_sequence</span>
+
+    $end    <a href="#state_24">shift, and go to state 24</a>
+    AND_IF  <a href="#state_25">shift, and go to state 25</a>
+    OR_IF   <a href="#state_26">shift, and go to state 26</a>
+</p>
+
+<h3><a name="state_9" id="state_9"></a>State 9</h3>
+
+<p class="pre">  <a href="#rule_1">  1</a> <span class="i">and_or</span> → <span class="i">pipe_sequence</span> <span class="dot">•</span>  [$end, AND_IF, OR_IF]
+  <a href="#rule_5">  5</a> <span class="i">pipe_sequence</span> → <span class="i">pipe_sequence</span> <span class="dot">•</span> <b>PIPE</b> <span class="i">simple_command</span>
+
+    PIPE  <a href="#state_27">shift, and go to state 27</a>
+
+    $default  <a href="#rule_1">reduce using rule 1</a> (and_or)
+</p>
+
+<h3><a name="state_10" id="state_10"></a>State 10</h3>
+
+<p class="pre">  <a href="#rule_4">  4</a> <span class="i">pipe_sequence</span> → <span class="i">simple_command</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_4">reduce using rule 4</a> (pipe_sequence)
+</p>
+
+<h3><a name="state_11" id="state_11"></a>State 11</h3>
+
+<p class="pre">  <a href="#rule_9">  9</a> <span class="i">simple_command</span> → <span class="i">cmd_name</span> <span class="dot">•</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_10"> 10</a>                | <span class="i">cmd_name</span> <span class="dot">•</span>  [$end, PIPE, AND_IF, OR_IF]
+  <a href="#rule_17"> 17</a> <span class="i">cmd_suffix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_18"> 18</a>            | <span class="dot">•</span> <span class="i">cmd_suffix</span> <span class="i">io_redirect</span>
+  <a href="#rule_19"> 19</a>            | <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_20"> 20</a>            | <span class="dot">•</span> <span class="i">cmd_suffix</span> <b>WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD       <a href="#state_28">shift, and go to state 28</a>
+    RET_TO     <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM   <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER  <a href="#state_5">shift, and go to state 5</a>
+    DLESS      <a href="#state_6">shift, and go to state 6</a>
+    DGREAT     <a href="#state_7">shift, and go to state 7</a>
+
+    $default  <a href="#rule_10">reduce using rule 10</a> (simple_command)
+
+    cmd_suffix   <a href="#state_29">go to state 29</a>
+    io_redirect  <a href="#state_30">go to state 30</a>
+    io_file      <a href="#state_14">go to state 14</a>
+    io_here      <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_12" id="state_12"></a>State 12</h3>
+
+<p class="pre">  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="i">cmd_prefix</span> <span class="dot">•</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="i">cmd_prefix</span> <span class="dot">•</span> <span class="i">cmd_word</span>
+  <a href="#rule_8">  8</a>                | <span class="i">cmd_prefix</span> <span class="dot">•</span>  [$end, PIPE, AND_IF, OR_IF]
+  <a href="#rule_12"> 12</a> <span class="i">cmd_word</span> → <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_14"> 14</a> <span class="i">cmd_prefix</span> → <span class="i">cmd_prefix</span> <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_16"> 16</a>            | <span class="i">cmd_prefix</span> <span class="dot">•</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD             <a href="#state_31">shift, and go to state 31</a>
+    ASSIGNMENT_WORD  <a href="#state_32">shift, and go to state 32</a>
+    RET_TO           <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM         <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER        <a href="#state_5">shift, and go to state 5</a>
+    DLESS            <a href="#state_6">shift, and go to state 6</a>
+    DGREAT           <a href="#state_7">shift, and go to state 7</a>
+
+    $default  <a href="#rule_8">reduce using rule 8</a> (simple_command)
+
+    cmd_word     <a href="#state_33">go to state 33</a>
+    io_redirect  <a href="#state_34">go to state 34</a>
+    io_file      <a href="#state_14">go to state 14</a>
+    io_here      <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_13" id="state_13"></a>State 13</h3>
+
+<p class="pre">  <a href="#rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="i">io_redirect</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_13">reduce using rule 13</a> (cmd_prefix)
+</p>
+
+<h3><a name="state_14" id="state_14"></a>State 14</h3>
+
+<p class="pre">  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="i">io_file</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_21">reduce using rule 21</a> (io_redirect)
+</p>
+
+<h3><a name="state_15" id="state_15"></a>State 15</h3>
+
+<p class="pre">  <a href="#rule_23"> 23</a> <span class="i">io_redirect</span> → <span class="i">io_here</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_23">reduce using rule 23</a> (io_redirect)
+</p>
+
+<h3><a name="state_16" id="state_16"></a>State 16</h3>
+
+<p class="pre">  <a href="#rule_28"> 28</a> <span class="i">filename</span> → <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_28">reduce using rule 28</a> (filename)
+</p>
+
+<h3><a name="state_17" id="state_17"></a>State 17</h3>
+
+<p class="pre">  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <b>RET_TO</b> <span class="i">filename</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_25">reduce using rule 25</a> (io_file)
+</p>
+
+<h3><a name="state_18" id="state_18"></a>State 18</h3>
+
+<p class="pre">  <a href="#rule_26"> 26</a> <span class="i">io_file</span> → <b>RET_FROM</b> <span class="i">filename</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_26">reduce using rule 26</a> (io_file)
+</p>
+
+<h3><a name="state_19" id="state_19"></a>State 19</h3>
+
+<p class="pre">  <a href="#rule_22"> 22</a> <span class="i">io_redirect</span> → <b>IO_NUMBER</b> <span class="i">io_file</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_22">reduce using rule 22</a> (io_redirect)
+</p>
+
+<h3><a name="state_20" id="state_20"></a>State 20</h3>
+
+<p class="pre">  <a href="#rule_24"> 24</a> <span class="i">io_redirect</span> → <b>IO_NUMBER</b> <span class="i">io_here</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_24">reduce using rule 24</a> (io_redirect)
+</p>
+
+<h3><a name="state_21" id="state_21"></a>State 21</h3>
+
+<p class="pre">  <a href="#rule_30"> 30</a> <span class="i">here_end</span> → <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_30">reduce using rule 30</a> (here_end)
+</p>
+
+<h3><a name="state_22" id="state_22"></a>State 22</h3>
+
+<p class="pre">  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <b>DLESS</b> <span class="i">here_end</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_29">reduce using rule 29</a> (io_here)
+</p>
+
+<h3><a name="state_23" id="state_23"></a>State 23</h3>
+
+<p class="pre">  <a href="#rule_27"> 27</a> <span class="i">io_file</span> → <b>DGREAT</b> <span class="i">filename</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_27">reduce using rule 27</a> (io_file)
+</p>
+
+<h3><a name="state_24" id="state_24"></a>State 24</h3>
+
+<p class="pre">  <a href="#rule_0">  0</a> <span class="i">$accept</span> → <span class="i">and_or</span> <b>$end</b> <span class="dot">•</span>
+
+    $default  accept
+</p>
+
+<h3><a name="state_25" id="state_25"></a>State 25</h3>
+
+<p class="pre">  <a href="#rule_2">  2</a> <span class="i">and_or</span> → <span class="i">and_or</span> <b>AND_IF</b> <span class="dot">•</span> <span class="i">pipe_sequence</span>
+  <a href="#rule_4">  4</a> <span class="i">pipe_sequence</span> → <span class="dot">•</span> <span class="i">simple_command</span>
+  <a href="#rule_5">  5</a>               | <span class="dot">•</span> <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="i">simple_command</span>
+  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span>
+  <a href="#rule_8">  8</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span>
+  <a href="#rule_9">  9</a>                | <span class="dot">•</span> <span class="i">cmd_name</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_10"> 10</a>                | <span class="dot">•</span> <span class="i">cmd_name</span>
+  <a href="#rule_11"> 11</a> <span class="i">cmd_name</span> → <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_14"> 14</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">io_redirect</span>
+  <a href="#rule_15"> 15</a>            | <span class="dot">•</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_16"> 16</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD             <a href="#state_1">shift, and go to state 1</a>
+    ASSIGNMENT_WORD  <a href="#state_2">shift, and go to state 2</a>
+    RET_TO           <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM         <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER        <a href="#state_5">shift, and go to state 5</a>
+    DLESS            <a href="#state_6">shift, and go to state 6</a>
+    DGREAT           <a href="#state_7">shift, and go to state 7</a>
+
+    pipe_sequence   <a href="#state_35">go to state 35</a>
+    simple_command  <a href="#state_10">go to state 10</a>
+    cmd_name        <a href="#state_11">go to state 11</a>
+    cmd_prefix      <a href="#state_12">go to state 12</a>
+    io_redirect     <a href="#state_13">go to state 13</a>
+    io_file         <a href="#state_14">go to state 14</a>
+    io_here         <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_26" id="state_26"></a>State 26</h3>
+
+<p class="pre">  <a href="#rule_3">  3</a> <span class="i">and_or</span> → <span class="i">and_or</span> <b>OR_IF</b> <span class="dot">•</span> <span class="i">pipe_sequence</span>
+  <a href="#rule_4">  4</a> <span class="i">pipe_sequence</span> → <span class="dot">•</span> <span class="i">simple_command</span>
+  <a href="#rule_5">  5</a>               | <span class="dot">•</span> <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="i">simple_command</span>
+  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span>
+  <a href="#rule_8">  8</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span>
+  <a href="#rule_9">  9</a>                | <span class="dot">•</span> <span class="i">cmd_name</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_10"> 10</a>                | <span class="dot">•</span> <span class="i">cmd_name</span>
+  <a href="#rule_11"> 11</a> <span class="i">cmd_name</span> → <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_14"> 14</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">io_redirect</span>
+  <a href="#rule_15"> 15</a>            | <span class="dot">•</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_16"> 16</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD             <a href="#state_1">shift, and go to state 1</a>
+    ASSIGNMENT_WORD  <a href="#state_2">shift, and go to state 2</a>
+    RET_TO           <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM         <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER        <a href="#state_5">shift, and go to state 5</a>
+    DLESS            <a href="#state_6">shift, and go to state 6</a>
+    DGREAT           <a href="#state_7">shift, and go to state 7</a>
+
+    pipe_sequence   <a href="#state_36">go to state 36</a>
+    simple_command  <a href="#state_10">go to state 10</a>
+    cmd_name        <a href="#state_11">go to state 11</a>
+    cmd_prefix      <a href="#state_12">go to state 12</a>
+    io_redirect     <a href="#state_13">go to state 13</a>
+    io_file         <a href="#state_14">go to state 14</a>
+    io_here         <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_27" id="state_27"></a>State 27</h3>
+
+<p class="pre">  <a href="#rule_5">  5</a> <span class="i">pipe_sequence</span> → <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="dot">•</span> <span class="i">simple_command</span>
+  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">cmd_word</span>
+  <a href="#rule_8">  8</a>                | <span class="dot">•</span> <span class="i">cmd_prefix</span>
+  <a href="#rule_9">  9</a>                | <span class="dot">•</span> <span class="i">cmd_name</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_10"> 10</a>                | <span class="dot">•</span> <span class="i">cmd_name</span>
+  <a href="#rule_11"> 11</a> <span class="i">cmd_name</span> → <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_13"> 13</a> <span class="i">cmd_prefix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_14"> 14</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <span class="i">io_redirect</span>
+  <a href="#rule_15"> 15</a>            | <span class="dot">•</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_16"> 16</a>            | <span class="dot">•</span> <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD             <a href="#state_1">shift, and go to state 1</a>
+    ASSIGNMENT_WORD  <a href="#state_2">shift, and go to state 2</a>
+    RET_TO           <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM         <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER        <a href="#state_5">shift, and go to state 5</a>
+    DLESS            <a href="#state_6">shift, and go to state 6</a>
+    DGREAT           <a href="#state_7">shift, and go to state 7</a>
+
+    simple_command  <a href="#state_37">go to state 37</a>
+    cmd_name        <a href="#state_11">go to state 11</a>
+    cmd_prefix      <a href="#state_12">go to state 12</a>
+    io_redirect     <a href="#state_13">go to state 13</a>
+    io_file         <a href="#state_14">go to state 14</a>
+    io_here         <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_28" id="state_28"></a>State 28</h3>
+
+<p class="pre">  <a href="#rule_19"> 19</a> <span class="i">cmd_suffix</span> → <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_19">reduce using rule 19</a> (cmd_suffix)
+</p>
+
+<h3><a name="state_29" id="state_29"></a>State 29</h3>
+
+<p class="pre">  <a href="#rule_9">  9</a> <span class="i">simple_command</span> → <span class="i">cmd_name</span> <span class="i">cmd_suffix</span> <span class="dot">•</span>  [$end, PIPE, AND_IF, OR_IF]
+  <a href="#rule_18"> 18</a> <span class="i">cmd_suffix</span> → <span class="i">cmd_suffix</span> <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_20"> 20</a>            | <span class="i">cmd_suffix</span> <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD       <a href="#state_38">shift, and go to state 38</a>
+    RET_TO     <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM   <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER  <a href="#state_5">shift, and go to state 5</a>
+    DLESS      <a href="#state_6">shift, and go to state 6</a>
+    DGREAT     <a href="#state_7">shift, and go to state 7</a>
+
+    $default  <a href="#rule_9">reduce using rule 9</a> (simple_command)
+
+    io_redirect  <a href="#state_39">go to state 39</a>
+    io_file      <a href="#state_14">go to state 14</a>
+    io_here      <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_30" id="state_30"></a>State 30</h3>
+
+<p class="pre">  <a href="#rule_17"> 17</a> <span class="i">cmd_suffix</span> → <span class="i">io_redirect</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_17">reduce using rule 17</a> (cmd_suffix)
+</p>
+
+<h3><a name="state_31" id="state_31"></a>State 31</h3>
+
+<p class="pre">  <a href="#rule_12"> 12</a> <span class="i">cmd_word</span> → <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_12">reduce using rule 12</a> (cmd_word)
+</p>
+
+<h3><a name="state_32" id="state_32"></a>State 32</h3>
+
+<p class="pre">  <a href="#rule_16"> 16</a> <span class="i">cmd_prefix</span> → <span class="i">cmd_prefix</span> <b>ASSIGNMENT_WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_16">reduce using rule 16</a> (cmd_prefix)
+</p>
+
+<h3><a name="state_33" id="state_33"></a>State 33</h3>
+
+<p class="pre">  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="dot">•</span> <span class="i">cmd_suffix</span>
+  <a href="#rule_7">  7</a>                | <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="dot">•</span>  [$end, PIPE, AND_IF, OR_IF]
+  <a href="#rule_17"> 17</a> <span class="i">cmd_suffix</span> → <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_18"> 18</a>            | <span class="dot">•</span> <span class="i">cmd_suffix</span> <span class="i">io_redirect</span>
+  <a href="#rule_19"> 19</a>            | <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_20"> 20</a>            | <span class="dot">•</span> <span class="i">cmd_suffix</span> <b>WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD       <a href="#state_28">shift, and go to state 28</a>
+    RET_TO     <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM   <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER  <a href="#state_5">shift, and go to state 5</a>
+    DLESS      <a href="#state_6">shift, and go to state 6</a>
+    DGREAT     <a href="#state_7">shift, and go to state 7</a>
+
+    $default  <a href="#rule_7">reduce using rule 7</a> (simple_command)
+
+    cmd_suffix   <a href="#state_40">go to state 40</a>
+    io_redirect  <a href="#state_30">go to state 30</a>
+    io_file      <a href="#state_14">go to state 14</a>
+    io_here      <a href="#state_15">go to state 15</a>
+</p>
+
+<h3><a name="state_34" id="state_34"></a>State 34</h3>
+
+<p class="pre">  <a href="#rule_14"> 14</a> <span class="i">cmd_prefix</span> → <span class="i">cmd_prefix</span> <span class="i">io_redirect</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_14">reduce using rule 14</a> (cmd_prefix)
+</p>
+
+<h3><a name="state_35" id="state_35"></a>State 35</h3>
+
+<p class="pre">  <a href="#rule_2">  2</a> <span class="i">and_or</span> → <span class="i">and_or</span> <b>AND_IF</b> <span class="i">pipe_sequence</span> <span class="dot">•</span>  [$end, AND_IF, OR_IF]
+  <a href="#rule_5">  5</a> <span class="i">pipe_sequence</span> → <span class="i">pipe_sequence</span> <span class="dot">•</span> <b>PIPE</b> <span class="i">simple_command</span>
+
+    PIPE  <a href="#state_27">shift, and go to state 27</a>
+
+    $default  <a href="#rule_2">reduce using rule 2</a> (and_or)
+</p>
+
+<h3><a name="state_36" id="state_36"></a>State 36</h3>
+
+<p class="pre">  <a href="#rule_3">  3</a> <span class="i">and_or</span> → <span class="i">and_or</span> <b>OR_IF</b> <span class="i">pipe_sequence</span> <span class="dot">•</span>  [$end, AND_IF, OR_IF]
+  <a href="#rule_5">  5</a> <span class="i">pipe_sequence</span> → <span class="i">pipe_sequence</span> <span class="dot">•</span> <b>PIPE</b> <span class="i">simple_command</span>
+
+    PIPE  <a href="#state_27">shift, and go to state 27</a>
+
+    $default  <a href="#rule_3">reduce using rule 3</a> (and_or)
+</p>
+
+<h3><a name="state_37" id="state_37"></a>State 37</h3>
+
+<p class="pre">  <a href="#rule_5">  5</a> <span class="i">pipe_sequence</span> → <span class="i">pipe_sequence</span> <b>PIPE</b> <span class="i">simple_command</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_5">reduce using rule 5</a> (pipe_sequence)
+</p>
+
+<h3><a name="state_38" id="state_38"></a>State 38</h3>
+
+<p class="pre">  <a href="#rule_20"> 20</a> <span class="i">cmd_suffix</span> → <span class="i">cmd_suffix</span> <b>WORD</b> <span class="dot">•</span>
+
+    $default  <a href="#rule_20">reduce using rule 20</a> (cmd_suffix)
+</p>
+
+<h3><a name="state_39" id="state_39"></a>State 39</h3>
+
+<p class="pre">  <a href="#rule_18"> 18</a> <span class="i">cmd_suffix</span> → <span class="i">cmd_suffix</span> <span class="i">io_redirect</span> <span class="dot">•</span>
+
+    $default  <a href="#rule_18">reduce using rule 18</a> (cmd_suffix)
+</p>
+
+<h3><a name="state_40" id="state_40"></a>State 40</h3>
+
+<p class="pre">  <a href="#rule_6">  6</a> <span class="i">simple_command</span> → <span class="i">cmd_prefix</span> <span class="i">cmd_word</span> <span class="i">cmd_suffix</span> <span class="dot">•</span>  [$end, PIPE, AND_IF, OR_IF]
+  <a href="#rule_18"> 18</a> <span class="i">cmd_suffix</span> → <span class="i">cmd_suffix</span> <span class="dot">•</span> <span class="i">io_redirect</span>
+  <a href="#rule_20"> 20</a>            | <span class="i">cmd_suffix</span> <span class="dot">•</span> <b>WORD</b>
+  <a href="#rule_21"> 21</a> <span class="i">io_redirect</span> → <span class="dot">•</span> <span class="i">io_file</span>
+  <a href="#rule_22"> 22</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_file</span>
+  <a href="#rule_23"> 23</a>             | <span class="dot">•</span> <span class="i">io_here</span>
+  <a href="#rule_24"> 24</a>             | <span class="dot">•</span> <b>IO_NUMBER</b> <span class="i">io_here</span>
+  <a href="#rule_25"> 25</a> <span class="i">io_file</span> → <span class="dot">•</span> <b>RET_TO</b> <span class="i">filename</span>
+  <a href="#rule_26"> 26</a>         | <span class="dot">•</span> <b>RET_FROM</b> <span class="i">filename</span>
+  <a href="#rule_27"> 27</a>         | <span class="dot">•</span> <b>DGREAT</b> <span class="i">filename</span>
+  <a href="#rule_29"> 29</a> <span class="i">io_here</span> → <span class="dot">•</span> <b>DLESS</b> <span class="i">here_end</span>
+
+    WORD       <a href="#state_38">shift, and go to state 38</a>
+    RET_TO     <a href="#state_3">shift, and go to state 3</a>
+    RET_FROM   <a href="#state_4">shift, and go to state 4</a>
+    IO_NUMBER  <a href="#state_5">shift, and go to state 5</a>
+    DLESS      <a href="#state_6">shift, and go to state 6</a>
+    DGREAT     <a href="#state_7">shift, and go to state 7</a>
+
+    $default  <a href="#rule_6">reduce using rule 6</a> (simple_command)
+
+    io_redirect  <a href="#state_39">go to state 39</a>
+    io_file      <a href="#state_14">go to state 14</a>
+    io_here      <a href="#state_15">go to state 15</a>
+</p>
+
+<div id="footer"><hr />This document was generated using
+      <a href="https://www.gnu.org/software/bison/" title="GNU Bison">
+      GNU Bison 3.8.2</a>
+      XML Automaton Report.<br />
+      Verbatim copying and distribution of this entire page is
+      permitted in any medium, provided this notice is preserved.</div></body>
+</html>

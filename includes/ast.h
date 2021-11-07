@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:19:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 15:17:50 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 10:16:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 /*
 ** BINARY TREE (AST) PARAMS
 */
-# define LEFT 0
-# define RIGHT 1
-# define TEMP 2
-# define TEMP_AND_RIGHT 3
-# define ALL 4
+# define AST 0
+# define BUFFER 1
+# define ALL 2
+# define NO_REDUC -1
+# define KEEP 0
+# define POP 1
 
 /*
 ** BINARY TREE (AST) STRUCTURE
@@ -30,6 +31,7 @@
 typedef struct s_node
 {
 	int				type;
+	int				reduc;
 	void			*data;
 	struct s_node	*left;
 	struct s_node	*right;
@@ -37,9 +39,8 @@ typedef struct s_node
 
 typedef struct s_ast_builder
 {
-	int		current_branch;
-	t_node	*buffer;
-	t_node	*branch[2];
+	t_node	**buffer;
+	t_node	*ast;
 }			t_ast_builder;
 
 typedef enum e_ast_types
@@ -57,21 +58,14 @@ typedef enum e_ast_types
 	A_RED_FROM
 }	t_ast_types;
 
-typedef enum e_ast_build
-{
-	B_PUT_TO_BUFFER = 0,
-	B_DO_NOTHING,
-	B_SWITCH_BRANCH,
-	B_APPLY_RULE,
-	B_BUFFER_THEN_RULE = 100
-}	t_ast_build;
-
 /*
 ** BINARY TREE (AST) FUNCTIONS
 */
-
-t_node			*ms_create_node(void *data, int type);
+t_node			*ms_create_node(void *data, int type, int reduc);
+void			ms_free_tree(t_node	*node);
 t_ast_builder	*ms_create_ast_builder(void);
+void			ms_buffer_add_back(t_node ***buffer, t_node *new);
+t_node			*ms_buffer_remove(t_node ***buffer, int i);
 void			ms_free_ast_builder(t_ast_builder **builder, int to_free);
 
 #endif

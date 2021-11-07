@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 15:32:51 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 10:08:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,11 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
-	/*if (ms_ast_builder(builder, &popped, reduction->type) == ERROR)
-		return (ms_free_stack(&popped, ERROR));
-	*/
+	/* UNCOMMENT TO BUILD AST */
+	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
+		return (ms_free_stack(popped, ERROR));
+	/* UNCOMMENT TO SHOW REDUCTIONS LIST */
+	/*
 	printf("%i : ", reduction->type);
 	while (*popped)
 	{
@@ -128,7 +130,7 @@ static int	ms_reduce(\
 		++popped;
 	}
 	printf("\n");
-	/**/
+	*/
 	return (EXIT_SUCCESS);
 }
 
@@ -177,19 +179,16 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 
 	builder = ms_create_ast_builder();
 	if (!builder)
-		return (NULL);
+		return (NULL);	
 	stack = NULL;
 	tok_end = ft_newtoken(NULL);
 	if (tok_end)
 	{
 		ft_tokenadd_back(&tok_list, tok_end);
 		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
-		{
-			ms_free_ast_builder(&builder, LEFT);
-			builder->branch[LEFT] = NULL;
-		}
+			builder->ast = NULL;
 	}
-	ast = builder->branch[LEFT];
-	ms_free_ast_builder(&builder, TEMP_AND_RIGHT);
+	ast = builder->ast;
+	ms_free_ast_builder(&builder, BUFFER);
 	return (ast);
 }

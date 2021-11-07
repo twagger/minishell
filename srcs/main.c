@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 09:29:24 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 10:30:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ static int	ms_loop(char **envp)
 			if (!tok_list)
 				status = ERROR;
 			ast = ms_parser(tok_list, table);
-			if (!ast)
+			if (!ast)// || (ast && ms_execute_ast(ast, envp) == ERROR))
 				status = ERROR;
+			// temporary function to check the tree
+			ms_visit_ast(ast);
 		}
 		else
 			printf("\n");

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 10:27:03 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/06 15:07:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ typedef enum e_rules
 	R_IO_FILE,
 	R_FILENAME,
 	R_IO_HERE,
-	R_HERE_END,
-	R_NEWLINE_LIST,
-	R_LINEBREAK
+	R_HERE_END
 }	t_rules;
 
 /*
@@ -71,7 +69,7 @@ typedef struct s_stack
 /*
 ** PARSER FUNCTIONS
 */
-
+int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduction);
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
 t_stack	*ms_new_stack_item(void *content, int type, int state);
