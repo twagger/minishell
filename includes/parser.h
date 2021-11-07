@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/06 15:07:36 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 11:54:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@
 /*
 ** PARSER DEFINES
 */
-# define NB_TRANS 172
-# define ACTION 114
-# define GOTO 58
+# define NB_TRANS 156
 # define AUTOMATON "./srcs/parser/parser/automaton"
 # define NO_ACTION -1
 # define DEFAULT -1
@@ -69,7 +67,7 @@ typedef struct s_stack
 /*
 ** PARSER FUNCTIONS
 */
-int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduction);
+int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
 t_stack	*ms_new_stack_item(void *content, int type, int state);

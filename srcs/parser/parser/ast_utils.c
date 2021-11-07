@@ -6,19 +6,27 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 10:29:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 11:56:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
-void	ms_visit_ast(t_node *node)
+void	ms_visit_ast(t_node *node, int mode)
 {
 	if (!node)
 		return ;
-	ms_visit_ast(node->left);
-	ms_visit_ast(node->right);
-	printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, node->data);
+	if (mode == PRE_ORDER)
+		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
+			node->data);
+	ms_visit_ast(node->left, mode);
+	if (mode == IN_ORDER)
+		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
+			node->data);
+	ms_visit_ast(node->right, mode);
+	if (mode == POST_ORDER)
+		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
+			node->data);
 }
 
 void	ms_free_tree(t_node	*node)

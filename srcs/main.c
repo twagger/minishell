@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 10:30:14 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 11:55:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	ms_loop(char **envp)
 	status = EXIT_SUCCESS;
 	table = ms_init_parsing_table();
 	if (!table)
-		status = ERROR;	
+		status = ERROR;
 	while (status == EXIT_SUCCESS)
 	{
 		line = readline("\x1B[32mMinishell> \e[0m");
@@ -40,8 +40,7 @@ static int	ms_loop(char **envp)
 			ast = ms_parser(tok_list, table);
 			if (!ast)// || (ast && ms_execute_ast(ast, envp) == ERROR))
 				status = ERROR;
-			// temporary function to check the tree
-			ms_visit_ast(ast);
+			ms_visit_ast(ast, POST_ORDER);
 		}
 		else
 			printf("\n");

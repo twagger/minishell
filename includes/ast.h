@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:19:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 10:16:26 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 11:51:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # define NO_REDUC -1
 # define KEEP 0
 # define POP 1
+# define PRE_ORDER 0
+# define IN_ORDER 1
+# define POST_ORDER 2
 
 /*
 ** BINARY TREE (AST) STRUCTURE
@@ -63,9 +66,11 @@ typedef enum e_ast_types
 */
 t_node			*ms_create_node(void *data, int type, int reduc);
 void			ms_free_tree(t_node	*node);
+void			ms_visit_ast(t_node *node, int mode);
+
 t_ast_builder	*ms_create_ast_builder(void);
-void			ms_buffer_add_back(t_node ***buffer, t_node *new);
-t_node			*ms_buffer_remove(t_node ***buffer, int i);
+int				ms_buffer_add_back(t_ast_builder **builder, t_node *new);
+t_node			*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void			ms_free_ast_builder(t_ast_builder **builder, int to_free);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 10:26:19 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 11:56:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,11 @@ static int	ms_stack_to_buffer(\
 	t_stack	*item, int reduction, t_ast_builder **builder)
 {
 	t_node	*new;
-	t_node	**new_buf;
 
 	new = ms_create_node(ft_strdup(item->data), item->type, reduction);
 	if (!new || (new && !new->data))
 		return (ERROR);
-	ms_buffer_add_back(&(*builder)->buffer, new);
-	if (!(*builder)->buffer)
+	if (ms_buffer_add_back(builder, new) == ERROR)
 	{
 		ms_free_tree(new);
 		return (ERROR);
@@ -45,7 +43,7 @@ static int	ms_stack_to_buffer(\
 
 t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	while ((*builder)->buffer[++i])
@@ -55,10 +53,10 @@ t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
 			if (action == KEEP)
 				return ((*builder)->buffer[i]);
 			else if (action == POP)
-				return (ms_buffer_remove(&(*builder)->buffer, i));
+				return (ms_buffer_remove(builder, i));
 		}
 	}
-	if ((*builder)->ast->reduc == reduc)
+	if ((*builder)->ast && (*builder)->ast->reduc == reduc)
 		return ((*builder)->ast);
 	return (NULL);
 }
@@ -76,7 +74,6 @@ static int	ms_apply_reduction(\
 	t_node	*node;
 	t_node	*child;
 
-	
 	if (nb == 1)
 	{
 		node = ms_get_popped(builder, popped[0]->type, KEEP);
@@ -94,7 +91,8 @@ static int	ms_apply_reduction(\
 		if (popped[i]->type >= 100)
 			child = ms_get_popped(builder, popped[i]->type, POP);
 		else
-			child = ms_create_node(ft_strdup(popped[i]->data), popped[i]->type, -1);
+			child = ms_create_node(ft_strdup(popped[i]->data), \
+				popped[i]->type, -1);
 		if (!child)
 			return (ERROR);
 		if (i == 0)
@@ -110,13 +108,12 @@ static int	ms_apply_reduction(\
 		}
 		if (i == 2)
 			node->left = child;
-	} // attach the tree to the ast if possible or let it in buffer
+	}
 	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left))
 		(*builder)->ast = node;
 	else
 	{
-		ms_buffer_add_back(&(*builder)->buffer, node);
-		if (!(*builder)->buffer)
+		if (ms_buffer_add_back(builder, node) == ERROR)
 			return (ERROR);
 	}
 	return (EXIT_SUCCESS);
@@ -140,7 +137,7 @@ static int	ms_simplify_tree(t_ast_builder **builder)
 ** build a binary tree from bottom - left to top.
 */
 
-int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduction)
+int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc)
 {
 	int	nb;
 
@@ -149,12 +146,12 @@ int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduction)
 		++nb;
 	if (nb == 1 && popped[0]->type < 100)
 	{
-		if (ms_stack_to_buffer(popped[0], reduction, builder) == ERROR)
+		if (ms_stack_to_buffer(popped[0], reduc, builder) == ERROR)
 			return (ERROR);
 	}
 	else
 	{
-		if (ms_apply_reduction(builder, popped, reduction, nb) == ERROR)
+		if (ms_apply_reduction(builder, popped, reduc, nb) == ERROR)
 			return (ERROR);
 		if (ms_simplify_tree(builder) == ERROR)
 			return (ERROR);
