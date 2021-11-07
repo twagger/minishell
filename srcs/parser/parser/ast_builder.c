@@ -6,13 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:56:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 16:19:13 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-#include "ast.h"
 
 /*
 ** BUFFER THE TERM
@@ -24,7 +23,7 @@ static int	ms_stack_to_buffer(\
 {
 	t_node	*new;
 
-	new = ms_create_node(ft_strdup(item->data), item->type, reduction);
+	new = ms_new_node(ft_strdup(item->data), item->type, reduction);
 	if (!new || (new && !new->data))
 		return (ERROR);
 	if (ms_buffer_add_back(builder, new) == ERROR)
@@ -70,9 +69,7 @@ t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
 static int	ms_apply_reduction(\
 	t_ast_builder **builder, t_stack **popped, int reduction, int nb)
 {
-	int		i;
 	t_node	*node;
-	t_node	*child;
 
 	if (nb == 1)
 	{
@@ -82,33 +79,11 @@ static int	ms_apply_reduction(\
 		node->reduc = reduction;
 		return (EXIT_SUCCESS);
 	}
-	node = ms_create_node(NULL, -1, reduction);
+	node = ms_new_node(NULL, -1, reduction);
 	if (!node)
 		return (ERROR);
-	i = -1;
-	while (++i < nb)
-	{
-		if (popped[i]->type >= 100)
-			child = ms_get_popped(builder, popped[i]->type, POP);
-		else
-			child = ms_create_node(ft_strdup(popped[i]->data), \
-				popped[i]->type, -1);
-		if (!child)
-			return (ERROR);
-		if (i == 0)
-			node->right = child;
-		if (i == 1 && nb == 2)
-			node->left = child;
-		if (i == 1 && nb == 3)
-		{
-			child->right = node->right;
-			child->reduc = reduction;
-			free(node);
-			node = child;
-		}
-		if (i == 2)
-			node->left = child;
-	}
+	if (ms_build_subtree(builder, popped, reduction, &node) == ERROR)
+		return (ERROR);
 	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left))
 		(*builder)->ast = node;
 	else

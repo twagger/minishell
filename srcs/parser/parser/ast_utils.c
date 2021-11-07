@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:56:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 16:09:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
+#include "parser.h"
 
 void	ms_visit_ast(t_node *node, int mode)
 {
@@ -18,15 +18,15 @@ void	ms_visit_ast(t_node *node, int mode)
 		return ;
 	if (mode == PRE_ORDER)
 		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
-			node->data);
+			(char *)node->data);
 	ms_visit_ast(node->left, mode);
 	if (mode == IN_ORDER)
 		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
-			node->data);
+			(char *)node->data);
 	ms_visit_ast(node->right, mode);
 	if (mode == POST_ORDER)
 		printf("TYPE : %i, REDUC : %i, DATA : %s\n", node->type, node->reduc, \
-			node->data);
+			(char *)node->data);
 }
 
 void	ms_free_tree(t_node	*node)
@@ -45,7 +45,7 @@ void	ms_free_tree(t_node	*node)
 	}
 }
 
-t_node	*ms_create_node(void *data, int type, int reduc)
+t_node	*ms_new_node(void *data, int type, int reduc)
 {
 	t_node	*new;
 

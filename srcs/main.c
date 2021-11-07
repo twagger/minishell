@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:55:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 15:35:30 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "ast.h"
 #include "token.h"
 #include "parser.h"
 

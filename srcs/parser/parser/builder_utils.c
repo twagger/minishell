@@ -6,11 +6,41 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 10:22:47 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 12:08:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 16:11:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
+#include "parser.h"
+
+int	ms_build_subtree(\
+	t_ast_builder **builder, t_stack **term, int reduc, t_node **node)
+{
+	int		i;
+	t_node	*child;
+
+	i = -1;
+	while (term[++i])
+	{
+		if (term[i]->type >= 100)
+			child = ms_get_popped(builder, term[i]->type, POP);
+		else
+			child = ms_new_node(ft_strdup(term[i]->data), term[i]->type, -1);
+		if (!child)
+			return (ERROR);
+		if (i == 0)
+			(*node)->right = child;
+		if ((i == 1 && !term[i + 1]) || i == 2)
+			(*node)->left = child;
+		if (i == 1 && term[i + 1])
+		{
+			child->right = (*node)->right;
+			child->reduc = reduc;
+			free(*node);
+			*node = child;
+		}
+	}
+	return (EXIT_SUCCESS);
+}
 
 int	ms_buffer_add_back(t_ast_builder **builder, t_node *new)
 {
@@ -78,20 +108,18 @@ void	ms_free_ast_builder(t_ast_builder **builder, int to_free)
 	}
 }
 
-t_ast_builder	*ms_create_ast_builder(void)
+int	ms_init_ast_builder(t_ast_builder **builder)
 {
-	t_ast_builder	*new;
-
-	new = (t_ast_builder *)malloc(sizeof(*new));
-	if (!new)
-		return (NULL);
-	new->buffer = (t_node **)malloc(sizeof(t_node *));
-	if (!new->buffer)
+	*builder = (t_ast_builder *)malloc(sizeof(**builder));
+	if (!*builder)
+		return (ERROR);
+	(*builder)->buffer = (t_node **)malloc(sizeof(t_node *));
+	if (!(*builder)->buffer)
 	{
-		free(new);
-		return (NULL);
+		free(*builder);
+		return (ERROR);
 	}
-	new->buffer[0] = NULL;
-	new->ast = NULL;
-	return (new);
+	(*builder)->buffer[0] = NULL;
+	(*builder)->ast = NULL;
+	return (EXIT_SUCCESS);
 }

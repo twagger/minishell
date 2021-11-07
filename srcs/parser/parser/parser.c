@@ -6,14 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 11:58:07 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 15:54:38 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 #include "token.h"
-#include "ast.h"
 
 /*
 ** LR Parser
@@ -176,8 +175,7 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 	t_stack			*stack;
 	t_ast_builder	*builder;
 
-	builder = ms_create_ast_builder();
-	if (!builder)
+	if (ms_init_ast_builder(&builder) == ERROR)
 		return (NULL);
 	stack = NULL;
 	tok_end = ft_newtoken(NULL);

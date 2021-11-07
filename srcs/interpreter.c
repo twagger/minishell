@@ -6,13 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 12:07:16 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/07 15:38:06 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
-#include "ast.h"
+#include "parser.h"
 
 static int	ms_is_builtin(char *command)
 {
