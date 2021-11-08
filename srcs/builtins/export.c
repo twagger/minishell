@@ -10,7 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+//#include "minishell.h"
+#include "../../includes/minishell.h"
+#include "../../libft/libft.h"
+
+typedef struct s_env
+{
+	char			*name;
+	char			*content;
+	struct s_env 	*next;
+}		t_env;
 
 /*
 ** Check if the param is like this : name=[value]
@@ -100,7 +109,7 @@ static	void	ms_clean_envp(char **envp, int ec)
 ** Malloc a new envp list of strings with every new exported param in it
 */
 
-int	ms_export(int ac, char **av, char **envp, t_param *prm)
+int	ms_export(int ac, char **av, char **envp)
 {
 	int		i;
 	int		nb_total;
@@ -150,5 +159,98 @@ int	ms_export(int ac, char **av, char **envp, t_param *prm)
 	prm->malloced_env = 1;
 	*envp = *new_env;
 	printf("Test\n");
+	return (0);
+}
+
+void	ft_envadd(t_env **lst, t_env *new)
+{
+	t_env	*current;
+
+	if (!(*lst))
+	{
+		(*lst) = new;
+		return ;
+	}
+	current = (*lst);
+	while (current->next != 0)
+	{
+		current = current->next;
+	}
+	current->next = new;
+}
+
+t_env	*ft_envnew(char *envp)
+{
+	t_env		*re;
+	char		**sep;
+
+	re = (t_env *)malloc(sizeof(t_env));
+	if (!re)
+		return (0);
+	sep = ft_split(envp, '=');
+	if (!sep)
+		return (0);
+	re->name = sep[0];
+	re->content = sep[1];
+	re->next = 0;
+	return (re);
+}
+
+void	printf_out(t_env *list)
+{
+	while(list)
+	{
+		printf("Export : \n");
+		printf("%s=%s\n", list->name, list->content);
+		list = list->next;
+	}
+}
+
+t_env *init_env(char **envp)
+{
+	t_env	*new;
+	t_env	*list;
+
+	list = NULL;
+	while (*envp)
+	{
+		new = ft_envnew(*envp);
+		if(!new)
+			return (0);
+		ft_envadd(&list, new);
+		envp++;
+	}
+	return (list);
+}
+
+int main(int ac, char **av, char **envp)
+{
+	t_env *my_envp;
+	char **cmd;
+
+	my_envp = init_env(envp);
+	cmd = ft_split(av[1], ' ');
+	if (!cmd[1])
+	{
+		printf_out(my_envp);
+		exit(0);
+	}
+	else 
+	{
+		
+	}
+	printf("There :%s, %s\n", cmd[0], cmd[1]);
+
+
+	//printf_out(my_envp);
+	// while (*envp)
+	// {
+	// 	printf("|%s|\n", *envp);
+	// 	envp++;
+	// }
+	
+
+
+
 	return (0);
 }
