@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 16:15:13 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/10 16:08:06 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	ms_execute_builtin(char **args, char **envp)
 		ret = ms_echo(ac, args);
 	if (ft_strncmp(args[0], "env", 4) == 0)
 		ret = ms_env(ac, args, envp);
-	/*if (ft_strncmp(args[0], "export", 7) == 0)
-		ret = ms_export(ac, args, envp, prm);*/
+	if (ft_strncmp(args[0], "export", 7) == 0)
+		ret = ms_export(ac, args, envp);
 	if (ft_strncmp(args[0], "unset", 6) == 0)
 		ret = ms_unset(ac, args, envp);
 	if (ft_strncmp(args[0], "exit", 5) == 0)

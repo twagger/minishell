@@ -6,22 +6,15 @@
 /*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/09 16:49:12 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/10 16:41:41 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "minishell.h"
-#include "../../includes/minishell.h"
-#include "../../libft/libft.h"
+#include "minishell.h"
+//#include "../../includes/minishell.h"
+//#include "../../libft/libft.h"
 
-typedef struct s_env
-{
-	char			*name;
-	char			*content;
-	struct s_env 	*next;
-}		t_env;
 
-static t_env *g_my_envp = 0;
 /*
 ** Check if the param is like this : name=[value]
 ** I don't handle yet '+=' operator
@@ -191,13 +184,15 @@ t_env	*ft_envnew(char *envp)
 	return (re);
 }
 
-void	printf_out(t_env *list)
+void	printf_out_env(t_env *list)
 {
-	while(list)
+	t_env *temp;
+
+	temp = list;
+	while(temp)
 	{
-		printf("Export : \n");
-		printf("%s=%s\n", list->name, list->content);
-		list = list->next;
+		printf("%s=%s\n", temp->name, temp->content);
+		temp = temp->next;
 	}
 }
 
@@ -340,7 +335,7 @@ int	realloc_var(char *cmd, t_env *envp)
 		return (1);
 	while (envp)
 	{
-		if (ft_strncmp(name, envp->name, len) == 0)
+		if (ft_strncmp(name, envp->name, len + 1) == 0)
 			realloc_var_2(cmd, &envp);
 		envp = envp->next;
 	}
@@ -349,32 +344,33 @@ int	realloc_var(char *cmd, t_env *envp)
 
 int	ms_export(int ac, char **av, char **envp)
 {
-	char **cmd;
+	//char **cmd;
 	int		i;
 
 	(void)ac;
-	g_my_envp = init_env(envp);
+	if (!g_my_envp)
+		g_my_envp = init_env(envp);
 	if (g_my_envp == NULL)
-		exit(1);
-	cmd = ft_split(av[1], ' ');
-	if (!cmd[1])
+		return (1);;
+	//cmd = ft_split(av[1], ' ');
+	if (!av[1])
 	{
-		printf_out(g_my_envp);
-		exit(0);
+		printf_out_env(g_my_envp);
+		return (0);
 	}
 	i = 0;
-	while(cmd[++i])
+	while(av[++i])
 	{
-		if (!ms_is_param_ok(cmd[i]))
+		if (!ms_is_param_ok(av[i]))
 		{
 			//free now?
 			printf("not a valid identifier\n");
 			continue ;
 			//exit(1);
 		}
-		if (ms_is_param_new(cmd[i], g_my_envp))
+		if (ms_is_param_new(av[i], g_my_envp))
 		{
-			if (add_newenvp(cmd[i], &g_my_envp))
+			if (add_newenvp(av[i], &g_my_envp))
 			{
 				printf("Error happened while exporting var\n");
 				continue ;
@@ -382,14 +378,13 @@ int	ms_export(int ac, char **av, char **envp)
 		}
 		else
 		{
-			if (realloc_var(cmd[i], g_my_envp))
+			if (realloc_var(av[i], g_my_envp))
 			{
 				printf("Error happened while realloc var\n");
 				continue ;
 			}
 		}
-
 	}
-	printf_out(g_my_envp);
+	//printf_out_env(g_my_envp);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 15:38:06 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/10 14:59:30 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "token.h"
 #include "parser.h"
 
-static int	ms_is_builtin(char *command)
+int	ms_is_builtin(char *command)
 {
 	if (ft_strncmp(command, "cd", ft_strlen(command)) == 0 || \
 		ft_strncmp(command, "env", ft_strlen(command)) == 0 || \

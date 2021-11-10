@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/06 14:21:51 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/10 16:08:52 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@
 # include <unistd.h>
 # include "libft.h"
 
+typedef struct s_env
+{
+	char			*name;
+	char			*content;
+	struct s_env 	*next;
+}		t_env;
+
+t_env *g_my_envp;
+
 /*
 ** GLOBAL PARAMS
 */
@@ -37,6 +46,7 @@
 ** CORE FUNCTIONS
 */
 int		ms_execute(char **args, char **envp);
+int		ms_is_builtin(char *command);
 int		ms_execute_builtin(char **args, char **envp);
 
 /*
@@ -58,6 +68,9 @@ int		ms_echo(int ac, char **av);
 int		ms_cd(int ac, char **av);
 int		ms_pwd(int ac, char **av);
 int		ms_env(int ac, char **av, char **envp);
+int		ms_export(int ac, char **av, char **envp);
+void	printf_out_env(t_env *list);
+t_env	*init_env(char **envp);
 //int		ms_export(int ac, char **av, char **envp, t_param *prm);
 int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
