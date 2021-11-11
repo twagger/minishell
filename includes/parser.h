@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 15:54:33 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 16:11:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,5 +144,7 @@ void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
 			int reduc, t_node **node);
 t_node	*ms_simplify_tree(t_node *tree);
+
+int		ms_execute_ast(t_node *ast, char **envp);
 
 #endif

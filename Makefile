@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/11 13:56:05 by twagner          ###   ########.fr        #
+#    Updated: 2021/11/11 16:04:41 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,6 @@ AR			= ar rcs
 #                                 SOURCES                                      #
 ################################################################################
 SRCS		= srcs/main.c \
-			  srcs/execute.c \
 			  srcs/parser/lexer/lexer.c \
 			  srcs/parser/lexer/split_qu.c \
 			  srcs/parser/lexer/split_qu2.c \
@@ -51,9 +50,10 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/builder_utils.c \
 			  srcs/parser/parser/ast_reducer.c \
 			  srcs/parser/parser/parser.c \
-			  srcs/interpreter.c \
-			  srcs/utils/path.c \
-			  srcs/utils/arg_array.c \
+			  srcs/interpreter/interpreter.c \
+			  srcs/interpreter/execute.c \
+			  srcs/interpreter/arg_utils.c \
+			  srcs/interpreter/path_utils.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \
 			  srcs/builtins/env.c \

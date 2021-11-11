@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 11:49:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 16:09:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ms_is_builtin(char *command)
 ** into Pipex, Execve or a builtin for execution
 */
 
-static char	**ms_visit(t_node *node, char **args, char **envp)
+/* static char	**ms_visit(t_node *node, char **args, char **envp)
 {
 	if (!node)
 		return (args);
@@ -54,10 +54,21 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 		args = ms_init_arg_array();
 	}
 	return (args);
+} */
+
+static char	**ms_visit(t_node *node, char **args, char **envp)
+{
+	if (!node)
+		return (args);
+	args = ms_visit(node->left, args, envp);
+	args = ms_visit(node->right, args, envp);
+	args = ms_add_one_arg(args, node->data);
+	return (args);
 }
 
 int	ms_execute_ast(t_node *ast, char **envp)
 {
+	int		i;
 	char	**args;
 
 	args = ms_init_arg_array();
@@ -66,6 +77,12 @@ int	ms_execute_ast(t_node *ast, char **envp)
 	{
 		ms_free_arg_array(args);
 		return (EXIT_FAILURE);
+	}
+	else
+	{
+		i = -1;
+		while (args[++i])
+			printf("ARGS : %s\n", args[i]);
 	}
 	// args > Table of arguments
 	// if pipe in cmd > pipex (args)

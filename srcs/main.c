@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 14:22:37 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 16:10:38 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static int	ms_loop(char **envp)
 			printf("----------\n");
 			printf("TREE\n----------\n");
 			ms_visit_ast(ast, POST_ORDER);
+			ms_execute_ast(ast, NULL);
 			printf("----------\n");
 		}
 		else
