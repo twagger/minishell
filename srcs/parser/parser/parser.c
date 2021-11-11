@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 15:53:03 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 16:19:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,15 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** Pop the token and rules out of the stack and replace them with
 ** the corresponding production. Then add the next state on the 
 ** top of the stack
-*/
+** FOR DEBUG, ADD THIS PART BEFORE ms_ast_builder :
+** /*
+**	printf("%i : ", reduction->type);
+**	int i;
+**	i = -1;
+**	while (popped[++i])
+**		printf("%i ", popped[i]->type);
+**	printf("\n");
+** */
 
 static int	ms_reduce(\
 	t_stack **stack, t_trans **table, int i_table, t_ast_builder **builder)
@@ -116,14 +124,6 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
-	/* UNCOMMENT TO SHOW REDUCTIONS LIST */
-	printf("%i : ", reduction->type);
-	int i;
-	i = -1;
-	while (popped[++i])
-		printf("%i ", popped[i]->type);
-	printf("\n");
-	/* UNCOMMENT TO BUILD AST */
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
 	return (EXIT_SUCCESS);
