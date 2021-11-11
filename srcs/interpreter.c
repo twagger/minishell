@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/10 14:59:30 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/11 11:49:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,19 @@ int	ms_is_builtin(char *command)
 	return (0);
 }
 
+/*
+** VISIT AST
+** This function builds an arg array from the ast to be pushed 
+** into Pipex, Execve or a builtin for execution
+*/
+
 static char	**ms_visit(t_node *node, char **args, char **envp)
 {
 	if (!node)
 		return (args);
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
-	if (node->type == A_OPE)
+	if (node->type == A_PARAM)
 		args = ms_add_one_arg(args, node->data);
 	else if (node->type == A_CMD)
 	{
@@ -55,11 +61,16 @@ int	ms_execute_ast(t_node *ast, char **envp)
 	char	**args;
 
 	args = ms_init_arg_array();
-	if (!ms_visit(ast, args, envp))
+	args = ms_visit(ast, args, envp);
+	if (!args)
 	{
 		ms_free_arg_array(args);
 		return (EXIT_FAILURE);
 	}
+	// args > Table of arguments
+	// if pipe in cmd > pipex (args)
+	// else 
+	// - buildins or execve (+ redirection ?)
 	ms_free_arg_array(args);
 	return (EXIT_SUCCESS);
 }

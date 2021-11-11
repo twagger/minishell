@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 19:08:05 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 15:39:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ static int	ms_stack_to_buffer(\
 {
 	t_node	*new;
 
+	if (item->type == T_WORD && reduction == R_HERE_END)
+		item->type = A_LIMITER;
+	if (item->type == T_WORD && reduction == R_FILENAME)
+		item->type = A_FILE;
 	new = ms_new_node(ft_strdup(item->data), item->type, reduction);
 	if (!new || (new && !new->data))
 		return (ERROR);
@@ -84,7 +88,8 @@ static int	ms_apply_reduction(\
 		return (ERROR);
 	if (ms_build_subtree(builder, popped, reduction, &node) == ERROR)
 		return (ERROR);
-	if (!(*builder)->ast || ((*builder)->ast && (*builder)->ast == node->left)\
+	if (!(*builder)->ast \
+		|| ((*builder)->ast && (*builder)->ast == node->left) \
 		|| ((*builder)->ast && (*builder)->ast == node->right))
 		(*builder)->ast = node;
 	else
@@ -93,18 +98,6 @@ static int	ms_apply_reduction(\
 			return (ERROR);
 	}
 	return (EXIT_SUCCESS);
-}
-
-/*
-** SIMPLIFY THE TREE
-** This function simplifies the tree by removing useless nodes and promoting
-** and flagging operator nodes
-*/
-
-static int	ms_simplify_tree(t_ast_builder **builder)
-{
-	(void)builder;
-	return (0);
 }
 
 /*
@@ -128,8 +121,6 @@ int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc)
 	else
 	{
 		if (ms_apply_reduction(builder, popped, reduc, nb) == ERROR)
-			return (ERROR);
-		if (ms_simplify_tree(builder) == ERROR)
 			return (ERROR);
 	}
 	return (EXIT_SUCCESS);

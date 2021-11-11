@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 16:09:09 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 15:54:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** PARSER PARAMS
 */
 # define NB_TRANS 156
-# define AUTOMATON "./srcs/parser/parser/automaton"
+# define AUTOMATON "./srcs/parser/parser/parsing_table"
 # define NO_ACTION -1
 # define DEFAULT -1
 # define SHIFT 0
@@ -54,20 +54,23 @@ typedef enum e_rules
 # define PRE_ORDER 0
 # define IN_ORDER 1
 # define POST_ORDER 2
+# define LEFT 0
+# define RIGHT 1
+# define ROOT 2
 
 typedef enum e_ast_types
 {
 	A_CMD = 0,
-	A_OPE,
+	A_PARAM,
 	A_FILE,
-	A_HERE,
-	A_AND_IF = 4,
+	A_AND_IF,
 	A_OR_IF,
 	A_DLESS,
 	A_DGREAT,
 	A_PIPE,
 	A_RED_TO,
-	A_RED_FROM
+	A_RED_FROM,
+	A_LIMITER
 }	t_ast_types;
 
 /*
@@ -140,5 +143,6 @@ t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
 			int reduc, t_node **node);
+t_node	*ms_simplify_tree(t_node *tree);
 
 #endif

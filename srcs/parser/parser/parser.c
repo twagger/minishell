@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/07 18:58:25 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 15:53:03 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,11 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 		ft_tokenadd_back(&tok_list, tok_end);
 		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
 			builder->ast = NULL;
+		else if (!builder->ast)
+		{
+			if (builder->buffer[0])
+				builder->ast = builder->buffer[0];
+		}
 	}
-	return (builder->ast);
+	return (ms_simplify_tree(builder->ast));
 }

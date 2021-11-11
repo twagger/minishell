@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+         #
+#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/10 14:39:07 by wlo              ###   ########.fr        #
+#    Updated: 2021/11/11 13:56:05 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,7 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/ast_utils.c \
 			  srcs/parser/parser/ast_builder.c \
 			  srcs/parser/parser/builder_utils.c \
+			  srcs/parser/parser/ast_reducer.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/interpreter.c \
 			  srcs/utils/path.c \
