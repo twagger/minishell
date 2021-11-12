@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:18:16 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 11:22:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,6 @@ int	ms_execute_ast(t_node *ast, char **envp)
 	args = ms_ast_to_arg_list(ast, args);
 	if (!args)
 		return (ERROR);
-	/* */
-	t_arglist *begin;
-	begin = args;
-	while (args)
-	{
-		printf("ARGS : %i - %s\n", args->type, args->data);
-		args = args->next;
-	}
-	args = begin;
-	/* */
 	if (nb_pipe && ms_exec_pipeline(args, envp, nb_pipe) == ERROR)
 		return (EXIT_FAILURE);
 	else if (nb_redir_end && ms_exec_command(args, envp) == ERROR)
