@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:13:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 16:17:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,45 +23,43 @@ void	printf_out(t_token *all)
 	printf("----------\n"); 
 }
 
+/*
+** SHELL LOOP
+** for DEBUG add part below after ast = ms_parser
+**
+** printf("TREE\n----------\n");
+** ms_visit_ast(ast, POST_ORDER);
+** printf("----------\n");
+*/
+
 static int	ms_loop(char **envp)
 {
 	char	*line;
-	t_token	*tok_list;
-	t_trans	**table;
+	t_trans	**parsing_table;
 	int		status;
 	t_node	*ast;
 
-	(void)envp;
-	tok_list = NULL;
 	status = EXIT_SUCCESS;
-	table = ms_init_parsing_table();
-	if (!table)
+	parsing_table = ms_init_parsing_table();
+	if (!parsing_table)
 		status = ERROR;
 	while (status == EXIT_SUCCESS)
 	{
 		line = readline("\x1B[32mMinishell> \e[0m");
 		if (line)
 		{
-			tok_list = ms_tokenizer(line);
-			if (!tok_list)
-				status = ERROR;
-			printf_out(tok_list);
-			printf("PARSER\n----------\n");
-			ast = ms_parser(tok_list, table);
-			if (!ast)// || (ast && ms_execute_ast(ast, envp) == ERROR))
-				status = ERROR;
-			printf("----------\n");
-			printf("TREE\n----------\n");
+			ast = ms_parser(ms_tokenizer(line), parsing_table);
+			printf("TREE (POST ORDER)\n----------\n");
 			ms_visit_ast(ast, POST_ORDER);
-			ms_execute_ast(ast, NULL);
 			printf("----------\n");
+			if (ast && ms_execute_ast(ast, envp) == ERROR)
+				status = ERROR;
 		}
 		else
 			printf("\n");
 		free(line);
 	}
-	ms_free_tokens(tok_list);
-	ms_free_table(table);
+	ms_free_table(parsing_table);
 	return (status);
 }
 
@@ -89,7 +87,6 @@ static int	ms_loop(char **envp)
 	}
 } */
 
-
 int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
@@ -97,6 +94,5 @@ int	main(int ac, char **av, char **envp)
 	g_my_envp = 0;
 	if (ms_loop(envp) == ERROR)
 		return (EXIT_FAILURE);
-	// test_env(envp);
 	return (EXIT_SUCCESS);
 }

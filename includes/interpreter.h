@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:00:28 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 16:09:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,4 @@ int			ms_exec_pipeline(t_node *ast, char **envp, int nb_pipe);
 int			ms_exec_command(t_node *ast, char **envp);
 int			ms_exec_simple_command(t_node *ast, char **envp);
 
-# endif
+#endif
