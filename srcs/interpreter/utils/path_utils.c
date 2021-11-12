@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:32:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/16 11:47:01 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 09:31:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "interpreter.h"
 
 /*
 ** Concat a directory and a binary name, test if the binary is in the dir.

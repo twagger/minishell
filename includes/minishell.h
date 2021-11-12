@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 16:11:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 09:35:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,6 @@ t_env *g_my_envp;
 int		ms_execute(char **args, char **envp);
 int		ms_is_builtin(char *command);
 int		ms_execute_builtin(char **args, char **envp);
-
-/*
-** UTILS
-*/
-
-int		ft_cleaner(char *line, char **args, int exit_code);
-int		ms_getbin_path(char **bin);
-char	**ms_init_arg_array(void);
-char	**ms_add_one_arg(char **array, char *data);
-char	**ms_add_command(char **array, char *cmd);
-void	ms_free_arg_array(char **array);
 
 /*
 ** BUILTINS

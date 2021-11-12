@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/11 16:04:41 by twagner          ###   ########.fr        #
+#    Updated: 2021/11/12 11:14:52 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,9 +51,12 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/ast_reducer.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/interpreter/interpreter.c \
-			  srcs/interpreter/execute.c \
-			  srcs/interpreter/arg_utils.c \
-			  srcs/interpreter/path_utils.c \
+			  srcs/interpreter/exec_pipeline.c \
+			  srcs/interpreter/exec_command.c \
+			  srcs/interpreter/exec_simple_command.c \
+			  srcs/interpreter/utils/arg_utils.c \
+			  srcs/interpreter/utils/arglist_utils.c \
+			  srcs/interpreter/utils/path_utils.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \
 			  srcs/builtins/env.c \

@@ -6,88 +6,69 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 16:09:12 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 11:18:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "token.h"
+#include "interpreter.h"
 #include "parser.h"
 
-int	ms_is_builtin(char *command)
-{
-	if (ft_strncmp(command, "cd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "env", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "echo", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "pwd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "exit", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "export", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "unset", ft_strlen(command)) == 0)
-		return (1);
-	return (0);
-}
-
 /*
-** VISIT AST
-** This function builds an arg array from the ast to be pushed 
-** into Pipex, Execve or a builtin for execution
+** INTERPRETER
+** The interpreter browse the AST in a certain order and push the arguments
+** to the right executer (pipeline, command, simple command)
 */
 
-/* static char	**ms_visit(t_node *node, char **args, char **envp)
+static t_arglist	*ms_ast_to_arg_list(t_node *node, t_arglist *args)
 {
 	if (!node)
 		return (args);
-	args = ms_visit(node->left, args, envp);
-	args = ms_visit(node->right, args, envp);
-	if (node->type == A_PARAM)
-		args = ms_add_one_arg(args, node->data);
-	else if (node->type == A_CMD)
-	{
-		args = ms_add_command(args, node->data);
-		if (!args)
-			return (NULL);
-		if (ms_is_builtin(args[0]))
-			ms_execute_builtin(args, envp);
-		else
-			ms_execute(args, envp);
-		ms_free_arg_array(args);
-		args = ms_init_arg_array();
-	}
+	args = ms_ast_to_arg_list(node->left, args);
+	args = ms_ast_to_arg_list(node->right, args);
+	ms_arglistadd_back(&args, ms_arglist_new(node->data, node->type));
 	return (args);
-} */
+}
 
-static char	**ms_visit(t_node *node, char **args, char **envp)
+static int	ms_search_ast(t_node *node, int needle, int nb)
 {
 	if (!node)
-		return (args);
-	args = ms_visit(node->left, args, envp);
-	args = ms_visit(node->right, args, envp);
-	args = ms_add_one_arg(args, node->data);
-	return (args);
+		return (nb);
+	if (node->type == needle)
+		++nb;
+	nb = ms_search_ast(node->left, needle, nb);
+	nb = ms_search_ast(node->right, needle, nb);
+	return (nb);
 }
 
 int	ms_execute_ast(t_node *ast, char **envp)
 {
-	int		i;
-	char	**args;
+	int			nb_pipe;
+	int			nb_redir_end;
+	t_arglist	*args;
 
-	args = ms_init_arg_array();
-	args = ms_visit(ast, args, envp);
+	args = NULL;
+	nb_pipe = ms_search_ast(ast, A_PIPE, 0);
+	nb_redir_end = ms_search_ast(ast, A_RED_TO, 0) \
+		+ ms_search_ast(ast, A_RED_FROM, 0) + ms_search_ast(ast, A_DGREAT, 0) \
+		+ ms_search_ast(ast, A_DLESS, 0);
+	args = ms_ast_to_arg_list(ast, args);
 	if (!args)
+		return (ERROR);
+	/* */
+	t_arglist *begin;
+	begin = args;
+	while (args)
 	{
-		ms_free_arg_array(args);
+		printf("ARGS : %i - %s\n", args->type, args->data);
+		args = args->next;
+	}
+	args = begin;
+	/* */
+	if (nb_pipe && ms_exec_pipeline(args, envp, nb_pipe) == ERROR)
 		return (EXIT_FAILURE);
-	}
-	else
-	{
-		i = -1;
-		while (args[++i])
-			printf("ARGS : %s\n", args[i]);
-	}
-	// args > Table of arguments
-	// if pipe in cmd > pipex (args)
-	// else 
-	// - buildins or execve (+ redirection ?)
-	ms_free_arg_array(args);
+	else if (nb_redir_end && ms_exec_command(args, envp) == ERROR)
+		return (EXIT_FAILURE);
+	else if (ms_exec_simple_command(ast, envp) == ERROR)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

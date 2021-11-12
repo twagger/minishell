@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:02:55 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 16:03:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 09:32:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "interpreter.h"
 
 static int	ms_args_len(char **args)
 {
@@ -34,7 +34,7 @@ void	ms_free_arg_array(char **args)
 	}
 }
 
-char	**ms_add_one_arg(char **args, char *data)
+char	**ms_add_arg_back(char **args, char *data)
 {
 	int		i;
 	int		ac;
@@ -58,7 +58,7 @@ char	**ms_add_one_arg(char **args, char *data)
 	return (new);
 }
 
-char	**ms_add_command(char **args, char *cmd)
+char	**ms_add_arg_front(char **args, char *cmd)
 {
 	int		i;
 	int		ac;

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 16:19:56 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/11 16:31:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,14 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** the corresponding production. Then add the next state on the 
 ** top of the stack
 ** FOR DEBUG, ADD THIS PART BEFORE ms_ast_builder :
-** /*
+**
 **	printf("%i : ", reduction->type);
 **	int i;
 **	i = -1;
 **	while (popped[++i])
 **		printf("%i ", popped[i]->type);
 **	printf("\n");
-** */
+*/
 
 static int	ms_reduce(\
 	t_stack **stack, t_trans **table, int i_table, t_ast_builder **builder)
