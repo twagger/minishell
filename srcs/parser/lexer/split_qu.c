@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2021/11/02 10:28:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:14:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "token.h"
+#include "parser.h"
 
 int	sep(char s, char c)
 {

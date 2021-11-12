@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 09:26:04 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 09:26:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:14:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "token.h"
+#include "parser.h"
 
 int	count_w_qu_2(int state, char *s, char c, int *count)
 {

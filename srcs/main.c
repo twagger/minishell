@@ -6,12 +6,10 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 14:40:07 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:13:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "token.h"
 #include "parser.h"
 
 void	printf_out(t_token *all)

@@ -6,11 +6,10 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 15:39:40 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:14:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "parser.h"
 
 /*

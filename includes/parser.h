@@ -6,14 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:00:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:11:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 # include "minishell.h"
-# include "token.h"
 
 /*
 ** PARSER PARAMS
@@ -60,20 +59,31 @@ typedef enum e_rules
 # define RIGHT 1
 # define ROOT 2
 
-typedef enum e_ast_types
+/*
+** LEXER STRUCTURES
+*/
+
+typedef enum e_token_types
 {
-	A_CMD = 0,
-	A_PARAM,
-	A_FILE,
-	A_AND_IF,
-	A_OR_IF,
-	A_DLESS,
-	A_DGREAT,
-	A_PIPE,
-	A_RED_TO,
-	A_RED_FROM,
-	A_LIMITER
-}	t_ast_types;
+	T_END = -2,
+	T_WORD = 0,
+	T_ASSIGNMENT_WORD,
+	T_IO_NUMBER,
+	T_AND_IF,
+	T_OR_IF,
+	T_DLESS,
+	T_DGREAT,
+	T_PIPE,
+	T_RED_TO,
+	T_RED_FROM
+}	t_token_types;
+
+typedef struct s_token
+{
+	int				type;
+	void			*value;
+	struct s_token	*next;
+}					t_token;
 
 /*
 ** PARSER STRUCTURES
@@ -114,6 +124,39 @@ typedef struct s_ast_builder
 	t_node	**buffer;
 	t_node	*ast;
 }			t_ast_builder;
+
+typedef enum e_ast_types
+{
+	A_CMD = 0,
+	A_PARAM,
+	A_FILE,
+	A_AND_IF,
+	A_OR_IF,
+	A_DLESS,
+	A_DGREAT,
+	A_PIPE,
+	A_RED_TO,
+	A_RED_FROM,
+	A_LIMITER
+}	t_ast_types;
+
+/*
+** LEXER FUNCTIONS
+*/
+
+t_token	*ms_tokenizer(char *line);
+
+char	**ft_split_qu(char *s, char c);
+int		check_special_char(char *c, char *line);
+int		count_w_qu(char *s, char c);
+int		int_word(char *s, char c, int index, char ***arr);
+char	*check_if_envvar(char *cmd);
+int		len_w_qu(char *s, char c);
+int		sep(char s, char c);
+
+t_token	*ft_newtoken(void *content);
+void	ft_tokenadd_back(t_token **lst, t_token *new);
+void	ms_free_tokens(t_token *tokens);
 
 /*
 ** PARSER FUNCTIONS

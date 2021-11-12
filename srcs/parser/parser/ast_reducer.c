@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 09:31:00 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:04:21 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:06:44 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** keeping operators and operands
 */
 
-static t_node	*ms_promote_to_root(t_node *node)
+static t_node	*ms_get_concrete_root(t_node *node)
 {
 	int		left_reduc;
 	int		right_reduc;
@@ -108,7 +108,7 @@ static void	ms_visit_simplif(t_node *node, t_node *parent, int from)
 t_node	*ms_simplify_tree(t_node *tree)
 {
 	while (tree->type == -1)
-		tree = ms_promote_to_root(tree);
+		tree = ms_get_concrete_root(tree);
 	ms_visit_simplif(tree, NULL, ROOT);
 	return (tree);
 }

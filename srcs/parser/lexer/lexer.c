@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/02 10:28:13 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:14:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "token.h"
+#include "parser.h"
 
 void	ms_free_tokens(t_token *token)
 {
