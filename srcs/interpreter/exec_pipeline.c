@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:55:34 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 14:52:56 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 16:22:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,10 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 	return (args);
 }
 
-int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
+int	ms_exec_pipeline(t_node *node, char **envp)
 {
 	char	**args;
 
-	(void)envp;
-	(void)nb_pipe;
 	args = ms_init_arg_array();
 	args = ms_visit(node, args, envp);
 	if (!args)
