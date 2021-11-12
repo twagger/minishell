@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 09:35:36 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 16:09:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ typedef struct s_env
 {
 	char			*name;
 	char			*content;
-	struct s_env 	*next;
-}		t_env;
+	struct s_env	*next;
+}					t_env;
 
-t_env *g_my_envp;
+t_env	*g_my_envp;
 
 /*
 ** GLOBAL PARAMS
@@ -60,7 +60,6 @@ int		ms_env(int ac, char **av, char **envp);
 int		ms_export(int ac, char **av, char **envp);
 void	printf_out_env(t_env *list);
 t_env	*init_env(char **envp);
-//int		ms_export(int ac, char **av, char **envp, t_param *prm);
 int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
 

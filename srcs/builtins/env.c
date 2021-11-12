@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/10 14:38:00 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/12 16:10:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-//#include "../../includes/minishell.h"
 
 static int	ms_env_arg_errors(int ac, char **av)
 {
