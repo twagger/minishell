@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:06:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 11:42:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ void		ms_arglist_clear(t_arglist **lst);
 
 int			ms_exec_pipeline(t_arglist *args, char **envp, int nb_pipe);
 int			ms_exec_command(t_arglist *args, char **envp);
-int			ms_exec_simple_command(t_node *ast, char **envp);
+int			ms_exec_simple_command(t_arglist *arglist, char **envp);
 
 # endif

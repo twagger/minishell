@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:17:22 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 11:40:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,16 @@ int	ms_execute_builtin(char **args, char **envp)
 	return (ret);
 }
 
+static int	ms_command_launcher(char **args, char **envp)
+{
+	(void)envp;
+	if (ms_getbin_path(&args[0]) == ERROR)
+		return (ERROR);
+	if (execve(args[0], args, NULL) == ERROR)
+		perror("Minishell");
+	return (EXIT_SUCCESS);
+}
+
 int	ms_execute(char **args, char **envp)
 {
 	pid_t	pid;
@@ -72,10 +82,8 @@ int	ms_execute(char **args, char **envp)
 	}
 	if (pid == 0)
 	{
-		if (ms_getbin_path(&args[0]) == ERROR)
-			return (ERROR);
-		if (execve(args[0], args, envp) == ERROR)
-			perror("Minishell");
+		if (ms_command_launcher(args, envp) == ERROR)
+			return (1);
 	}
 	else
 	{
@@ -89,40 +97,30 @@ int	ms_execute(char **args, char **envp)
 	return (1);
 }
 
-static char	**ms_visit(t_node *node, char **args, char **envp)
-{
-	if (!node)
-		return (args);
-	args = ms_visit(node->left, args, envp);
-	args = ms_visit(node->right, args, envp);
-	if (node->type == A_PARAM)
-		args = ms_add_arg_back(args, node->data);
-	else if (node->type == A_CMD)
-	{
-		args = ms_add_arg_front(args, node->data);
-		if (!args)
-			return (NULL);
-		if (ms_is_builtin(args[0]))
-			ms_execute_builtin(args, envp);
-		else
-			ms_execute(args, envp);
-		ms_free_arg_array(args);
-		args = ms_init_arg_array();
-	}
-	return (args);
-}
-
-int	ms_exec_simple_command(t_node *ast, char **envp)
+int	ms_exec_simple_command(t_arglist *arglist, char **envp)
 {
 	char	**args;
 
 	args = ms_init_arg_array();
-	args = ms_visit(ast, args, envp);
 	if (!args)
-	{
-		ms_free_arg_array(args);
 		return (ERROR);
+	while (arglist)
+	{
+		if (!arglist->next)
+			args = ms_add_arg_front(args, arglist->data);
+		else
+			args = ms_add_arg_back(args, arglist->data);
+		if (!args)
+		{
+			ms_free_arg_array(args);
+			return (ERROR);
+		}
+		arglist = arglist->next;
 	}
+	if (ms_is_builtin(args[0]))
+		ms_execute_builtin(args, envp);
+	else
+		ms_execute(args, envp);
 	ms_free_arg_array(args);
 	return (EXIT_SUCCESS);
 }
