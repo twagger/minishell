@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:44:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 12:16:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,17 @@ int	ms_execute_ast(t_node *ast, char **envp)
 		+ ms_search_ast(ast, A_RED_FROM, 0) + ms_search_ast(ast, A_DGREAT, 0) \
 		+ ms_search_ast(ast, A_DLESS, 0);
 	args = ms_ast_to_arg_list(ast, args);
-	printf("PIPE : %i, REDIR : %i\n", nb_pipe, nb_redir_end);
 	if (!args)
 		return (ERROR);
 	if (nb_pipe && ms_exec_pipeline(args, envp, nb_pipe) == ERROR)
 		return (EXIT_FAILURE);
-	else if (nb_redir_end && ms_exec_command(args, envp) == ERROR)
+	else
+		return (EXIT_SUCCESS);
+	if (nb_redir_end && ms_exec_command(args, envp) == ERROR)
 		return (EXIT_FAILURE);
-	else if (ms_exec_simple_command(args, envp) == ERROR)
+	else
+		return (EXIT_SUCCESS);
+	if (ms_exec_simple_command(args, envp) == ERROR)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

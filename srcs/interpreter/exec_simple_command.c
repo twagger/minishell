@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:40:58 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 11:50:44 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 ** SIMPLE COMMAND
 ** Execute a simple command (command with/ without parameters),
 ** no redirection, pipe or delimiter
+** The input of the simple command is an arg list with the command as last arg
 */
 
 int	ms_is_builtin(char *command)
