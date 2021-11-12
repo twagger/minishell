@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:57:08 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 14:56:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,6 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
-	printf("%i : ", reduction->type);
-	int i;
-	i = -1;
-	while (popped[++i])
-		printf("%i ", popped[i]->type);
-	printf("\n");
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
 	return (EXIT_SUCCESS);

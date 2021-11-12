@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/12 11:24:39 by twagner          ###   ########.fr        #
+#    Updated: 2021/11/12 14:54:37 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,6 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/exec_command.c \
 			  srcs/interpreter/exec_simple_command.c \
 			  srcs/interpreter/utils/arg_array_utils.c \
-			  srcs/interpreter/utils/arg_list_utils.c \
 			  srcs/interpreter/utils/path_utils.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \

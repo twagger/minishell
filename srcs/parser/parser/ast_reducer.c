@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 09:31:00 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 14:36:17 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:04:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,11 @@ static t_node	*ms_promote_to_root(t_node *node)
 	return (new_root);
 }
 
-static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
+static t_node	*ms_get_node(t_node *node, int which)
 {
 	t_node	*to_promote;
 	t_node	*to_child;
 
-	to_promote = NULL;
 	if (node->left)
 	{
 		to_promote = node->left;
@@ -65,6 +64,18 @@ static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
 			to_child = node->left;
 		}
 	}
+	if (which == TO_PROMOTE)
+		return (to_promote);
+	return (to_child);
+}
+
+static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
+{
+	t_node	*to_promote;
+	t_node	*to_child;
+
+	to_promote = ms_get_node(node, TO_PROMOTE);
+	to_child = ms_get_node(node, TO_CHILD);
 	if (!to_promote)
 		return (NULL);
 	if (from == LEFT)
@@ -74,7 +85,7 @@ static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
 	if (!to_promote->left)
 		to_promote->left = to_child;
 	else
-		to_promote->right = to_child;	
+		to_promote->right = to_child;
 	free(node);
 	return (to_promote);
 }
@@ -83,13 +94,13 @@ static void	ms_visit_simplif(t_node *node, t_node *parent, int from)
 {
 	if (!node)
 		return ;
+	if (node->type == -1)
+		node = ms_promote_child(node, parent, from);
 	if (node->type == 0)
 	{
 		if (node->reduc > R_CMD_NAME || node->reduc == -1)
 			node->type = A_PARAM;
 	}
-	if (node->type == -1)
-		node = ms_promote_child(node, parent, from);
 	ms_visit_simplif(node->left, node, LEFT);
 	ms_visit_simplif(node->right, node, RIGHT);
 }

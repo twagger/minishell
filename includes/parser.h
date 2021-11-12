@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 16:11:43 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 15:00:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define SHIFT 0
 # define REDUCE 1
 # define ACCEPT 2
+# define TO_PROMOTE 0
+# define TO_CHILD 1
 
 typedef enum e_rules
 {
