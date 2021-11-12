@@ -3,46 +3,285 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:55:34 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 14:52:56 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/12 18:12:12 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 #include "parser.h"
 
-static char	**ms_visit(t_node *node, char **args, char **envp)
+typedef struct s_cmds
 {
+	char **cmds;
+	int	i;
+}	t_cmds;
+
+int g_index;
+
+static int	ms_args_len_2(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+		++i;
+	return (i);
+}
+
+t_cmds	*ms_init_arg_array_2(void)
+{
+	t_cmds	*cmds;
+	char	**array;
+
+	cmds = malloc(sizeof(t_cmds));
+	if (!cmds)
+		return (NULL);
+	array = (char **)malloc(sizeof(*array));
+	if (!array)
+		return (NULL);
+	*array = NULL;
+	return (cmds);
+}
+
+void	free_path(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i])
+	{
+		free(paths[i]);
+		i++;
+	}
+	free(paths);
+}
+
+char	*get_path(char *cmd, char **envp)
+{
+	char	**paths;
+	char	*path;
+	int		i;
+	char	*part_path;
+
+	i = 0;
+	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+		i++;
+	paths = ft_split(envp[i] + 5, ':');
+	i = 0;
+	while (paths[i])
+	{
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, cmd);
+		free(part_path);
+		if (access(path, F_OK) == 0)
+		{
+			free_path(paths);
+			return (path);
+		}
+		free(path);
+		i++;
+	}
+	if (paths)
+		free_path(paths);
+	return (0);
+}
+
+void print_arg(char **argv)
+{
+	int i = 0;
+
+	while(argv[i])
+	{
+		printf("%s\n", argv[i]);
+		i++;
+	}
+}
+void pipe_execte(int *pipex, int index,t_cmds *args, int nb_pipe, char **envp)
+{
+	int		i;
+	char	*path;
+	//if not last cmds
+    if (index !=nb_pipe)
+	{
+        if (dup2(pipex[2 * args->i + 1], STDOUT_FILENO) < 0)
+		{
+			perror("dup");
+			exit(1);
+		}
+    }
+	//if not first cmd
+	if (index != 0)
+	{
+        if (dup2(pipex[2 * (args->i-1)], STDIN_FILENO) < 0)
+		{
+			perror("dup");
+			exit(1);
+		}
+    }
+	i = -1;
+    while(++i < nb_pipe * 2)	
+		close(pipex[i]);
+	path = get_path(args->cmds[0], envp);
+    if (!path)
+	{
+		perror("path");
+		exit(1);
+	}
+	if (execve(path, args->cmds, envp) == -1)
+	{
+		perror("execve");
+		exit(1);
+	}
+
+}
+t_cmds *ms_add_arg_back_2(t_cmds *args, char *data)
+{
+	int		i;
+	int		ac;
+	char	**new;
+
+	if (!args)
+		return (NULL);
+	ac = ms_args_len_2(args->cmds);
+	new = (char **)malloc(sizeof(*new) * (ac + 2));
+	if (!new)
+	{
+		ms_free_arg_array(args->cmds);
+		return (NULL);
+	}
+	new[ac + 1] = NULL;
+	i = -1;
+	while (args->cmds[++i])
+		new[i] = ft_strdup(args->cmds[i]);
+	new[i] = ft_strdup(data);
+	ms_free_arg_array(args->cmds);
+	return (args);
+}
+
+t_cmds *ms_add_arg_front_2(t_cmds *args, char *cmd)
+{
+	int		i;
+	int		ac;
+	char	**new;
+
+	if (!args)
+		return (NULL);
+	ac = ms_args_len_2(args->cmds);
+	new = (char **)malloc(sizeof(*new) * (ac + 2));
+	if (!new)
+	{
+		ms_free_arg_array(args->cmds);
+		return (NULL);
+	}
+	new[ac + 1] = NULL;
+	new[0] = ft_strdup(cmd);
+	i = -1;
+	while (args->cmds[++i])
+		new[i + 1] = ft_strdup(args->cmds[i]);
+	ms_free_arg_array(args->cmds);
+	return (args);
+}
+
+static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp, int *pipex, int nb_pipe)
+{
+	//static int	index = 0;
+	pid_t		child;
+	int			i;
+
 	if (!node)
 		return (args);
-	args = ms_visit(node->left, args, envp);
-	args = ms_visit(node->right, args, envp);
+	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
+	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
+	printf("????\n");
 	if (node->type == A_PARAM)
-		args = ms_add_arg_back(args, node->data);
-	else if (node->type == A_CMD)
 	{
-		args = ms_add_arg_front(args, node->data);
+		printf("before0\n");
+		args = ms_add_arg_back_2(args, node->data);
+		printf("after1\n");
+		// if (args->cmds)
+		// 	printf("para:%s\n", args->cmds[0]);
+	}
+	else if (node->type == A_CMD)
+	{	
+		printf("before1\n");
+		args = ms_add_arg_front_2(args, node->data);
+		printf("after1\n");
+		// if (args->cmds)
+		// 	printf("cmds:%s\n", args->cmds[0]);
 		if (!args)
 			return (NULL);
+		child = fork();
+		if (child < 0)
+		{
+			perror("fork");
+			exit(1);
+		}
+		if (child == 0)
+		{
+			printf("childe\n");
+			printf("index:%d\n", args->i);
+			printf("child2\n");
+			printf("----\n");
+			print_arg(args->cmds);
+			printf("----\n");
+			pipe_execte(pipex, g_index, args, nb_pipe, envp);
+			
+		}
+		//parent
+		args = ms_init_arg_array_2();
+		(args->i)++;
+		i = -1;
+		while(++i < nb_pipe * 2)
+			close(pipex[i]);
+		while (errno != ECHILD)
+			wait(NULL);
 	}
 	return (args);
 }
 
+int		*pipex_creat(int nb_pipe)
+{
+	int		*pipex;
+	int		i;
+
+	pipex = malloc(nb_pipe * 2 * sizeof(int));
+	if (!pipex)
+	{
+		perror("pipe");
+		exit(1);
+	}
+	i = -1;
+	while(++i < nb_pipe)
+	{
+		if (pipe(&pipex[nb_pipe * i]) < 0)
+		{
+			perror("pipe");
+			exit(1);
+		}
+	}
+	return pipex;
+}
+
 int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 {
-	char	**args;
+	t_cmds	*args;
+	int		*pipex;
 
-	(void)envp;
-	(void)nb_pipe;
-	args = ms_init_arg_array();
-	args = ms_visit(node, args, envp);
-	if (!args)
-	{
-		ms_free_arg_array(args);
-		return (ERROR);
-	}
-	ms_free_arg_array(args);
+	g_index = 0;
+	pipex = pipex_creat(nb_pipe);
+	printf("first\n");
+	args = ms_init_arg_array_2();
+	printf("secodne\n");
+	args->i = 0;
+	args = ms_visit(node, args, envp, pipex, nb_pipe);
+	// if (!args)
+	// {
+	// 	ms_free_arg_array(args);
+	// 	return (ERROR);
+	// }
+	// ms_free_arg_array(args);
 	return (EXIT_SUCCESS);
 }
