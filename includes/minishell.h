@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 16:09:55 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/13 10:46:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <string.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <curses.h>
+# include <term.h>
 # include "libft.h"
 
 typedef struct s_env

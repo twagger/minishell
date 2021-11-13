@@ -6,11 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/16 10:12:04 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/13 10:12:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#define NO_ARG -2
 
 static int	ms_is_operand_ok(char *op)
 {
@@ -38,7 +39,7 @@ static int	ms_is_operand_ok(char *op)
 static int	ms_exit_arg_errors(int ac, char **av)
 {
 	if (ac == 1)
-		return (0);
+		return (NO_ARG);
 	if (ac == 2)
 	{
 		if (ms_is_operand_ok(av[1]))
@@ -57,10 +58,13 @@ static int	ms_exit_arg_errors(int ac, char **av)
 int	ms_exit(int ac, char **av)
 {
 	int	code;
+	int ret;
 
-	if (ms_exit_arg_errors(ac, av) == ERROR)
+	ret = ms_exit_arg_errors(ac, av);
+	if (ret == ERROR)
 		return (1);
-	code = ft_atoi(av[1]);
+	if (ret != NO_ARG)
+		code = ft_atoi(av[1]);
 	if (ac == 2)
 	{
 		if (code >= 0 && code <= 255)

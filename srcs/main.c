@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 16:17:05 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/13 10:48:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ static int	ms_loop(char **envp)
 			printf("TREE (POST ORDER)\n----------\n");
 			ms_visit_ast(ast, POST_ORDER);
 			printf("----------\n");
-			if (ast && ms_execute_ast(ast, envp) == ERROR)
-				status = ERROR;
+			ms_execute_ast(ast, envp);
 		}
 		else
 			printf("\n");
@@ -89,9 +88,13 @@ static int	ms_loop(char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
+	char	*term_type;
+
+	g_my_envp = 0;
 	(void)ac;
 	(void)av;
-	g_my_envp = 0;
+	term_type = getenv("TERM");
+	if (tgetent(NULL, term_type) != 1) ;
 	if (ms_loop(envp) == ERROR)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
