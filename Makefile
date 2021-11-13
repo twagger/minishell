@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/13 10:03:46 by twagner          ###   ########.fr        #
+#    Updated: 2021/11/13 13:53:14 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,8 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/utils/arg_array_utils.c \
 			  srcs/interpreter/utils/path_utils.c \
 			  srcs/interpreter/utils/builtins_utils.c \
+			  srcs/history/raw_mode.c \
+			  srcs/history/readline.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \
 			  srcs/builtins/env.c \
@@ -84,7 +86,7 @@ LFTDIR		= libft/
 ################################################################################
 CFLAGS		:= -Wall -Wextra -Werror
 LFTFLAGS	:= -L. -lft
-LADDFLAGS	:= -lreadline
+LADDFLAGS	:= -lreadline -ltermcap
 
 ifeq ($(DEBUG), true)
 	CFLAGS	+= -fsanitize=address -g3 -O0

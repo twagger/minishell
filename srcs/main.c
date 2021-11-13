@@ -6,22 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:48:08 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/13 16:54:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-void	printf_out(t_token *all)
-{
-	printf("----------\nLEXER\n----------\n");
-	while (all)
-	{
-		printf("int : %d - value : %s\n", all->type, (char *)all->value);
-		all = all->next;
-	}
-	printf("----------\n"); 
-}
+#include "history.h"
 
 /*
 ** SHELL LOOP
@@ -45,7 +35,8 @@ static int	ms_loop(char **envp)
 		status = ERROR;
 	while (status == EXIT_SUCCESS)
 	{
-		line = readline("\x1B[32mMinishell> \e[0m");
+		line = ms_readline("\x1B[32mMinishell> \e[0m");
+		//line = readline("\x1B[32mMinishell> \e[0m"); -> use this one instead of the other one to get standard behaviour
 		if (line)
 		{
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
@@ -62,40 +53,24 @@ static int	ms_loop(char **envp)
 	return (status);
 }
 
-/* void	test_env(char **envp)
-{
-	int		status;
-	char	*line;
-	char	**cmds;
-
-	status = EXIT_SUCCESS;
-	while (status == EXIT_SUCCESS)
-	{
-		line = readline("\x1B[32mMinishell> \e[0m");
-		if (line)
-		{
-			cmds = ft_split(line, ' ');
-			if (ms_is_builtin(cmds[0]))
-				ms_execute_builtin(cmds, envp);
-			else
-				ms_execute(cmds, envp);
-		}
-		else
-			printf("\n");
-		free(line);
-	}
-} */
-
 int	main(int ac, char **av, char **envp)
 {
-	char	*term_type;
+	struct termios	orig_termios;
+	char 			*term_type;
 
 	g_my_envp = 0;
 	(void)ac;
 	(void)av;
 	term_type = getenv("TERM");
-	if (tgetent(NULL, term_type) != 1) ;
-	if (ms_loop(envp) == ERROR)
+	if (tgetent(NULL, term_type) != 1)
 		return (EXIT_FAILURE);
+	if (ms_enable_raw_mode(&orig_termios) == ERROR)
+		return (EXIT_FAILURE);
+	if (ms_loop(envp) == ERROR)
+	{
+		ms_disable_raw_mode(&orig_termios);
+		return (EXIT_FAILURE);
+	}
+	ms_disable_raw_mode(&orig_termios);
 	return (EXIT_SUCCESS);
 }

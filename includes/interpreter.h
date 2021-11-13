@@ -6,13 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:05:28 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/13 10:57:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERPRETER_H
 # define INTERPRETER_H
-# include "minishell.h"
 # include "parser.h"
 
 /*
