@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:11:53 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 10:13:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,12 @@ typedef enum e_rules
 # define ROOT 2
 
 /*
-** LEXER STRUCTURES
+** STRUCTURES
 */
 
+/*
+** lexer
+*/
 typedef enum e_token_types
 {
 	T_END = -2,
@@ -86,9 +89,8 @@ typedef struct s_token
 }					t_token;
 
 /*
-** PARSER STRUCTURES
+** parser
 */
-
 typedef struct s_trans
 {
 	int	state;
@@ -107,9 +109,8 @@ typedef struct s_stack
 }	t_stack;
 
 /*
-** AST STRUCTURE
+** ast
 */
-
 typedef struct s_node
 {
 	int				type;
@@ -141,9 +142,12 @@ typedef enum e_ast_types
 }	t_ast_types;
 
 /*
-** LEXER FUNCTIONS
+**FUNCTIONS
 */
 
+/*
+** lexer
+*/
 t_token	*ms_tokenizer(char *line);
 
 char	**ft_split_qu(char *s, char c);
@@ -159,7 +163,7 @@ void	ft_tokenadd_back(t_token **lst, t_token *new);
 void	ms_free_tokens(t_token *tokens);
 
 /*
-** PARSER FUNCTIONS
+** parser
 */
 t_node	*ms_parser(t_token *tok_list, t_trans **table);
 
@@ -175,7 +179,7 @@ int		ms_free_stack(t_stack **stack, int return_code);
 int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
 
 /*
-** AST FUNCTIONS
+** ast
 */
 t_node	*ms_new_node(void *data, int type, int reduc);
 void	ms_free_tree(t_node	*node);

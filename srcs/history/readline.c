@@ -6,59 +6,75 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 16:52:15 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 11:28:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 
-static int	ms_putchar(int i)
+static int	ms_handle_move(char **buffer, char *seq, int *cpos)
 {
-	char c;
-
-	c = (char)i;
-	write(1, &c, 1);
-	return (1);
+	if (seq[1] == 91 && seq[2] == 67 && (int)ft_strlen(*buffer) > *cpos)
+	{
+		tputs(tgetstr("nd", NULL), 0, ms_putchar);
+		++(*cpos);
+	}
+	if (seq[1] == 91 && seq[2] == 68 && *cpos > 0)
+	{
+		tputs(tgetstr("le", NULL), 0, ms_putchar);
+		--(*cpos);
+	}
+	if (seq[1] == 91 && seq[2] == 70 && (int)ft_strlen(*buffer) > *cpos)
+	{
+		tputs(tgoto(tgetstr("RI", NULL), 0, \
+			(*cpos - ft_strlen(*buffer)) * -1), 0, ms_putchar);
+		*cpos = (int)ft_strlen(*buffer);
+	}
+	if (seq[1] == 91 && seq[2] == 72)
+	{
+		tputs(tgetstr("rc", NULL), 0, ms_putchar);
+		*cpos = 0;
+	}
+	return (0);
 }
 
-static int	ms_add_char(char **buffer, char c)
+static int	ms_handle_history(char **buffer, char *seq, t_history **histo)
 {
-	size_t	len;
+	if (seq[1] == 91 && seq[2] == 65)
+	{
+		// add current buffer in history (last)
+		ms_histo_insert_back(histo, ms_histo_new(ft_strdup(*buffer)));
+		// clear current line
+		// display previous
 
-	len = ft_strlen(*buffer);
-	*buffer = ft_realloc(*buffer, len + 2);
-	if (!buffer)
-		return (ERROR);
-	(*buffer)[len] = c;
-	(*buffer)[len + 1] = '\0';
-	return (EXIT_SUCCESS);
+		// previous = buffer
+		// cursor at the end
+		tputs(tgetstr("up", NULL), 0, ms_putchar);
+	}
+	if (seq[1] == 91 && seq[2] == 66)
+		tputs(tgetstr("rc", NULL), 1, ms_putchar);
+	return (0);
 }
 
-static int	ms_handle_escape_sequence(char **buffer, char *seq)
+static int	ms_handle_escape_sequence(\
+	char **buffer, char *seq, t_history **histo, int *cpos)
 {
 	int	line_len;
 
 	line_len = ft_strlen(*buffer);
 	if (ft_strlen(seq) == 3)
 	{
-		if (seq[1] == 91 && seq[2] == 65)
-			tputs(tgetstr("up", NULL), 0, ms_putchar);
-		if (seq[1] == 91 && seq[2] == 66)
-			tputs(tgetstr("do", NULL), 0, ms_putchar);
-		if (seq[1] == 91 && seq[2] == 67)
-			tputs(tgetstr("nd", NULL), 0, ms_putchar);
-		if (seq[1] == 91 && seq[2] == 68)
-			tputs(tgetstr("le", NULL), 0, ms_putchar);
-		if (seq[1] == 91 && seq[2] == 72)
-			tputs(tgetstr("cr", NULL), 0, ms_putchar);
+		ms_handle_move(buffer, seq, cpos);
+		ms_handle_history(buffer, seq, histo);
 	}
 	return (0);
 }
 
-static int	ms_handle_simple_char(char **buffer, char c)
+static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
 {
 	if (ft_isprint(c))
 	{
+		++(*cpos);
 		ft_putchar_fd(c, 1);
 		if (ms_add_char(buffer, c) == ERROR)
 			return (ERROR);
@@ -70,19 +86,23 @@ static int	ms_handle_simple_char(char **buffer, char c)
 	}
 	else if (c == BACKSPACE)
 	{
-		ft_putchar_fd('d', 1);
+		--(*cpos);
+		ft_putchar_fd('*', 1);
 	}
 	return (EXIT_SUCCESS);
 }
 
-char	*ms_readline(const char *prompt)
+char	*ms_readline(const char *prompt, t_history **histo)
 {
 	char	*buffer;
 	char	c[11];
 	int		ret;
+	int		cpos;
 
 	buffer = NULL;
+	cpos = 0;
 	ft_putstr_fd((char *)prompt, 1);
+	tputs(tgetstr("sc", NULL), 0, ms_putchar);
 	while (1)
 	{
 		ret = read(STDIN_FILENO, c, 10);
@@ -91,14 +111,15 @@ char	*ms_readline(const char *prompt)
 		c[ret] = '\0';
 		if (ret == 1)
 		{
-			ret = ms_handle_simple_char(&buffer, c[0]);
+			ret = ms_handle_simple_char(&buffer, c[0], &cpos);
 			if (ret == ERROR)
 				return (NULL);
 			if (ret == LINE_END)
 				break ;
 		}
-		else if (ms_handle_escape_sequence(&buffer, c) == ERROR)
+		else if (ms_handle_escape_sequence(&buffer, c, histo, &cpos) == ERROR)
 			return (NULL);
 	}
+	ms_histo_insert_back(histo, ms_histo_new(ft_strdup(buffer)));
 	return (buffer);
 }

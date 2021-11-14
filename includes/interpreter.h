@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:57:42 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 10:11:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include "parser.h"
 
 /*
-** INTERPRETER FUNCTIONS
+** FUNCTIONS
 */
 
 int		ms_getbin_path(char **bin);

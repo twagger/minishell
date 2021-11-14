@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 16:04:04 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 10:11:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include "minishell.h"
 
 /*
-** HISTORY PARAMS
+** PARAMS
 */
 
 # define LINE_END -2
@@ -23,14 +23,40 @@
 # define BACKSPACE 127
 
 /*
-** HISTORY FUNCTIONS
+** STRUCTURES
 */
 
-int		ms_enable_raw_mode(struct termios *orig_termios);
-int		ms_disable_raw_mode(struct termios *orig_termios);
+typedef struct s_history
+{
+	void				*data;
+	struct s_history	*previous;
+	struct s_history	*next;
+}						t_history;
 
-char	*ms_readline(const char *prompt);
+/*
+** FUNCTIONS
+*/
 
-char	ms_ctrl_key(char key);
+/*
+** raw mode
+*/
+int			ms_enable_raw_mode(struct termios *orig_termios);
+int			ms_disable_raw_mode(struct termios *orig_termios);
+
+/*
+** readline
+*/
+char		*ms_readline(const char *prompt, t_history **histo);
+char		ms_ctrl_key(char key);
+int			ms_putchar(int i);
+int			ms_add_char(char **buffer, char c);
+
+/*
+** history
+*/
+t_history	*ms_histo_new(void *data);
+t_history	*ms_histo_last(t_history *histo);
+void		ms_histo_insert_back(t_history **histo, t_history *insert);
+void		ms_histo_clear(t_history *histo);
 
 #endif

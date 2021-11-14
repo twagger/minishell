@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 11:22:33 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 10:12:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@
 # include <termios.h>
 # include "libft.h"
 
+/*
+** PARAMS
+*/
+# define ERROR -1
+# define ERROR_BIN_NOT_FOUND 127
+
+/*
+** STRUCTURES
+*/
+
 typedef struct s_env
 {
 	char			*name;
@@ -40,22 +50,19 @@ typedef struct s_env
 t_env	*g_my_envp;
 
 /*
-** GLOBAL PARAMS
+** FUNCTIONS
 */
-# define ERROR -1
-# define ERROR_BIN_NOT_FOUND 127
 
 /*
-** CORE FUNCTIONS
+** core
 */
 int		ms_execute(char **args, char **envp);
 int		ms_is_builtin(char *command);
 int		ms_execute_builtin(char **args, char **envp);
 
 /*
-** BUILTINS
+** builtins
 */
-
 int		ms_echo(int ac, char **av);
 int		ms_cd(int ac, char **av);
 int		ms_pwd(int ac, char **av);

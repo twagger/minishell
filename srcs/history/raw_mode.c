@@ -6,16 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:08 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 15:44:22 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 10:07:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
-
-char	ms_ctrl_key(char key)
-{
-	return (key & 0x1f);
-}
 
 int	ms_disable_raw_mode(struct termios *orig_termios)
 {
