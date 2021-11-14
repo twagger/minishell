@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 10:11:16 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 11:40:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ int			ms_add_char(char **buffer, char c);
 ** history
 */
 t_history	*ms_histo_new(void *data);
-t_history	*ms_histo_last(t_history *histo);
-void		ms_histo_insert_back(t_history **histo, t_history *insert);
+void		ms_histo_insert_front(t_history **histo, t_history *insert);
 void		ms_histo_clear(t_history *histo);
 
 #endif

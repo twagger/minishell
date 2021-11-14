@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 09:28:51 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 09:55:12 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 11:41:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,14 @@ t_history	*ms_histo_new(void *data)
 	return (new);
 }
 
-t_history	*ms_histo_last(t_history *histo)
+void	ms_histo_insert_front(t_history **histo, t_history *insert)
 {
-	while (histo && histo->next)
-		histo = histo->next;
-	return (histo);
-}
-
-void	ms_histo_insert_back(t_history **histo, t_history *insert)
-{
-	t_history	*last;
-
 	if (insert)
 	{
-		last = ms_histo_last(*histo);
-		if (last)
+		if (*histo)
 		{
-			last->next = insert;
-			insert->previous = last;
+			insert->next = *histo;
+			(*histo)->previous = insert;
 		}
 		else
 			*histo = insert;
