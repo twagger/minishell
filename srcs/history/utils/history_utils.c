@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 09:28:51 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 11:41:36 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 11:58:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	ms_histo_insert_front(t_history **histo, t_history *insert)
 		{
 			insert->next = *histo;
 			(*histo)->previous = insert;
+			*histo = insert;
 		}
 		else
 			*histo = insert;
