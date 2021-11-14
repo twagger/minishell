@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 11:48:58 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/14 12:02:38 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ static int	ms_handle_history(\
 	{
 		// add current buffer in history (last)
 		ms_histo_insert_front(histo, ms_histo_new(ft_strdup(*buffer)));
-		// clear buffer
-		*buffer = NULL;
 		// clear current line
 		tputs(tgetstr("dl", NULL), 0, ms_putchar);
 		// put the prompt and restore cursor position
@@ -54,7 +52,10 @@ static int	ms_handle_history(\
 		tputs(tgetstr("rc", NULL), 0, ms_putchar);
 		// buffer = previous
 		if ((*histo)->next)
+		{
 			*buffer = (*histo)->next->data;
+			*histo = (*histo)->next;
+		}
 		else
 			*buffer = (*histo)->data;
 		// display buffer
