@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 12:02:38 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/15 22:04:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static int	ms_handle_history(\
 	if (seq[1] == 91 && seq[2] == 65)
 	{
 		// add current buffer in history (last)
-		ms_histo_insert_front(histo, ms_histo_new(ft_strdup(*buffer)));
+		if (!ms_is_new_in_histo(histo))
+			ms_histo_insert_front(histo, ms_histo_new(ft_strdup(*buffer)), B_NEW);
 		// clear current line
 		tputs(tgetstr("dl", NULL), 0, ms_putchar);
 		// put the prompt and restore cursor position
@@ -70,9 +71,6 @@ static int	ms_handle_history(\
 static int	ms_handle_escape_sequence(\
 	char **buffer, char *seq, t_history **histo, int *cpos)
 {
-	int	line_len;
-
-	line_len = ft_strlen(*buffer);
 	if (ft_strlen(seq) == 3)
 	{
 		ms_handle_move(buffer, seq, cpos);
@@ -131,6 +129,7 @@ char	*ms_readline(const char *prompt, t_history **histo)
 		else if (ms_handle_escape_sequence(&buffer, c, histo, &cpos) == ERROR)
 			return (NULL);
 	}
-	ms_histo_insert_front(histo, ms_histo_new(ft_strdup(buffer)));
+	ms_histo_rewind(histo);
+	ms_histo_insert_front(histo, ms_histo_new(ft_strdup(buffer)), B_HISTO);
 	return (buffer);
 }

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/10 17:15:25 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/15 21:06:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern t_env	*g_my_envp;
 
 void	delete_var(char *name)
 {

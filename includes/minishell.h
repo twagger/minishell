@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 10:12:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/15 21:06:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ typedef struct s_env
 	char			*content;
 	struct s_env	*next;
 }					t_env;
-
-t_env	*g_my_envp;
 
 /*
 ** FUNCTIONS

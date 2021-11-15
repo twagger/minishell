@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 11:40:34 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/15 22:03:10 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # define LINE_END -2
 # define ESCAPE_SEQUENCE 27
 # define BACKSPACE 127
+# define B_NEW 0
+# define B_HISTO 1
 
 /*
 ** STRUCTURES
@@ -28,6 +30,7 @@
 
 typedef struct s_history
 {
+	int					type;
 	void				*data;
 	struct s_history	*previous;
 	struct s_history	*next;
@@ -55,7 +58,10 @@ int			ms_add_char(char **buffer, char c);
 ** history
 */
 t_history	*ms_histo_new(void *data);
-void		ms_histo_insert_front(t_history **histo, t_history *insert);
+void		ms_histo_insert_front(t_history **histo, t_history *insert, \
+			int type);
 void		ms_histo_clear(t_history *histo);
+int			ms_is_new_in_histo(t_history **histo);
+void		ms_histo_rewind(t_history **histo);
 
 #endif

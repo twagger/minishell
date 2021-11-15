@@ -6,11 +6,13 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 16:10:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/15 21:06:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern t_env	*g_my_envp;
 
 static int	ms_env_arg_errors(int ac, char **av)
 {

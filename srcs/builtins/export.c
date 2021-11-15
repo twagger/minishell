@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/10 16:41:41 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/15 21:06:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 //#include "../../includes/minishell.h"
 //#include "../../libft/libft.h"
 
+extern t_env	*g_my_envp;
 
 /*
 ** Check if the param is like this : name=[value]

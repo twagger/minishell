@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 10:00:00 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/15 22:05:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 ** ms_visit_ast(ast, POST_ORDER);
 ** printf("----------\n");
 */
+t_env	*g_my_envp;
 
 static int	ms_loop(char **envp)
 {
