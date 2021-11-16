@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 10:19:41 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 12:29:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ int			ms_disable_raw_mode(struct termios *orig_termios);
 char		*ms_readline(const char *prompt, t_history **histo);
 char		ms_ctrl_key(char key);
 int			ms_putchar(int i);
-int			ms_add_char(char **buffer, char c);
+int			ms_add_char(char **buffer, char c, int where);
 int			ms_handle_move(char **buffer, char *seq, int *cpos);
 int			ms_handle_history(char **buffer, char *seq, \
 			t_history **histo, int *cpos);
 int			ms_handle_delete(char **buffer, char *seq, int *cpos);
+void		ms_put_line(char *buffer, int cpos);
 
 /*
 ** history
