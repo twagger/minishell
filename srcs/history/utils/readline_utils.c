@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 10:07:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/14 10:36:23 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 10:40:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	ms_ctrl_key(char key)
 
 int	ms_putchar(int i)
 {
-	char c;
+	char	c;
 
 	c = (char)i;
 	write(1, &c, 1);
@@ -39,7 +39,28 @@ int	ms_add_char(char **buffer, char c)
 	return (EXIT_SUCCESS);
 }
 
-void	ms_clear_line()
+char	*ms_del_char(char **buffer, int index)
 {
-	
+	int		i;
+	int		j;
+	char	*new;
+
+	if (!buffer)
+		return (NULL);
+	new = (char *)malloc(sizeof(*new) * ft_strlen(*buffer));
+	if (!new)
+	{
+		free(*buffer);
+		return (NULL);
+	}
+	j = 0;
+	i = -1;
+	while ((*buffer)[++i])
+	{
+		if (i != index)
+			new[j++] = (*buffer)[i];
+	}
+	new[j] = '\0';
+	free(*buffer);
+	return (new);
 }

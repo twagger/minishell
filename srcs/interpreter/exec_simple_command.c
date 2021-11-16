@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:06:03 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 11:16:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 {
 	if (!node)
 		return (args);
+	
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
 	if (node->type == A_PARAM)

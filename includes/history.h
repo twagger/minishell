@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/15 22:03:10 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 10:19:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ char		*ms_readline(const char *prompt, t_history **histo);
 char		ms_ctrl_key(char key);
 int			ms_putchar(int i);
 int			ms_add_char(char **buffer, char c);
+int			ms_handle_move(char **buffer, char *seq, int *cpos);
+int			ms_handle_history(char **buffer, char *seq, \
+			t_history **histo, int *cpos);
+int			ms_handle_delete(char **buffer, char *seq, int *cpos);
 
 /*
 ** history
@@ -63,5 +67,6 @@ void		ms_histo_insert_front(t_history **histo, t_history *insert, \
 void		ms_histo_clear(t_history *histo);
 int			ms_is_new_in_histo(t_history **histo);
 void		ms_histo_rewind(t_history **histo);
+char		*ms_del_char(char **buffer, int index);
 
 #endif
