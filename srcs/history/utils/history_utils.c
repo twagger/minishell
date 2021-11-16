@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 09:28:51 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/15 22:06:41 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 15:46:59 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ int	ms_is_new_in_histo(t_history **histo)
 
 	res = 0;
 	begin = *histo;
-	ms_histo_rewind(histo);
+	if (!*histo)
+		return (res);
+	while ((*histo)->previous)
+		*histo = (*histo)->previous;
 	while (*histo)
 	{
 		if ((*histo)->type == B_NEW)
@@ -51,21 +54,35 @@ void	ms_histo_insert_front(t_history **histo, t_history *insert, int type)
 		if (*histo)
 		{
 			insert->type = type;
-			insert->next = *histo;
+			insert->next = (*histo);
 			(*histo)->previous = insert;
 			*histo = insert;
 		}
 		else
+		{
+			insert->type = type;
 			*histo = insert;
+		}
 	}
 }
 
-void	ms_histo_rewind(t_history **histo)
+void	ms_histo_clean(t_history **histo)
 {
+	t_history *to_clear;
+
 	if (*histo)
 	{
 		while ((*histo)->previous)
 			*histo = (*histo)->previous;
+		if ((*histo)->next && (*histo)->next->type == B_NEW)
+		{
+			to_clear = (*histo)->next;
+			(*histo)->next = to_clear->next;
+			if ((*histo)->next)
+				(*histo)->next->previous = *histo;
+			free(to_clear->data);
+			free(to_clear);
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 12:33:49 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 15:45:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static int	ms_handle_escape_sequence(\
 
 static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
 {
-	int where;
+	int	where;
 
 	if (*cpos == (int)ft_strlen(*buffer))
 		where = -1;
 	else
-		where = *cpos;	
+		where = *cpos;
 	if (ft_isprint(c))
 	{
 		++(*cpos);
@@ -83,7 +83,22 @@ char	*ms_readline(const char *prompt, t_history **histo)
 		else if (ms_handle_escape_sequence(&buffer, c, histo, &cpos) == ERROR)
 			return (NULL);
 	}
-	ms_histo_rewind(histo);
 	ms_histo_insert_front(histo, ms_histo_new(ft_strdup(buffer)), B_HISTO);
+	/**/
+	t_history *begin;
+	if (*histo)
+		while ((*histo)->previous)
+			*histo = (*histo)->previous;
+	begin = *histo;
+	printf("\n------\n");
+	while (*histo)
+	{
+		printf("H : %s\n", (*histo)->data);
+		*histo = (*histo)->next;
+	}
+	printf("------\n");
+	*histo = begin;
+	/**/
+	ms_histo_clean(histo);
 	return (buffer);
 }
