@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:55:34 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 18:15:47 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/16 11:59:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,12 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp, int *pipex, int
 	printf("begin:%d\n", args->i);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
+	if (node->type == A_PIPE)
+	{
+		// if last pipe > launch pipex
+		// if not > Connect cmd 1 output to cmd 2 input
+		printf("HELLOOOOO\n");
+	}
 	if (node->type == A_PARAM)
 	{
 		args = ms_add_arg_back_2(args, node->data);
@@ -211,6 +217,7 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp, int *pipex, int
 	else if (node->type == A_CMD)
 	{	
 		args = ms_add_arg_front_2(args, node->data);
+		// Save the args tab in an array
 		printf("args :%s, index:%d\n", args->cmds[0], args->i);
 		// if (args->cmds)
 		// 	printf("cmds:%s\n", args->cmds[0]);
@@ -232,7 +239,7 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp, int *pipex, int
 			pipe_execte(pipex, args, nb_pipe, envp);
 		}
 		//parent
-		args = ms_init_arg_array_2();
+		//args = ms_init_arg_array_2();
 		args->i = (args->i) + 1;
 		i = -1;
 		while(++i < nb_pipe * 2)
