@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 10:40:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 12:33:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,18 @@ static int	ms_handle_escape_sequence(\
 
 static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
 {
+	int where;
+
+	if (*cpos == (int)ft_strlen(*buffer))
+		where = -1;
+	else
+		where = *cpos;	
 	if (ft_isprint(c))
 	{
 		++(*cpos);
-		ft_putchar_fd(c, 1);
-		if (ms_add_char(buffer, c) == ERROR)
+		if (ms_add_char(buffer, c, where) == ERROR)
 			return (ERROR);
+		ms_put_line(*buffer, *cpos);
 	}
 	else if (c == '\n')
 	{
@@ -44,6 +50,7 @@ static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
 	{
 		--(*cpos);
 		ms_handle_delete(buffer, NULL, cpos);
+		ms_put_line(*buffer, *cpos);
 	}
 	return (EXIT_SUCCESS);
 }

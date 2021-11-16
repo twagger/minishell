@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:11:40 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 10:28:18 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/16 12:33:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,6 @@ int	ms_handle_delete(char **buffer, char *seq, int *cpos)
 			*buffer = ms_del_char(buffer, *cpos);
 			if (!*buffer)
 				return (ERROR);
-			tputs(tgetstr("dl", NULL), 0, ms_putchar);
-			ft_putstr_fd("\x1B[32mMinishell> \e[0m", 1);
-			ft_putstr_fd(*buffer, 1);
-			tputs(tgetstr("rc", NULL), 0, ms_putchar);
-			tputs(tgoto(tgetstr("RI", NULL), 0, *cpos), 0, ms_putchar);
 		}
 	}
 	return (0);
