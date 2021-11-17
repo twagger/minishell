@@ -13,15 +13,38 @@
 #include "interpreter.h"
 #include "parser.h"
 
+typedef struct s_cmd
+{
+	char			***cmds;
+	int				index;
+}					t_cmd;
+
+void print_args(char ***argv)
+{
+	int x = -1;
+	int y = -1;
+
+	printf("RESULT:\n");
+	while (argv[++x])
+	{
+		while(argv[x][++y])
+		{
+			printf("%s\n", argv[x][y]);
+		}
+		printf("\n");
+	}
+	printf("----------------\n");
+}
+
 static int	ms_cmd_len_2(char ***args)
 {
 	int	i;
 
 	i = 0;
-	printf("11111\n");
+	// printf("11111\n");
 	if (!args)
 		return (0);
-	printf("2222222x\n");
+	// printf("2222222x\n");
 	while (args[i])
 		++i;
 	return (i);
@@ -37,20 +60,23 @@ static int	ms_args_len_2(char **args)
 	return (i);
 }
 
-char	***ms_init_arg_array_2(int nb_pipe)
+char	***ms_init_arg_array_2(void)
 {
 	char	***array;
-	char	**arr;
+	//char	**arr;
 	
 	array = (char ***)malloc(sizeof(**array));
 	if (!array)
 		return (NULL);
-	arr = (char **)malloc(sizeof(*arr) * (nb_pipe + 2));
-	if (!arr)
-		return (NULL);
-	*array = arr;
-	arr[nb_pipe + 1] =  NULL;
-	(*arr) = NULL;
+	*array = NULL;
+	// arr = (char **)malloc(sizeof(*arr));
+	// if (!arr)
+	// 	return (NULL);
+	// // *array = arr;
+	// *arr = NULL;
+	// *array = arr;
+	// arr[nb_pipe + 1] =  NULL;
+	// (*arr) = NULL;
 	return (array);
 }
 
@@ -154,118 +180,145 @@ void print_arg(char ***argv, int nb_cmd)
 // 	}
 
 // }
-char	***ms_add_arg_back_2(char ***args, int nd_cmd, char *data)
+char	***ms_add_arg_back_2(char ***args, char *data)
 {
 	int		i;
-	int		ac;
+	int		len1;
+	int 	len2;
+	char	***cmd;
 	char	**new;
 
 	if (!args)
 		return (NULL);
-	ac = ms_args_len_2(args[nd_cmd]);
-	new = (char **)malloc(sizeof(*new) * (ac + 2));
+	len1 = ms_cmd_len_2(args);
+	printf("len in back :%d\n", len1);
+	cmd = (char ***)malloc(sizeof(**cmd) * (len1 + 2));
+	if (!cmd)
+	{
+		//ms_free_arg_array(args);
+		return (NULL);
+	}
+	cmd[len1 + 1] = NULL;
+	if (len1 == 0)
+		len2 = 0;
+	else
+		len2 = ms_args_len_2(args[len1 - 1]);
+	printf("len2 in back :%d\n", len2);
+	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
 	{
 		//ms_free_arg_array(args);
 		return (NULL);
 	}
-	new[ac + 1] = NULL;
 	i = -1;
-	while (args[nd_cmd][++i])
-		new[i] = ft_strdup(args[nd_cmd][i]);
+	printf("so far so good\n");
+	while (args[++i])
+	{
+		printf("inside\n");
+		new[i] = ft_strdup(args[len1][i]);
+	}
 	new[i] = ft_strdup(data);
+	cmd[len1] = new;
+	new[i + 1] = NULL;
+	printf("good!!\n");
+	printf("new len :%d\n", ms_args_len_2(cmd[len1]));
 	//ms_free_arg_array(args);
-	return (args);
+	return (cmd);
 }
 
-char	***ms_add_arg_front_2(char ***args, int nd_cmd , char *cmd)
+char	***ms_add_arg_front_2(char ***args, char *data)
 {
 	int		i;
-	int		ac;
+	int		len1;
+	int 	len2;
+	char	***cmd;
 	char	**new;
 
 	if (!args)
 		return (NULL);
-	ac = ms_args_len_2(args[nd_cmd]);
-	new = (char **)malloc(sizeof(*new) * (ac + 2));
+	len1 = ms_cmd_len_2(args);
+	printf("len in front :%d\n", len1);
+	cmd = (char ***)malloc(sizeof(**cmd) * (len1 + 2));
+	if (!cmd)
+	{
+		//ms_free_arg_array(args);
+		return (NULL);
+	}
+	cmd[len1 + 1] = NULL;
+	if (len1 == 0)
+		len2 = 0;
+	else
+		len2 = ms_args_len_2(args[len1 - 1]);
+	printf("len2 in front :%d\n", len2);
+	new = (char **)malloc(sizeof(*new) * (len2 + 1));
 	if (!new)
 	{
 		//ms_free_arg_array_2(args);
 		return (NULL);
 	}
-	new[ac + 1] = NULL;
-	new[0] = ft_strdup(cmd);
+	new[len2 + 1] = NULL;
+	new[0] = ft_strdup(data);
 	i = -1;
-	while (args[nd_cmd][++i])
-		new[i + 1] = ft_strdup(args[nd_cmd][i]);
+	while (args[++i])
+		new[i + 1] = ft_strdup(args[len1][i]);
 	//ms_free_arg_array(args);
-	return (args);
+	printf("good front\n");
+	return (cmd);
 }
 
 static char ***ms_visit(t_node *node, char ***args, char **envp, int *pipex, int nb_pipe)
 {
-	pid_t		child;
-	int			i;
-	int			nd_pipx;
-	int			nd_cmd;
+	// pid_t		child;
+	// int			i;
 
 	if (!node)
 		return (args);
-	nd_pipx = 0;
-	nd_cmd = ms_cmd_len_2(args);
-	printf("here???\n");
+	printf("here:%s\n", node->data);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
 	if (node->type == A_PIPE)
 	{
-		nd_pipx++;
-		if (nd_pipx == nb_pipe)
-		{
-			printf("HELLOOOOO\n");
-			print_arg(args, nd_cmd);
-		}
+		printf("HELLOOOOO\n");
 		// if last pipe > launch pipex
 		// if not > Connect cmd 1 output to cmd 2 input
 	}
 	if (node->type == A_PARAM)
 	{
-		nd_cmd = ms_cmd_len_2(args);
-		args = ms_add_arg_back_2(args, nd_cmd, node->data);
-		nd_cmd = ms_cmd_len_2(args);
-		printf("back:%s, %s, %d \n", node->data, args[nd_cmd][0], ms_cmd_len_2(args));
+		args = ms_add_arg_back_2(args, node->data);
+		printf("param\n");
+		print_args(args);
 	}
 	else if (node->type == A_CMD)
 	{	
-		nd_cmd = ms_cmd_len_2(args);
-		args = ms_add_arg_front_2(args, nd_cmd, node->data);
-		nd_cmd = ms_cmd_len_2(args);
-		printf("front:%s, %s, %d \n", node->data, args[nd_cmd][0], ms_cmd_len_2(args));
+		args = ms_add_arg_front_2(args, node->data);
+		printf("cmd\n");
+		print_args(args);
 		// Save the args tab in an array
 		// if (args->cmds)
 		// 	printf("cmds:%s\n", args->cmds[0]);
-		if (!args)
-			return (NULL);
-		child = fork();
-		if (child < 0)
-		{
-			perror("fork");
-			exit(1);
-		}
-		if (child == 0)
-		{
-			printf("childe\n");
-			printf("----\n");
-			printf("----\n");
-			//pipe_execte(pipex, args, nb_pipe, envp);
-		}
-		//parent
-		//args = ms_init_arg_array_2();
-		//args->i = (args->i) + 1;
-		i = -1;
-		while(++i < nb_pipe * 2)
-			close(pipex[i]);
-		while (errno != ECHILD)
-			wait(NULL);
+		// if (!args)
+		// 	return (NULL);
+		// child = fork();
+		// if (child < 0)
+		// {
+		// 	perror("fork");
+		// 	exit(1);
+		// }
+		// if (child == 0)
+		// {
+		// 	printf("childe\n");
+		// 	printf("----\n");
+		// 	printf("----\n");
+		// 	//pipe_execte(pipex, args, nb_pipe, envp);
+		// }
+		// //parent
+		// //args = ms_init_arg_array_2();
+		// //args->i = (args->i) + 1;
+		// i = -1;
+		// while(++i < nb_pipe * 2)
+		// 	close(pipex[i]);
+		// while (errno != ECHILD)
+		// 	wait(NULL);
 	}
 	return (args);
 }
@@ -293,18 +346,33 @@ int		*pipex_creat(int nb_pipe)
 	return pipex;
 }
 
+
 int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 {
 	char	***args;
 	int		*pipex;
+	char	***ex;
+	char 	**content;
 
 	(void)node;
 	(void)envp;
 	pipex = pipex_creat(nb_pipe);
-	printf("first\n");
-	args = ms_init_arg_array_2(nb_pipe);
+	args = ms_init_arg_array_2();
 	printf("secodne\n");
 	args = ms_visit(node, args, envp, pipex, nb_pipe);
+	print_args(args);
+	ex = (char ***)malloc(sizeof(**ex)*2);
+	if (!ex)
+		return 1;
+	ex[1]=NULL;
+	content = (char **)malloc(sizeof(*content) * 3);
+	if (!content)
+		return 1;
+	content[2]=NULL;
+	content[0] = ft_strdup("HELLO");
+	content[1] = ft_strdup("YOU!!!");
+	ex[0] = content;
+	print_args(ex);
 	// if (!args)
 	// {
 	// 	ms_free_arg_array(args);
