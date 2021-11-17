@@ -358,21 +358,21 @@ int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 	(void)envp;
 	pipex = pipex_creat(nb_pipe);
 	args = ms_init_arg_array_2();
-	printf("secodne\n");
-	args = ms_visit(node, args, envp, pipex, nb_pipe);
-	print_args(args);
-	ex = (char ***)malloc(sizeof(**ex)*2);
-	if (!ex)
-		return 1;
-	ex[1]=NULL;
-	content = (char **)malloc(sizeof(*content) * 3);
-	if (!content)
-		return 1;
-	content[2]=NULL;
-	content[0] = ft_strdup("HELLO");
-	content[1] = ft_strdup("YOU!!!");
-	ex[0] = content;
-	print_args(ex);
+	// printf("secodne\n");
+	// args = ms_visit(node, args, envp, pipex, nb_pipe);
+	// print_args(args);
+	// ex = (char ***)malloc(sizeof(**ex)*2);
+	// if (!ex)
+	// 	return 1;
+	// ex[1]=NULL;
+	// content = (char **)malloc(sizeof(*content) * 3);
+	// if (!content)
+	// 	return 1;
+	// content[2]=NULL;
+	// content[0] = ft_strdup("HELLO");
+	// content[1] = ft_strdup("YOU!!!");
+	// ex[0] = content;
+	// print_args(ex);
 	// if (!args)
 	// {
 	// 	ms_free_arg_array(args);
