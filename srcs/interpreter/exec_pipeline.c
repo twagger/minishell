@@ -17,6 +17,7 @@ typedef struct s_cmd
 {
 	char			***cmds;
 	int				index;
+	int				times;
 }					t_cmd;
 
 void print_args(char ***argv)
@@ -36,19 +37,19 @@ void print_args(char ***argv)
 	printf("----------------\n");
 }
 
-static int	ms_cmd_len_2(char ***args)
-{
-	int	i;
+// static int	ms_cmd_len_2(char ***args)
+// {
+// 	int	i;
 
-	i = 0;
-	// printf("11111\n");
-	if (!args)
-		return (0);
-	// printf("2222222x\n");
-	while (args[i])
-		++i;
-	return (i);
-}
+// 	i = 0;
+// 	// printf("11111\n");
+// 	if (!args)
+// 		return (0);
+// 	// printf("2222222x\n");
+// 	while (args[i])
+// 		++i;
+// 	return (i);
+// }
 
 static int	ms_args_len_2(char **args)
 {
@@ -60,24 +61,34 @@ static int	ms_args_len_2(char **args)
 	return (i);
 }
 
-char	***ms_init_arg_array_2(void)
+t_cmd	*ms_init_arg_array_2(int nb_pipe)
 {
+	t_cmd	*args;
 	char	***array;
-	//char	**arr;
+	int		i;
+	char	**arr;
 	
-	array = (char ***)malloc(sizeof(**array));
+	i = 0;
+	args = malloc(sizeof(t_cmd));
+	if (!args)
+		return (NULL);
+	array = (char ***)malloc(sizeof(**array) * (nb_pipe + 2));
 	if (!array)
 		return (NULL);
-	*array = NULL;
-	// arr = (char **)malloc(sizeof(*arr));
-	// if (!arr)
-	// 	return (NULL);
-	// // *array = arr;
-	// *arr = NULL;
-	// *array = arr;
-	// arr[nb_pipe + 1] =  NULL;
-	// (*arr) = NULL;
-	return (array);
+	while(i < nb_pipe + 2)
+	{
+		array[i] = NULL;
+		i++;
+	}
+	arr = (char **)malloc(sizeof(*arr));
+	if (!array)
+		return (NULL);
+	*arr = 0;
+	args->cmds = array;
+	args->index = 0;
+	args->times = 0;
+	*array = arr;
+	return (args);
 }
 
 void	free_path(char **paths)
@@ -180,29 +191,18 @@ void print_arg(char ***argv, int nb_cmd)
 // 	}
 
 // }
-char	***ms_add_arg_back_2(char ***args, char *data)
+t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 {
 	int		i;
-	int		len1;
 	int 	len2;
-	char	***cmd;
 	char	**new;
 
 	if (!args)
 		return (NULL);
-	len1 = ms_cmd_len_2(args);
-	printf("len in back :%d\n", len1);
-	cmd = (char ***)malloc(sizeof(**cmd) * (len1 + 2));
-	if (!cmd)
-	{
-		//ms_free_arg_array(args);
-		return (NULL);
-	}
-	cmd[len1 + 1] = NULL;
-	if (len1 == 0)
+	if (args->times == 0)
 		len2 = 0;
 	else
-		len2 = ms_args_len_2(args[len1 - 1]);
+		len2 = ms_args_len_2(args->cmds[args->index]);
 	printf("len2 in back :%d\n", len2);
 	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
@@ -212,45 +212,32 @@ char	***ms_add_arg_back_2(char ***args, char *data)
 	}
 	i = -1;
 	printf("so far so good\n");
-	while (args[++i])
+	while (args->cmds[args->index][++i])
 	{
 		printf("inside\n");
-		new[i] = ft_strdup(args[len1][i]);
+		new[i] = ft_strdup(args->cmds[args->index][i]);
 	}
 	new[i] = ft_strdup(data);
-	cmd[len1] = new;
-	new[i + 1] = NULL;
+	args->cmds[args->index] = new;
+	new[len2 + 1] = NULL;
 	printf("good!!\n");
-	printf("new len :%d\n", ms_args_len_2(cmd[len1]));
+	args->times = args->times + 1;
 	//ms_free_arg_array(args);
-	return (cmd);
+	return (args);
 }
 
-char	***ms_add_arg_front_2(char ***args, char *data)
+t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 {
 	int		i;
-	int		len1;
 	int 	len2;
-	char	***cmd;
 	char	**new;
 
 	if (!args)
 		return (NULL);
-	len1 = ms_cmd_len_2(args);
-	printf("len in front :%d\n", len1);
-	cmd = (char ***)malloc(sizeof(**cmd) * (len1 + 2));
-	if (!cmd)
-	{
-		//ms_free_arg_array(args);
-		return (NULL);
-	}
-	cmd[len1 + 1] = NULL;
-	if (len1 == 0)
-		len2 = 0;
-	else
-		len2 = ms_args_len_2(args[len1 - 1]);
+	args->times = 0;
+	len2 = ms_args_len_2(args->cmds[args->index]);
 	printf("len2 in front :%d\n", len2);
-	new = (char **)malloc(sizeof(*new) * (len2 + 1));
+	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
 	{
 		//ms_free_arg_array_2(args);
@@ -259,14 +246,19 @@ char	***ms_add_arg_front_2(char ***args, char *data)
 	new[len2 + 1] = NULL;
 	new[0] = ft_strdup(data);
 	i = -1;
-	while (args[++i])
-		new[i + 1] = ft_strdup(args[len1][i]);
+	while (args->cmds[args->index][++i])
+	{
+		new[i + 1] = ft_strdup(args->cmds[args->index][i]);
+	}
 	//ms_free_arg_array(args);
+	args->cmds[args->index] = new;
+	new[len2 + 1] = NULL;
+	args->index = args->index + 1;
 	printf("good front\n");
-	return (cmd);
+	return (args);
 }
 
-static char ***ms_visit(t_node *node, char ***args, char **envp, int *pipex, int nb_pipe)
+static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int nb_pipe)
 {
 	// pid_t		child;
 	// int			i;
@@ -284,15 +276,17 @@ static char ***ms_visit(t_node *node, char ***args, char **envp, int *pipex, int
 	}
 	if (node->type == A_PARAM)
 	{
-		args = ms_add_arg_back_2(args, node->data);
 		printf("param\n");
-		print_args(args);
+		args = ms_add_arg_back_2(args, node->data);
+		print_args(args->cmds);
+		printf("index:%d\n", args->index);
 	}
 	else if (node->type == A_CMD)
 	{	
-		args = ms_add_arg_front_2(args, node->data);
 		printf("cmd\n");
-		print_args(args);
+		args = ms_add_arg_front_2(args, node->data);
+		print_args(args->cmds);
+		printf("index:%d\n", args->index);
 		// Save the args tab in an array
 		// if (args->cmds)
 		// 	printf("cmds:%s\n", args->cmds[0]);
@@ -349,17 +343,16 @@ int		*pipex_creat(int nb_pipe)
 
 int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 {
-	char	***args;
+	t_cmd	*args;
 	int		*pipex;
-	char	***ex;
-	char 	**content;
+	// char	***ex;
+	// char 	**content;
 
 	(void)node;
 	(void)envp;
 	pipex = pipex_creat(nb_pipe);
-	args = ms_init_arg_array_2();
-	// printf("secodne\n");
-	// args = ms_visit(node, args, envp, pipex, nb_pipe);
+	args = ms_init_arg_array_2(nb_pipe);
+	args = ms_visit(node, args, envp, pipex, nb_pipe);
 	// print_args(args);
 	// ex = (char ***)malloc(sizeof(**ex)*2);
 	// if (!ex)
