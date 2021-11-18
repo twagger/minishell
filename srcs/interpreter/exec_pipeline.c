@@ -121,11 +121,11 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
 	int		i;
 	char	*path;
-	// printf("index: %d , %d\n", args->index, args->times);
+	fprintf(stderr, "**BULL:%d, %s\n", args->index, args->cmds[args->index][0]);
 	//if not last cmds
-    if ((args->times != nb_pipe))
+    if (args->times != nb_pipe)
 	{
-		// printf("not last one : %d\n", args->times);
+		fprintf(stderr,"not last one : %d\n", args->times);
         if (dup2(pipex[2 * (args->times) + 1], STDOUT_FILENO) < 0)
 		{
 			perror("dup a");
@@ -133,9 +133,9 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 		}
     }
 	//if not first cmd
-	if (args->index != 0)
+	if (args->times != 0)
 	{
-		// printf("not first one : %d\n", args->times);
+		fprintf(stderr,"not first one : %d\n", args->times);
         if (dup2(pipex[2 * (args->times - 1)], STDIN_FILENO) < 0)
 		{
 			perror("dup b");
@@ -145,18 +145,25 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 	i = -1;
 	while(++i < nb_pipe * 2)	
 		close(pipex[i]);
-	path = get_path(args->cmds[args->index][0], envp);
-	//path and cmd not free?
-    if (!path)
+	fprintf(stderr, "BULL:%d, %s\n", args->index, args->cmds[args->index][0]);
+	if (ms_is_builtin(args->cmds[args->index][0]))
+		ms_execute_builtin(args->cmds[args->index], envp);
+	else
 	{
-		//free_path(cmd);
-		perror("no path:");
-	}
-	if (execve(path, args->cmds[args->index], envp) == -1)
-	{
+		fprintf(stderr, "INSDIE\n");
+		path = get_path(args->cmds[args->index][0], envp);
+		//path and cmd not free?
+    	if (!path)
+		{
+			//free_path(cmd);
+			perror("no path:");
+		}
+		if (execve(path, args->cmds[args->index], envp) == -1)
+		{
 		//free(path);
 		//free_path(cmd);
-		perror("execve:");
+			perror("execve:");
+		}
 	}
 }
 void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
@@ -186,6 +193,7 @@ void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 		}
 		if (child == 0)
 		{
+			printf("args->times:%d, args->index:%d\n", args->times, args->index);
 			pipe_execte(pipex, args, nb_pipe, envp);
 		}
 		args->index =  args->index + 1;
