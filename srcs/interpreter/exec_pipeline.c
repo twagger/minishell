@@ -20,14 +20,15 @@ typedef struct s_cmd
 	int				times;
 }					t_cmd;
 
-void print_args(char ***argv)
+void print_args(char ***argv, int nb)
 {
 	int x = -1;
-	int y = -1;
+	int y;
 
-	printf("RESULT:\n");
-	while (argv[++x])
+	printf("RESULT: %d\n", nb);
+	while (++x <= nb)
 	{
+		y = -1;
 		while(argv[x][++y])
 		{
 			printf("%s\n", argv[x][y]);
@@ -36,20 +37,6 @@ void print_args(char ***argv)
 	}
 	printf("----------------\n");
 }
-
-// static int	ms_cmd_len_2(char ***args)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	// printf("11111\n");
-// 	if (!args)
-// 		return (0);
-// 	// printf("2222222x\n");
-// 	while (args[i])
-// 		++i;
-// 	return (i);
-// }
 
 static int	ms_args_len_2(char **args)
 {
@@ -72,10 +59,10 @@ t_cmd	*ms_init_arg_array_2(int nb_pipe)
 	args = malloc(sizeof(t_cmd));
 	if (!args)
 		return (NULL);
-	array = (char ***)malloc(sizeof(**array) * (nb_pipe + 2));
+	array = (char ***)malloc(sizeof(**array) * (2 * nb_pipe + 2));
 	if (!array)
 		return (NULL);
-	while(i < nb_pipe + 2)
+	while(i < 2 * nb_pipe + 2)
 	{
 		array[i] = NULL;
 		i++;
@@ -133,64 +120,89 @@ char	*get_path(char *cmd, char **envp)
 		free_path(paths);
 	return (0);
 }
-
-void print_arg(char ***argv, int nb_cmd)
+void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
-	int i = 0;
-	int nb = 0;
-
-	while (nb < nb_cmd)
+	int		i;
+	char	*path;
+	printf("index: %d , %d\n", args->index, args->times);
+	//if not last cmds
+    if ((args->times != nb_pipe))
 	{
-		while(argv[nb][i])
+		printf("not last one : %d\n", args->times);
+        if (dup2(pipex[2 * (args->times) + 1], STDOUT_FILENO) < 0)
 		{
-			printf("%s\n", argv[nb][i]);
-			i++;
+			perror("dup a");
+			exit(1);
 		}
-		printf("\\\\\\n");
-		nb++;
+    }
+	//if not first cmd
+	if (args->index != 0)
+	{
+		printf("not first one : %d\n", args->times);
+        if (dup2(pipex[2 * (args->times - 1)], STDIN_FILENO) < 0)
+		{
+			perror("dup b");
+			exit(1);
+		}
+    }
+	i = -1;
+	while(++i < nb_pipe * 2)	
+		close(pipex[i]);
+	path = get_path(args->cmds[args->index][0], envp);
+	//path and cmd not free?
+    if (!path)
+	{
+		//free_path(cmd);
+		perror("no path:");
+	}
+	if (execve(path, args->cmds[args->index], envp) == -1)
+	{
+		//free(path);
+		//free_path(cmd);
+		perror("execve:");
 	}
 }
+void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
+{
+	//int		index;
+	pid_t	child;
+	int		i;
 
-// void pipe_execte(int *pipex, t_cmds *args, int nb_pipe, char **envp)
-// {
-// 	int		i;
-// 	char	*path;
-// 	//if not last cmds
-// 	printf("inside:%d\n", args->i);
-//     if (args->i !=nb_pipe)
-// 	{
-//         if (dup2(pipex[2 * args->i + 1], STDOUT_FILENO) < 0)
-// 		{
-// 			perror("dup a");
-// 			exit(1);
-// 		}
-//     }
-// 	//if not first cmd
-// 	if (args->i != 0)
-// 	{
-//         if (dup2(pipex[2 * (args->i-1)], STDIN_FILENO) < 0)
-// 		{
-// 			perror("dup b");
-// 			exit(1);
-// 		}
-//     }
-// 	i = -1;
-//     while(++i < nb_pipe * 2)	
-// 		close(pipex[i]);
-// 	printf("getpath:%s\n", args->cmds[0]);
-// 	path = get_path(args->cmds[0], envp);
-//     if (!path)
-// 	{
-// 		perror("path");
-// 		exit(1);
-// 	}
-// 	if (execve(path, args->cmds, envp) == -1)
-// 	{
-// 		perror("execve");
-// 		exit(1);
-// 	}
+	//if not last cmds
+	args->index = 0;
+	args->times = -1;
+	while(args->index < 2 *nb_pipe + 1)
+	{
+		if (ft_strncmp(args->cmds[args->index][0], "|", 2))
+			args->times = args->times + 1;
+		if (ft_strncmp(args->cmds[args->index][0], "|", 2) == 0)
+		{
+			printf("pipp\n");
+			args->index= args->index + 1;
+			continue ;
+		}
+		child = fork();
+		if (child < 0)
+		{
+			perror("fork:");
+			exit(1);
+		}
+		if (child == 0)
+		{
+			pipe_execte(pipex, args, nb_pipe, envp);
+		}
+		args->index =  args->index + 1;
+		//free
+	}
+	i = -1;
+    while(++i < nb_pipe * 2)	
+		close(pipex[i]);
+	free(pipex);
+	//free();
+	while (errno != ECHILD)
+		wait(NULL);
+}
 
-// }
 t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 {
 	int		i;
@@ -203,7 +215,7 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 		len2 = 0;
 	else
 		len2 = ms_args_len_2(args->cmds[args->index]);
-	printf("len2 in back :%d\n", len2);
+	printf("len2 in back :%d, %d\n", args->times, len2);
 	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
 	{
@@ -211,15 +223,16 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 		return (NULL);
 	}
 	i = -1;
-	printf("so far so good\n");
-	while (args->cmds[args->index][++i])
+	printf("so far so good:%p\n", args->cmds[args->index]);
+	while (args->cmds[args->index] != NULL && args->cmds[args->index][++i])
 	{
-		printf("inside\n");
 		new[i] = ft_strdup(args->cmds[args->index][i]);
 	}
+	if (i == -1)
+		i = 0;
 	new[i] = ft_strdup(data);
+	new[i + 1] = NULL;
 	args->cmds[args->index] = new;
-	new[len2 + 1] = NULL;
 	printf("good!!\n");
 	args->times = args->times + 1;
 	//ms_free_arg_array(args);
@@ -234,8 +247,11 @@ t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 
 	if (!args)
 		return (NULL);
+	if (args->times == 0)
+		len2 = 0;
+	else
+		len2 = ms_args_len_2(args->cmds[args->index]);
 	args->times = 0;
-	len2 = ms_args_len_2(args->cmds[args->index]);
 	printf("len2 in front :%d\n", len2);
 	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
@@ -243,26 +259,27 @@ t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 		//ms_free_arg_array_2(args);
 		return (NULL);
 	}
-	new[len2 + 1] = NULL;
 	new[0] = ft_strdup(data);
 	i = -1;
-	while (args->cmds[args->index][++i])
+	while (args->cmds[args->index] != NULL && args->cmds[args->index][++i])
 	{
 		new[i + 1] = ft_strdup(args->cmds[args->index][i]);
 	}
+	if (i == -1)
+		i = 0;
+	new[i + 1] = NULL;
 	//ms_free_arg_array(args);
 	args->cmds[args->index] = new;
 	new[len2 + 1] = NULL;
 	args->index = args->index + 1;
 	printf("good front\n");
+	if (args->index == 2)
+		printf("seconde:%s\n", args->cmds[args->index-1][1]);
 	return (args);
 }
 
 static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int nb_pipe)
 {
-	// pid_t		child;
-	// int			i;
-
 	if (!node)
 		return (args);
 	printf("here:%s\n", node->data);
@@ -271,48 +288,29 @@ static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int n
 	if (node->type == A_PIPE)
 	{
 		printf("HELLOOOOO\n");
-		// if last pipe > launch pipex
-		// if not > Connect cmd 1 output to cmd 2 input
+		args = ms_add_arg_back_2(args, node->data);
+		print_args(args->cmds, args->index);
+		args->times = 0;
+		args->index = args->index + 1;
+		printf("index:%d, %d\n", args->index, nb_pipe);
+		if (args->index == (2 * nb_pipe + 1))
+		{
+			printf("run!\n");
+			pipe_fork(pipex, args, nb_pipe, envp);
+		}
 	}
 	if (node->type == A_PARAM)
 	{
 		printf("param\n");
 		args = ms_add_arg_back_2(args, node->data);
-		print_args(args->cmds);
 		printf("index:%d\n", args->index);
 	}
 	else if (node->type == A_CMD)
 	{	
 		printf("cmd\n");
 		args = ms_add_arg_front_2(args, node->data);
-		print_args(args->cmds);
 		printf("index:%d\n", args->index);
-		// Save the args tab in an array
-		// if (args->cmds)
-		// 	printf("cmds:%s\n", args->cmds[0]);
-		// if (!args)
-		// 	return (NULL);
-		// child = fork();
-		// if (child < 0)
-		// {
-		// 	perror("fork");
-		// 	exit(1);
-		// }
-		// if (child == 0)
-		// {
-		// 	printf("childe\n");
-		// 	printf("----\n");
-		// 	printf("----\n");
-		// 	//pipe_execte(pipex, args, nb_pipe, envp);
-		// }
-		// //parent
-		// //args = ms_init_arg_array_2();
-		// //args->i = (args->i) + 1;
-		// i = -1;
-		// while(++i < nb_pipe * 2)
-		// 	close(pipex[i]);
-		// while (errno != ECHILD)
-		// 	wait(NULL);
+		print_args(args->cmds, args->index-1);
 	}
 	return (args);
 }
@@ -345,27 +343,12 @@ int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 {
 	t_cmd	*args;
 	int		*pipex;
-	// char	***ex;
-	// char 	**content;
 
 	(void)node;
 	(void)envp;
 	pipex = pipex_creat(nb_pipe);
 	args = ms_init_arg_array_2(nb_pipe);
 	args = ms_visit(node, args, envp, pipex, nb_pipe);
-	// print_args(args);
-	// ex = (char ***)malloc(sizeof(**ex)*2);
-	// if (!ex)
-	// 	return 1;
-	// ex[1]=NULL;
-	// content = (char **)malloc(sizeof(*content) * 3);
-	// if (!content)
-	// 	return 1;
-	// content[2]=NULL;
-	// content[0] = ft_strdup("HELLO");
-	// content[1] = ft_strdup("YOU!!!");
-	// ex[0] = content;
-	// print_args(ex);
 	// if (!args)
 	// {
 	// 	ms_free_arg_array(args);
