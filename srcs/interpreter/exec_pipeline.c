@@ -20,23 +20,23 @@ typedef struct s_cmd
 	int				times;
 }					t_cmd;
 
-void print_args(char ***argv, int nb)
-{
-	int x = -1;
-	int y;
+// void print_args(char ***argv, int nb)
+// {
+// 	int x = -1;
+// 	int y;
 
-	printf("RESULT: %d\n", nb);
-	while (++x <= nb)
-	{
-		y = -1;
-		while(argv[x][++y])
-		{
-			printf("%s\n", argv[x][y]);
-		}
-		printf("\n");
-	}
-	printf("----------------\n");
-}
+// 	printf("RESULT: %d\n", nb);
+// 	while (++x <= nb)
+// 	{
+// 		y = -1;
+// 		while(argv[x][++y])
+// 		{
+// 			printf("%s\n", argv[x][y]);
+// 		}
+// 		printf("\n");
+// 	}
+// 	printf("----------------\n");
+// }
 
 static int	ms_args_len_2(char **args)
 {
@@ -55,18 +55,15 @@ t_cmd	*ms_init_arg_array_2(int nb_pipe)
 	int		i;
 	char	**arr;
 	
-	i = 0;
 	args = malloc(sizeof(t_cmd));
 	if (!args)
 		return (NULL);
 	array = (char ***)malloc(sizeof(**array) * (2 * nb_pipe + 2));
 	if (!array)
 		return (NULL);
-	while(i < 2 * nb_pipe + 2)
-	{
+	i = -1;
+	while(++i < 2 * nb_pipe + 2)
 		array[i] = NULL;
-		i++;
-	}
 	arr = (char **)malloc(sizeof(*arr));
 	if (!array)
 		return (NULL);
@@ -124,11 +121,11 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
 	int		i;
 	char	*path;
-	printf("index: %d , %d\n", args->index, args->times);
+	// printf("index: %d , %d\n", args->index, args->times);
 	//if not last cmds
     if ((args->times != nb_pipe))
 	{
-		printf("not last one : %d\n", args->times);
+		// printf("not last one : %d\n", args->times);
         if (dup2(pipex[2 * (args->times) + 1], STDOUT_FILENO) < 0)
 		{
 			perror("dup a");
@@ -138,7 +135,7 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 	//if not first cmd
 	if (args->index != 0)
 	{
-		printf("not first one : %d\n", args->times);
+		// printf("not first one : %d\n", args->times);
         if (dup2(pipex[2 * (args->times - 1)], STDIN_FILENO) < 0)
 		{
 			perror("dup b");
@@ -177,7 +174,7 @@ void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 			args->times = args->times + 1;
 		if (ft_strncmp(args->cmds[args->index][0], "|", 2) == 0)
 		{
-			printf("pipp\n");
+			//printf("pipp\n");
 			args->index= args->index + 1;
 			continue ;
 		}
@@ -215,7 +212,7 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 		len2 = 0;
 	else
 		len2 = ms_args_len_2(args->cmds[args->index]);
-	printf("len2 in back :%d, %d\n", args->times, len2);
+	//printf("len2 in back :%d, %d\n", args->times, len2);
 	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
 	{
@@ -223,7 +220,6 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 		return (NULL);
 	}
 	i = -1;
-	printf("so far so good:%p\n", args->cmds[args->index]);
 	while (args->cmds[args->index] != NULL && args->cmds[args->index][++i])
 	{
 		new[i] = ft_strdup(args->cmds[args->index][i]);
@@ -233,7 +229,6 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 	new[i] = ft_strdup(data);
 	new[i + 1] = NULL;
 	args->cmds[args->index] = new;
-	printf("good!!\n");
 	args->times = args->times + 1;
 	//ms_free_arg_array(args);
 	return (args);
@@ -252,7 +247,6 @@ t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 	else
 		len2 = ms_args_len_2(args->cmds[args->index]);
 	args->times = 0;
-	printf("len2 in front :%d\n", len2);
 	new = (char **)malloc(sizeof(*new) * (len2 + 2));
 	if (!new)
 	{
@@ -272,9 +266,9 @@ t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 	args->cmds[args->index] = new;
 	new[len2 + 1] = NULL;
 	args->index = args->index + 1;
-	printf("good front\n");
-	if (args->index == 2)
-		printf("seconde:%s\n", args->cmds[args->index-1][1]);
+	// printf("good front\n");
+	// if (args->index == 2)
+	// 	printf("seconde:%s\n", args->cmds[args->index-1][1]);
 	return (args);
 }
 
@@ -282,35 +276,33 @@ static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int n
 {
 	if (!node)
 		return (args);
-	printf("here:%s\n", node->data);
+	//printf("here:%s\n", node->data);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
 	if (node->type == A_PIPE)
 	{
-		printf("HELLOOOOO\n");
+		//printf("HELLOOOOO\n");
 		args = ms_add_arg_back_2(args, node->data);
-		print_args(args->cmds, args->index);
+		//print_args(args->cmds, args->index);
 		args->times = 0;
 		args->index = args->index + 1;
-		printf("index:%d, %d\n", args->index, nb_pipe);
+		//printf("index:%d, %d\n", args->index, nb_pipe);
 		if (args->index == (2 * nb_pipe + 1))
 		{
-			printf("run!\n");
+			//printf("run!\n");
 			pipe_fork(pipex, args, nb_pipe, envp);
 		}
 	}
 	if (node->type == A_PARAM)
 	{
-		printf("param\n");
+		//printf("param\n");
 		args = ms_add_arg_back_2(args, node->data);
-		printf("index:%d\n", args->index);
+		//printf("index:%d\n", args->index);
 	}
 	else if (node->type == A_CMD)
 	{	
-		printf("cmd\n");
 		args = ms_add_arg_front_2(args, node->data);
-		printf("index:%d\n", args->index);
-		print_args(args->cmds, args->index-1);
+		//print_args(args->cmds, args->index-1);
 	}
 	return (args);
 }
