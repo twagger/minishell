@@ -48,7 +48,7 @@ static int	ms_args_len_2(char **args)
 	return (i);
 }
 
-t_cmd	*ms_init_arg_array_2(int nb_pipe)
+static t_cmd	*ms_init_arg_array_2(int nb_pipe)
 {
 	t_cmd	*args;
 	char	***array;
@@ -75,7 +75,7 @@ t_cmd	*ms_init_arg_array_2(int nb_pipe)
 	return (args);
 }
 
-void	free_path(char **paths)
+static void	free_path(char **paths)
 {
 	int	i;
 
@@ -88,7 +88,7 @@ void	free_path(char **paths)
 	free(paths);
 }
 
-char	*get_path(char *cmd, char **envp)
+static char	*get_path(char *cmd, char **envp)
 {
 	char	**paths;
 	char	*path;
@@ -117,7 +117,7 @@ char	*get_path(char *cmd, char **envp)
 		free_path(paths);
 	return (0);
 }
-void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
+static void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
 	int		i;
 	char	*path;
@@ -166,7 +166,7 @@ void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 		}
 	}
 }
-void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
+static void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
 	//int		index;
 	pid_t	child;
@@ -208,7 +208,7 @@ void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 		wait(NULL);
 }
 
-t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
+static t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 {
 	int		i;
 	int 	len2;
@@ -242,7 +242,7 @@ t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
 	return (args);
 }
 
-t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
+static t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
 {
 	int		i;
 	int 	len2;
@@ -315,7 +315,7 @@ static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int n
 	return (args);
 }
 
-int		*pipex_creat(int nb_pipe)
+static int		*pipex_creat(int nb_pipe)
 {
 	int		*pipex;
 	int		i;
