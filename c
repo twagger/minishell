@@ -1,0 +1,16 @@
+Makefile
+c
+doc
+includes
+libft
+libft.a
+minishell
+srcs
+Makefile
+c
+doc
+includes
+libft
+libft.a
+minishell
+srcs

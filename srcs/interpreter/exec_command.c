@@ -367,6 +367,7 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 	{
 		args->type = node->type;
 	}
+	printf("node:%s\n", node->data);
 	return (args);
 }
 
