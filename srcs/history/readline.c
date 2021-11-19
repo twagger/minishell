@@ -15,6 +15,13 @@
 static int	ms_handle_escape_sequence(\
 	char **buffer, char *seq, t_history **histo, int *cpos)
 {
+	/* display escape sequence */
+	/*int i;
+	i = -1;
+	while (seq[++i])
+		printf(" %i", seq[i]);
+	printf("\n");
+	*/
 	if (ft_strlen(seq) == 3)
 	{
 		ms_handle_move(buffer, seq, cpos);

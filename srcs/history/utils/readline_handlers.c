@@ -64,8 +64,11 @@ int	ms_handle_history(char **buffer, char *seq, t_history **histo, int *cpos)
 		else
 			*buffer = (*histo)->data;
 	}
-	*cpos = ft_strlen(*buffer);
-	ms_put_line(*buffer, *cpos);
+	if (seq[2] == ARROW_UP || seq[2] == ARROW_DOWN)
+	{
+		*cpos = ft_strlen(*buffer);
+		ms_put_line(*buffer, *cpos);
+	}
 	return (0);
 }
 
