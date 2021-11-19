@@ -46,7 +46,6 @@ static int	ms_loop(char **envp)
 		}
 		else
 			printf("\n");
-		free(line);
 	}
 	ms_histo_clear(histo);
 	ms_free_table(parsing_table);

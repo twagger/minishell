@@ -12,10 +12,10 @@
 
 #include "history.h"
 
-int	ms_handle_move(char **buffer, char *seq, int *cpos)
+int	ms_handle_move(t_history **histo, char *seq, int *cpos)
 {
 	if (seq[1] == 91 && seq[2] == ARROW_RIGHT \
-		&& (int)ft_strlen(*buffer) > *cpos)
+		&& (int)ft_strlen((*histo)->data) > *cpos)
 	{
 		tputs(tgetstr("nd", NULL), 0, ms_putchar);
 		++(*cpos);
@@ -26,11 +26,11 @@ int	ms_handle_move(char **buffer, char *seq, int *cpos)
 		--(*cpos);
 	}
 	if (seq[1] == 91 && seq[2] == END \
-		&& (int)ft_strlen(*buffer) > *cpos)
+		&& (int)ft_strlen((*histo)->data) > *cpos)
 	{
 		tputs(tgoto(tgetstr("RI", NULL), 0, \
-			(*cpos - ft_strlen(*buffer)) * -1), 0, ms_putchar);
-		*cpos = (int)ft_strlen(*buffer);
+			(*cpos - ft_strlen((*histo)->data)) * -1), 0, ms_putchar);
+		*cpos = (int)ft_strlen((*histo)->data);
 	}
 	if (seq[1] == 91 && seq[2] == HOME)
 	{
@@ -40,46 +40,34 @@ int	ms_handle_move(char **buffer, char *seq, int *cpos)
 	return (0);
 }
 
-int	ms_handle_history(char **buffer, char *seq, t_history **histo, int *cpos)
+int	ms_handle_history(t_history **histo, char *seq, int *cpos)
 {
 	if (seq[1] == 91 && seq[2] == ARROW_UP)
 	{
-		if (!ms_is_new_in_histo(histo))
-			ms_histo_insert_front(histo, ms_histo_new(ft_strdup(*buffer)), B_NEW);
 		if ((*histo)->next)
-		{
-			*buffer = (*histo)->next->data;
 			*histo = (*histo)->next;
-		}
-		else
-			*buffer = (*histo)->data;
 	}
 	if (seq[1] == 91 && seq[2] == ARROW_DOWN)
 	{
 		if ((*histo)->previous)
-		{
-			*buffer = (*histo)->previous->data;
 			*histo = (*histo)->previous;
-		}
-		else
-			*buffer = (*histo)->data;
 	}
 	if (seq[2] == ARROW_UP || seq[2] == ARROW_DOWN)
 	{
-		*cpos = ft_strlen(*buffer);
-		ms_put_line(*buffer, *cpos);
+		*cpos = ft_strlen((*histo)->data);
+		ms_put_line((*histo)->data, *cpos);
 	}
 	return (0);
 }
 
-int	ms_handle_delete(char **buffer, char *seq, int *cpos)
+int	ms_handle_delete(t_history **histo, char *seq, int *cpos)
 {
 	if (seq == NULL || (seq[1] == 91 && seq[2] == 51 && seq[3] == 126))
 	{
-		if (*cpos != (int)ft_strlen(*buffer))
+		if (*cpos != (int)ft_strlen((*histo)->data))
 		{
-			*buffer = ms_del_char(buffer, *cpos);
-			if (!*buffer)
+			(*histo)->data = ms_del_char(histo, *cpos);
+			if (!(*histo)->data)
 				return (ERROR);
 		}
 	}

@@ -12,28 +12,7 @@
 
 #include "history.h"
 
-int	ms_is_new_in_histo(t_history **histo)
-{
-	int			res;
-	t_history	*begin;
-
-	res = 0;
-	begin = *histo;
-	if (!*histo)
-		return (res);
-	while ((*histo)->previous)
-		*histo = (*histo)->previous;
-	while (*histo)
-	{
-		if ((*histo)->type == B_NEW)
-			res = 1;
-		*histo = (*histo)->next;
-	}
-	*histo = begin;
-	return (res);
-}
-
-t_history	*ms_histo_new(void *data)
+t_history	*ms_histo_new(char *data)
 {
 	t_history	*new;
 
@@ -42,6 +21,7 @@ t_history	*ms_histo_new(void *data)
 		return (NULL);
 	new->type = B_NEW;
 	new->data = data;
+	new->saved_data = NULL;
 	new->previous = NULL;
 	new->next = NULL;
 	return (new);
@@ -51,6 +31,7 @@ void	ms_histo_insert_front(t_history **histo, t_history *insert, int type)
 {
 	if (insert)
 	{
+		ms_histo_rewind(histo);
 		if (*histo)
 		{
 			insert->type = type;
@@ -66,24 +47,38 @@ void	ms_histo_insert_front(t_history **histo, t_history *insert, int type)
 	}
 }
 
-void	ms_histo_clean(t_history **histo)
+void	ms_histo_del_one(t_history **histo, t_history **begin)
 {
-	t_history *to_clear;
+	t_history	*to_clear;
+	t_history	*previous;
+	t_history	*next;
 
 	if (*histo)
 	{
-		while ((*histo)->previous)
-			*histo = (*histo)->previous;
-		if ((*histo)->next && (*histo)->next->type == B_NEW)
+		previous = (*histo)->previous;
+		next = (*histo)->next;
+		to_clear = *histo;
+		if (previous)
+			previous->next = next;
+		if (next)
+			next->previous = previous;
+		free(to_clear->data);
+		free(to_clear->saved_data);
+		free(to_clear);
+		*histo = previous;
+		if (!*histo)
 		{
-			to_clear = (*histo)->next;
-			(*histo)->next = to_clear->next;
-			if ((*histo)->next)
-				(*histo)->next->previous = *histo;
-			free(to_clear->data);
-			free(to_clear);
+			*histo = next;
+			*begin = next;
 		}
 	}
+}
+
+void	ms_histo_rewind(t_history **histo)
+{
+	if (*histo)
+		while ((*histo)->previous)
+			*histo = (*histo)->previous;
 }
 
 void	ms_histo_clear(t_history *histo)
@@ -95,6 +90,7 @@ void	ms_histo_clear(t_history *histo)
 	{
 		next = histo->next->next;
 		free(histo->next->data);
+		free(histo->next->saved_data);
 		free(histo->next);
 		histo->next = next;
 	}
@@ -102,12 +98,14 @@ void	ms_histo_clear(t_history *histo)
 	{
 		previous = histo->previous->previous;
 		free(histo->previous->data);
+		free(histo->previous->saved_data);
 		free(histo->previous);
 		histo->previous = previous;
 	}
 	if (histo)
 	{
 		free(histo->data);
+		free(histo->saved_data);
 		free(histo);
 	}
 }

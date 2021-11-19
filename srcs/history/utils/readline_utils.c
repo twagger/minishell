@@ -37,55 +37,55 @@ void	ms_put_line(char *buffer, int cpos)
 		tputs(tgoto(tgetstr("RI", NULL), 0, cpos), 0, ms_putchar);
 }
 
-int	ms_add_char(char **buffer, char c, int where)
+int	ms_add_char(t_history **histo, char c, int where)
 {
 	char	curr;
 	char	saved;
 	size_t	len;
 
-	len = ft_strlen(*buffer);
-	*buffer = ft_realloc(*buffer, len + 2);
-	if (!buffer)
+	len = ft_strlen((*histo)->data);
+	(*histo)->data = ft_realloc((*histo)->data, len + 2);
+	if (!(*histo)->data)
 		return (ERROR);
 	if (where == -1)
-		(*buffer)[len] = c;
+		((*histo)->data)[len] = c;
 	else
 	{
 		saved = c;
 		while (where < (int)len + 1)
 		{
-			curr = (*buffer)[where];
-			(*buffer)[where] = saved;
+			curr = ((*histo)->data)[where];
+			((*histo)->data)[where] = saved;
 			saved = curr;
 			++where;
 		}
 	}	
-	(*buffer)[len + 1] = '\0';
+	((*histo)->data)[len + 1] = '\0';
 	return (EXIT_SUCCESS);
 }
 
-char	*ms_del_char(char **buffer, int index)
+char	*ms_del_char(t_history **histo, int index)
 {
 	int		i;
 	int		j;
 	char	*new;
 
-	if (!buffer)
+	if (!(*histo)->data)
 		return (NULL);
-	new = (char *)malloc(sizeof(*new) * ft_strlen(*buffer));
+	new = (char *)malloc(sizeof(*new) * ft_strlen((*histo)->data));
 	if (!new)
 	{
-		free(*buffer);
+		free((*histo)->data);
 		return (NULL);
 	}
 	j = 0;
 	i = -1;
-	while ((*buffer)[++i])
+	while ((*histo)->data[++i])
 	{
 		if (i != index)
-			new[j++] = (*buffer)[i];
+			new[j++] = ((*histo)->data)[i];
 	}
 	new[j] = '\0';
-	free(*buffer);
+	free((*histo)->data);
 	return (new);
 }

@@ -12,41 +12,33 @@
 
 #include "history.h"
 
-static int	ms_handle_escape_sequence(\
-	char **buffer, char *seq, t_history **histo, int *cpos)
+static int	ms_handle_escape_sequence(t_history **histo, char *seq, int *cpos)
 {
-	/* display escape sequence */
-	/*int i;
-	i = -1;
-	while (seq[++i])
-		printf(" %i", seq[i]);
-	printf("\n");
-	*/
 	if (ft_strlen(seq) == 3)
 	{
-		ms_handle_move(buffer, seq, cpos);
-		ms_handle_history(buffer, seq, histo, cpos);
-		ms_handle_delete(buffer, seq, cpos);
+		ms_handle_move(histo, seq, cpos);
+		ms_handle_history(histo, seq, cpos);
+		ms_handle_delete(histo, seq, cpos);
 	}
 	if (ft_strlen(seq) == 4)
-		ms_handle_delete(buffer, seq, cpos);
+		ms_handle_delete(histo, seq, cpos);
 	return (0);
 }
 
-static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
+static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 {
 	int	where;
 
-	if (*cpos == (int)ft_strlen(*buffer))
+	if (*cpos == (int)ft_strlen((*histo)->data))
 		where = -1;
 	else
 		where = *cpos;
 	if (ft_isprint(c))
 	{
 		++(*cpos);
-		if (ms_add_char(buffer, c, where) == ERROR)
+		if (ms_add_char(histo, c, where) == ERROR)
 			return (ERROR);
-		ms_put_line(*buffer, *cpos);
+		ms_put_line((*histo)->data, *cpos);
 	}
 	else if (c == '\n')
 	{
@@ -56,23 +48,22 @@ static int	ms_handle_simple_char(char **buffer, char c, int *cpos)
 	else if (c == BACKSPACE && *cpos != 0)
 	{
 		--(*cpos);
-		ms_handle_delete(buffer, NULL, cpos);
-		ms_put_line(*buffer, *cpos);
+		ms_handle_delete(histo, NULL, cpos);
+		ms_put_line((*histo)->data, *cpos);
 	}
 	return (EXIT_SUCCESS);
 }
 
 char	*ms_readline(const char *prompt, t_history **histo)
 {
-	char	*buffer;
 	char	c[11];
 	int		ret;
 	int		cpos;
 
-	buffer = NULL;
 	cpos = 0;
 	ft_putstr_fd((char *)prompt, 1);
 	tputs(tgetstr("sc", NULL), 0, ms_putchar);
+	ms_histo_insert_front(histo, ms_histo_new(NULL), B_NEW);
 	while (1)
 	{
 		ret = read(STDIN_FILENO, c, 10);
@@ -81,17 +72,22 @@ char	*ms_readline(const char *prompt, t_history **histo)
 		c[ret] = '\0';
 		if (ret == 1)
 		{
-			ret = ms_handle_simple_char(&buffer, c[0], &cpos);
+			ret = ms_handle_simple_char(histo, c[0], &cpos);
 			if (ret == ERROR)
 				return (NULL);
 			if (ret == LINE_END)
 				break ;
 		}
-		else if (ms_handle_escape_sequence(&buffer, c, histo, &cpos) == ERROR)
+		else if (ms_handle_escape_sequence(histo, c, &cpos) == ERROR)
 			return (NULL);
 	}
-	ms_histo_insert_front(histo, ms_histo_new(ft_strdup(buffer)), B_HISTO);
-	/**/
+	if ((*histo)->type != B_NEW)
+		(*histo)->type = B_HISTO_RESTORE;
+	if ((*histo)->data)
+		ms_histo_insert_front(histo, ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
+	ms_histo_clean(histo);
+
+	/* display history */
 	t_history *begin;
 	if (*histo)
 		while ((*histo)->previous)
@@ -100,12 +96,12 @@ char	*ms_readline(const char *prompt, t_history **histo)
 	printf("\n------\n");
 	while (*histo)
 	{
-		printf("H : %s\n", (*histo)->data);
+		printf("T : %i\tH : %s\n", (*histo)->type, (*histo)->data);
 		*histo = (*histo)->next;
 	}
 	printf("------\n");
 	*histo = begin;
-	/**/
-	ms_histo_clean(histo);
-	return (buffer);
+	/* end of display history */
+
+	return ((*histo)->data);
 }
