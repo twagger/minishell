@@ -344,8 +344,6 @@ int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 	t_cmd	*args;
 	int		*pipex;
 
-	(void)node;
-	(void)envp;
 	pipex = pipex_creat(nb_pipe);
 	args = ms_init_arg_array_2(nb_pipe);
 	args = ms_visit(node, args, envp, pipex, nb_pipe);
