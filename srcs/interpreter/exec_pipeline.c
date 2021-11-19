@@ -75,52 +75,52 @@ static t_cmd	*ms_init_arg_array_2(int nb_pipe)
 	return (args);
 }
 
-static void	free_path(char **paths)
-{
-	int	i;
+// static void	free_path(char **paths)
+// {
+// 	int	i;
 
-	i = 0;
-	while (paths[i])
-	{
-		free(paths[i]);
-		i++;
-	}
-	free(paths);
-}
+// 	i = 0;
+// 	while (paths[i])
+// 	{
+// 		free(paths[i]);
+// 		i++;
+// 	}
+// 	free(paths);
+// }
 
-static char	*get_path(char *cmd, char **envp)
-{
-	char	**paths;
-	char	*path;
-	int		i;
-	char	*part_path;
+// static char	*get_path(char *cmd, char **envp)
+// {
+// 	char	**paths;
+// 	char	*path;
+// 	int		i;
+// 	char	*part_path;
 
-	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
-		i++;
-	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (paths[i])
-	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
-		free(part_path);
-		if (access(path, F_OK) == 0)
-		{
-			free_path(paths);
-			return (path);
-		}
-		free(path);
-		i++;
-	}
-	if (paths)
-		free_path(paths);
-	return (0);
-}
+// 	i = 0;
+// 	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+// 		i++;
+// 	paths = ft_split(envp[i] + 5, ':');
+// 	i = 0;
+// 	while (paths[i])
+// 	{
+// 		part_path = ft_strjoin(paths[i], "/");
+// 		path = ft_strjoin(part_path, cmd);
+// 		free(part_path);
+// 		if (access(path, F_OK) == 0)
+// 		{
+// 			free_path(paths);
+// 			return (path);
+// 		}
+// 		free(path);
+// 		i++;
+// 	}
+// 	if (paths)
+// 		free_path(paths);
+// 	return (0);
+// }
 static void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
 	int		i;
-	char	*path;
+	//char	*path;
 	fprintf(stderr, "**BULL:%d, %s\n", args->index, args->cmds[args->index][0]);
 	//if not last cmds
     if (args->times != nb_pipe)
@@ -149,22 +149,27 @@ static void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 	if (ms_is_builtin(args->cmds[args->index][0]))
 		ms_execute_builtin(args->cmds[args->index], envp);
 	else
-	{
-		fprintf(stderr, "INSDIE\n");
-		path = get_path(args->cmds[args->index][0], envp);
-		//path and cmd not free?
-    	if (!path)
-		{
-			//free_path(cmd);
-			perror("no path:");
-		}
-		if (execve(path, args->cmds[args->index], envp) == -1)
-		{
-		//free(path);
-		//free_path(cmd);
-			perror("execve:");
-		}
-	}
+		ms_execute(args->cmds[args->index], envp);
+	//ms_free_arg_array(args);
+	// if (ms_is_builtin(args->cmds[args->index][0]))
+	// 	ms_execute_builtin(args->cmds[args->index], envp);
+	// else
+	// {
+	// 	fprintf(stderr, "INSDIE\n");
+	// 	path = get_path(args->cmds[args->index][0], envp);
+	// 	//path and cmd not free?
+    // 	if (!path)
+	// 	{
+	// 		//free_path(cmd);
+	// 		perror("no path:");
+	// 	}
+	// 	if (execve(path, args->cmds[args->index], envp) == -1)
+	// 	{
+	// 	//free(path);
+	// 	//free_path(cmd);
+	// 		perror("execve:");
+	// 	}
+	// }
 }
 static void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
 {
