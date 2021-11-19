@@ -238,10 +238,9 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 {
 	if (!node)
 		return (args);
-	printf("node be:%s,%d\n", node->data, node->type);
+	printf("node: %s,%d\n", node->data, node->type);
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
-	//printf("node:%s\n", node->data);
 	if (node->type == A_PARAM)
 		args = ms_add_arg_back_cmd(args, node->data);
 	else if (node->type == A_CMD)
