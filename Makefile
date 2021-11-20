@@ -62,7 +62,6 @@ SRCS		= srcs/main.c \
 			  srcs/history/utils/readline_handlers.c \
 			  srcs/history/utils/readline_utils.c \
 			  srcs/history/utils/history_utils.c \
-			  srcs/history/utils/history_utils_2.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \
 			  srcs/builtins/env.c \

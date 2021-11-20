@@ -37,6 +37,10 @@ void	ms_put_line(char *buffer, int cpos)
 		tputs(tgoto(tgetstr("RI", NULL), 0, cpos), 0, ms_putchar);
 }
 
+/*
+** ADD A CHAR TO AN EXISTING (OR NEW) HISTORY ENTRY
+*/
+
 int	ms_add_char(t_history **histo, char c, int where)
 {
 	char	curr;
@@ -63,6 +67,10 @@ int	ms_add_char(t_history **histo, char c, int where)
 	((*histo)->data)[len + 1] = '\0';
 	return (EXIT_SUCCESS);
 }
+
+/*
+** REMOVE A CHAR FROM AN EXISTING HISTORY ENTRY
+*/
 
 char	*ms_del_char(t_history **histo, int index)
 {

@@ -31,7 +31,8 @@ void	ms_histo_insert_front(t_history **histo, t_history *insert, int type)
 {
 	if (insert)
 	{
-		ms_histo_rewind(histo);
+		while (*histo && (*histo)->previous)
+			*histo = (*histo)->previous;
 		if (*histo)
 		{
 			insert->type = type;
@@ -74,12 +75,9 @@ void	ms_histo_del_one(t_history **histo, t_history **begin)
 	}
 }
 
-void	ms_histo_rewind(t_history **histo)
-{
-	if (*histo)
-		while ((*histo)->previous)
-			*histo = (*histo)->previous;
-}
+/*
+** FREE ALL HISTORY
+*/
 
 void	ms_histo_clear(t_history *histo)
 {
@@ -108,4 +106,40 @@ void	ms_histo_clear(t_history *histo)
 		free(histo->saved_data);
 		free(histo);
 	}
+}
+
+/*
+** CLEAN HISTORY BEFORE RETURNING CMD LINE
+** - Removes Temporary "B_NEW" entry
+** - Restore saved history entry if it has been modified then used as a new cmd
+** - Save all modified history entries
+*/
+
+void	ms_histo_clean(t_history **histo)
+{
+	t_history	*begin;
+
+	while (*histo && (*histo)->previous)
+		*histo = (*histo)->previous;
+	begin = *histo;
+	while (*histo)
+	{
+		if ((*histo)->type == B_NEW)
+			ms_histo_del_one(histo, &begin);
+		else if ((*histo)->type == B_HISTO_RESTORE)
+		{
+			free((*histo)->data);
+			(*histo)->data = (*histo)->saved_data;
+			(*histo)->saved_data = NULL;
+			(*histo)->type = B_HISTO;
+		}
+		else
+		{
+			free((*histo)->saved_data);
+			(*histo)->saved_data = ft_strdup((*histo)->data);
+		}
+		if (*histo)
+			*histo = (*histo)->next;
+	}
+	*histo = begin;
 }

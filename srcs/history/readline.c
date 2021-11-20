@@ -12,6 +12,10 @@
 
 #include "history.h"
 
+/*
+** HANDLE SPECIFIC INPUT (arrow keys, home, end, del)
+*/
+
 static int	ms_handle_escape_sequence(t_history **histo, char *seq, int *cpos)
 {
 	if (ft_strlen(seq) == 3)
@@ -24,6 +28,11 @@ static int	ms_handle_escape_sequence(t_history **histo, char *seq, int *cpos)
 		ms_handle_delete(histo, seq, cpos);
 	return (0);
 }
+
+/*
+** HANDLE SIMPLE INPUT (simple char, backspace, new line)
+*/
+
 
 static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 {
@@ -53,6 +62,13 @@ static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 	}
 	return (EXIT_SUCCESS);
 }
+
+/*
+** READLINE
+** Command line input with :
+** - History
+** - Cursor movement
+*/
 
 char	*ms_readline(const char *prompt, t_history **histo)
 {
@@ -86,7 +102,6 @@ char	*ms_readline(const char *prompt, t_history **histo)
 	if ((*histo)->data)
 		ms_histo_insert_front(histo, ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
 	ms_histo_clean(histo);
-
 	/* display history */
 	t_history *begin;
 	if (*histo)
@@ -102,6 +117,7 @@ char	*ms_readline(const char *prompt, t_history **histo)
 	printf("------\n");
 	*histo = begin;
 	/* end of display history */
-
-	return ((*histo)->data);
+	if (*histo)
+		return ((*histo)->data);
+	return (NULL);
 }

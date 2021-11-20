@@ -12,6 +12,11 @@
 
 #include "history.h"
 
+/*
+** HANDLE CURSOR MOVES
+** -> / <- / <end> / <home>
+*/
+
 int	ms_handle_move(t_history **histo, char *seq, int *cpos)
 {
 	if (seq[1] == 91 && seq[2] == ARROW_RIGHT \
@@ -40,6 +45,11 @@ int	ms_handle_move(t_history **histo, char *seq, int *cpos)
 	return (0);
 }
 
+/*
+** HANDLE HISTORY DISPLAY
+** <up arrow> / <down arrow>
+*/
+
 int	ms_handle_history(t_history **histo, char *seq, int *cpos)
 {
 	if (seq[1] == 91 && seq[2] == ARROW_UP)
@@ -60,6 +70,11 @@ int	ms_handle_history(t_history **histo, char *seq, int *cpos)
 	return (0);
 }
 
+/*
+** HANDLE CHARACTER DELETION
+** On an existing char * stored in history
+*/
+
 int	ms_handle_delete(t_history **histo, char *seq, int *cpos)
 {
 	if (seq == NULL || (seq[1] == 91 && seq[2] == 51 && seq[3] == 126))
@@ -69,6 +84,12 @@ int	ms_handle_delete(t_history **histo, char *seq, int *cpos)
 			(*histo)->data = ms_del_char(histo, *cpos);
 			if (!(*histo)->data)
 				return (ERROR);
+			if (ft_strlen((*histo)->data) == 0)
+			{
+				free((*histo)->data);
+				(*histo)->data = NULL;
+			}
+			ms_put_line((*histo)->data, *cpos);
 		}
 	}
 	return (0);

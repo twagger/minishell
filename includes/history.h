@@ -74,10 +74,7 @@ t_history	*ms_histo_new(char *data);
 void		ms_histo_insert_front(t_history **histo, t_history *insert, \
 			int type);
 void		ms_histo_del_one(t_history **histo, t_history **begin);
-void		ms_histo_rewind(t_history **histo);
 void		ms_histo_clear(t_history *histo);
-
-int			ms_is_new_in_histo(t_history **histo);
 void		ms_histo_clean(t_history **histo);
 
 #endif
