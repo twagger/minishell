@@ -71,7 +71,7 @@ static t_node	*ms_get_node(t_node *node, int which)
 
 static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
 {
-	t_node	*to_promsote;
+	t_node	*to_promote;
 	t_node	*to_child;
 
 	if (parent->left && parent->right)
