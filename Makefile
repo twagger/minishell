@@ -54,6 +54,7 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/exec_pipeline.c \
 			  srcs/interpreter/exec_command.c \
 			  srcs/interpreter/exec_simple_command.c \
+			  srcs/interpreter/exec_comb_command.c \
 			  srcs/interpreter/utils/arg_array_utils.c \
 			  srcs/interpreter/utils/path_utils.c \
 			  srcs/interpreter/utils/builtins_utils.c \

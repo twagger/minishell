@@ -38,7 +38,7 @@ int	ms_execute_ast(t_node *ast, char **envp)
 	// 	ms_search_ast(ast, A_PIPE, 0);
 	if (ms_search_ast(ast, A_PIPE, 0))
 	{
-		if (ms_exec_pipeline(ast, envp, \
+		if (ms_exec_comb_command(ast, envp, \
 			ms_search_ast(ast, A_PIPE, 0)) == ERROR)
 			return (EXIT_FAILURE);
 	}
@@ -47,7 +47,8 @@ int	ms_execute_ast(t_node *ast, char **envp)
 			+ ms_search_ast(ast, A_DGREAT, 0) \
 			+ ms_search_ast(ast, A_DLESS, 0))
 	{
-		if (ms_exec_command(ast, envp) == ERROR)
+		if (ms_exec_comb_command(ast, envp, \
+			ms_search_ast(ast, A_PIPE, 0)) == ERROR)
 			return (EXIT_FAILURE);
 	}
 	else if (ms_exec_simple_command(ast, envp) == ERROR)

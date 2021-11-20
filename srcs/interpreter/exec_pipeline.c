@@ -284,7 +284,7 @@ static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int n
 {
 	if (!node)
 		return (args);
-	//printf("here:%s\n", node->data);
+	printf("node: %s,%d\n", node->data, node->type);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
 	if (node->type == A_PIPE)
@@ -344,8 +344,6 @@ int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
 	t_cmd	*args;
 	int		*pipex;
 
-	(void)node;
-	(void)envp;
 	pipex = pipex_creat(nb_pipe);
 	args = ms_init_arg_array_2(nb_pipe);
 	args = ms_visit(node, args, envp, pipex, nb_pipe);
