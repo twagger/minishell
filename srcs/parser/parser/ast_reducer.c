@@ -71,38 +71,45 @@ static t_node	*ms_get_node(t_node *node, int which)
 
 static t_node	*ms_promote_child(t_node *node, t_node *parent, int from)
 {
-	t_node	*to_promote;
+	t_node	*to_promsote;
 	t_node	*to_child;
 
-	to_promote = ms_get_node(node, TO_PROMOTE);
-	to_child = ms_get_node(node, TO_CHILD);
-	if (!to_promote)
-		return (NULL);
-	if (from == LEFT)
-		parent->left = to_promote;
-	else
-		parent->right = to_promote;
-	if (!to_promote->left)
-		to_promote->left = to_child;
-	else
-		to_promote->right = to_child;
+	if (parent->left && parent->right)
+	{
+		to_promote = ms_get_node(node, TO_PROMOTE);
+		to_child = ms_get_node(node, TO_CHILD);
+		if (!to_promote)
+			return (NULL);
+		if (from == LEFT)
+			parent->left = to_promote;
+		else
+			parent->right = to_promote;
+		if (!to_promote->left)
+			to_promote->left = to_child;
+		else
+			to_promote->right = to_child;
+		free(node);
+		return (to_promote);
+	}
+	parent->left = node->left;
+	parent->right = node->right;
 	free(node);
-	return (to_promote);
+	return (parent);
 }
 
 static void	ms_visit_simplif(t_node *node, t_node *parent, int from)
 {
 	if (!node)
 		return ;
+	ms_visit_simplif(node->left, node, LEFT);
+	ms_visit_simplif(node->right, node, RIGHT);
 	if (node->type == -1)
 		node = ms_promote_child(node, parent, from);
 	if (node->type == 0)
 	{
-		if (node->reduc > R_CMD_NAME || node->reduc == -1)
+		if (node->reduc > R_CMD_WORD || node->reduc == -1)
 			node->type = A_PARAM;
 	}
-	ms_visit_simplif(node->left, node, LEFT);
-	ms_visit_simplif(node->right, node, RIGHT);
 }
 
 t_node	*ms_simplify_tree(t_node *tree)
