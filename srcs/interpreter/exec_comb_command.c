@@ -430,7 +430,8 @@ static t_cmdss *ms_visit(t_node *node, t_cmdss *args, char **envp, int *pipex, i
 {
 	if (!node)
 		return (args);
-	printf("node: %s,%d\n", node->data, node->type);
+	if (node->type != -1)
+		printf("node: %s,%d\n", node->data, node->type);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
 	if (node->type == A_PIPE)

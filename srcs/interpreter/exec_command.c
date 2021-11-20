@@ -238,7 +238,8 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 {
 	if (!node)
 		return (args);
-	printf("node: %s,%d\n", node->data, node->type);
+	if (node->type != -1)
+		printf("node: %s,%d\n", node->data, node->type);
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
 	if (node->type == A_PARAM)

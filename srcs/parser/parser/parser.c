@@ -122,6 +122,14 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
+
+	printf("%i : ", reduction->type);
+	int i;
+		i = -1;
+	while (popped[++i])
+		printf("%i ", popped[i]->type);
+	printf("\n");
+
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
 	return (EXIT_SUCCESS);
@@ -188,5 +196,5 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 		}
 	}
 	ms_free_tokens(tok_list);
-	return (ms_simplify_tree(builder->ast));
+	return (ms_fix_param_types(builder->ast));
 }

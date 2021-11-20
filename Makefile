@@ -48,7 +48,6 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/ast_utils.c \
 			  srcs/parser/parser/ast_builder.c \
 			  srcs/parser/parser/builder_utils.c \
-			  srcs/parser/parser/ast_reducer.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/interpreter/interpreter.c \
 			  srcs/interpreter/exec_pipeline.c \

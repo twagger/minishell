@@ -30,6 +30,6 @@ int		ms_execute_builtin(char **args, char **envp);
 int		ms_exec_pipeline(t_node *ast, char **envp, int nb_pipe);
 int		ms_exec_command(t_node *ast, char **envp);
 int		ms_exec_simple_command(t_node *ast, char **envp);
-int     ms_exec_comb_command(t_node *node, char **envp, int nb_pipe);
+int		ms_exec_comb_command(t_node *node, char **envp, int nb_pipe);
 
 #endif

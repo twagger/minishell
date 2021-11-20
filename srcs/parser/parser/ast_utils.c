@@ -23,7 +23,10 @@ void	ms_visit_ast(t_node *node, int mode)
 		printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
 	ms_visit_ast(node->right, mode);
 	if (mode == POST_ORDER)
-		printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	{
+		if (node->type != -1)
+			printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	}
 }
 
 void	ms_free_tree(t_node	*node)
@@ -55,4 +58,23 @@ t_node	*ms_new_node(void *data, int type, int reduc)
 	new->left = NULL;
 	new->right = NULL;
 	return (new);
+}
+
+static void	ms_visit_fix_types(t_node *node)
+{
+	if (!node)
+		return ;
+	ms_visit_fix_types(node->left);
+	ms_visit_fix_types(node->right);
+	if (node->type == 0)
+	{
+		if (node->reduc > R_CMD_WORD || node->reduc == -1)
+			node->type = A_PARAM;
+	}
+}
+
+t_node	*ms_fix_param_types(t_node *tree)
+{
+	ms_visit_fix_types(tree);
+	return (tree);
 }

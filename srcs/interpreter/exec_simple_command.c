@@ -63,13 +63,17 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 {
 	if (!node)
 		return (args);
-	
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
 	if (node->type == A_PARAM)
 		args = ms_add_arg_back(args, node->data);
 	else if (node->type == A_CMD)
 	{
+		if (ft_strcmp(node->data, "$?") == 0)
+		{
+			printf("%i\n", errno);
+			return (args);
+		}
 		args = ms_add_arg_front(args, node->data);
 		if (!args)
 			return (NULL);

@@ -36,12 +36,15 @@ static int	ms_loop(char **envp)
 	parsing_table = ms_init_parsing_table();
 	if (!parsing_table)
 		status = ERROR;
-	while (status >=  0)
+	while (status >= 0)
 	{
 		line = ms_readline(&histo);
 		if (line)
 		{
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
+			printf("TREE\n----------\n");
+			ms_visit_ast(ast, POST_ORDER);
+			printf("----------\n");
 			status = ms_execute_ast(ast, envp);
 		}
 		else
@@ -55,7 +58,7 @@ static int	ms_loop(char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	struct termios	orig_termios;
-	char 			*term_type;
+	char			*term_type;
 
 	g_my_envp = 0;
 	(void)ac;

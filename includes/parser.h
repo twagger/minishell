@@ -149,7 +149,7 @@ typedef enum e_ast_types
 ** lexer
 */
 t_token	*ms_tokenizer(char *line);
-
+t_token	*ft_newtoken(void *content);
 char	**ft_split_qu(char *s, char c);
 int		check_special_char(char *c, char *line);
 int		count_w_qu(char *s, char c);
@@ -157,8 +157,6 @@ int		int_word(char *s, char c, int index, char ***arr);
 char	*check_if_envvar(char *cmd);
 int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
-
-t_token	*ft_newtoken(void *content);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 void	ms_free_tokens(t_token *tokens);
 
@@ -166,16 +164,13 @@ void	ms_free_tokens(t_token *tokens);
 ** parser
 */
 t_node	*ms_parser(t_token *tok_list, t_trans **table);
-
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
-
 t_stack	*ms_new_stack_item(void *content, int type, int state);
 t_stack	**ms_pop_stack(t_stack **stack, int nb);
 int		ms_add_front(t_stack **stack, t_stack *item);
 void	ms_free_stack_item(t_stack *stack);
 int		ms_free_stack(t_stack **stack, int return_code);
-
 int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
 
 /*
@@ -184,16 +179,14 @@ int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
 t_node	*ms_new_node(void *data, int type, int reduc);
 void	ms_free_tree(t_node	*node);
 void	ms_visit_ast(t_node *node, int mode);
-
 int		ms_init_ast_builder(t_ast_builder **builder);
 t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action);
 int		ms_buffer_add_back(t_ast_builder **builder, t_node *new);
 t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
+t_node	*ms_fix_param_types(t_node *tree);
+int		ms_execute_ast(t_node *ast, char **envp);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
 			int reduc, t_node **node);
-t_node	*ms_simplify_tree(t_node *tree);
-
-int		ms_execute_ast(t_node *ast, char **envp);
 
 #endif
