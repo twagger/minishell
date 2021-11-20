@@ -113,6 +113,7 @@ void	ms_histo_clear(t_history *histo)
 ** - Removes Temporary "B_NEW" entry
 ** - Restore saved history entry if it has been modified then used as a new cmd
 ** - Save all modified history entries
+** - Set the history pointer to the first item
 */
 
 void	ms_histo_clean(t_history **histo)

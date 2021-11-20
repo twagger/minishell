@@ -13,7 +13,8 @@
 #include "history.h"
 
 /*
-** HANDLE SPECIFIC INPUT (arrow keys, home, end, del)
+** HANDLE SPECIFIC INPUT
+** arrow keys, home, end, del
 */
 
 static int	ms_handle_escape_sequence(t_history **histo, char *seq, int *cpos)
@@ -30,9 +31,9 @@ static int	ms_handle_escape_sequence(t_history **histo, char *seq, int *cpos)
 }
 
 /*
-** HANDLE SIMPLE INPUT (simple char, backspace, new line)
+** HANDLE SIMPLE INPUT
+** simple char, backspace, new line
 */
-
 
 static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 {
@@ -64,6 +65,61 @@ static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 }
 
 /*
+** ADD CURRENT ENTRY TO HISTORY
+** Add the current entry to history (if not NULL) and clean history
+** Then return the right command line or NULL if nothing has been typed
+** Add the following lines after ms_histo_clean to display history :
+**
+**	t_history *begin;
+**	while (*histo && (*histo)->previous)
+**		*histo = (*histo)->previous;
+**	begin = *histo;
+**	printf("\n------\n");
+**	while (*histo)
+**	{
+**		printf("T : %i\tH : %s\n", (*histo)->type, (*histo)->data);
+**		*histo = (*histo)->next;
+**	}
+**	printf("------\n");
+**	*histo = begin;
+*/
+
+static char	*ms_add_to_history(t_history **histo)
+{
+	int	is_empty;
+
+	is_empty = 0;
+	if ((*histo)->type != B_NEW)
+		(*histo)->type = B_HISTO_RESTORE;
+	if ((*histo)->data)
+		ms_histo_insert_front(histo, \
+			ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
+	else
+		is_empty = 1;
+	ms_histo_clean(histo);
+	if (is_empty)
+		return (NULL);
+	else if (*histo)
+		return ((*histo)->data);
+	return (NULL);
+}
+
+/*
+** INIT READLINE
+** - Display prompt
+** - Save cursor initial position and set cpos (cursor position) value
+** - Initialize new history entry
+*/
+
+static void	ms_init_readline(t_history **histo, int *cpos)
+{
+	*cpos = 0;
+	ft_putstr_fd(PROMPT, 1);
+	tputs(tgetstr("sc", NULL), 0, ms_putchar);
+	ms_histo_insert_front(histo, ms_histo_new(NULL), B_NEW);
+}
+
+/*
 ** READLINE
 ** Command line input with :
 ** - Prompt
@@ -76,13 +132,8 @@ char	*ms_readline(t_history **histo)
 	char	c[11];
 	int		ret;
 	int		cpos;
-	int		is_empty;
 
-	cpos = 0;
-	is_empty = 0;
-	ft_putstr_fd(PROMPT, 1);
-	tputs(tgetstr("sc", NULL), 0, ms_putchar);
-	ms_histo_insert_front(histo, ms_histo_new(NULL), B_NEW);
+	ms_init_readline(histo, &cpos);
 	while (1)
 	{
 		ret = read(STDIN_FILENO, c, 10);
@@ -100,31 +151,5 @@ char	*ms_readline(t_history **histo)
 		else if (ms_handle_escape_sequence(histo, c, &cpos) == ERROR)
 			return (NULL);
 	}
-	if ((*histo)->type != B_NEW)
-		(*histo)->type = B_HISTO_RESTORE;
-	if ((*histo)->data)
-		ms_histo_insert_front(histo, ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
-	else
-		is_empty = 1;
-	ms_histo_clean(histo);
-	/* display history */
-	t_history *begin;
-	while (*histo && (*histo)->previous)
-		*histo = (*histo)->previous;
-	begin = *histo;
-	printf("\n------\n");
-	while (*histo)
-	{
-		printf("T : %i\tH : %s\n", (*histo)->type, (*histo)->data);
-		*histo = (*histo)->next;
-	}
-	printf("------\n");
-	*histo = begin;
-	/* end of display history */
-	// ne pas renvoyer quelque chose si aucune commande
-	if (is_empty)
-		return (NULL);
-	else if (*histo)
-		return ((*histo)->data);
-	return (NULL);
+	return (ms_add_to_history(histo));
 }
