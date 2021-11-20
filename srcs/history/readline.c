@@ -66,18 +66,21 @@ static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 /*
 ** READLINE
 ** Command line input with :
-** - History
+** - Prompt
 ** - Cursor movement
+** - History
 */
 
-char	*ms_readline(const char *prompt, t_history **histo)
+char	*ms_readline(t_history **histo)
 {
 	char	c[11];
 	int		ret;
 	int		cpos;
+	int		is_empty;
 
 	cpos = 0;
-	ft_putstr_fd((char *)prompt, 1);
+	is_empty = 0;
+	ft_putstr_fd(PROMPT, 1);
 	tputs(tgetstr("sc", NULL), 0, ms_putchar);
 	ms_histo_insert_front(histo, ms_histo_new(NULL), B_NEW);
 	while (1)
@@ -101,12 +104,13 @@ char	*ms_readline(const char *prompt, t_history **histo)
 		(*histo)->type = B_HISTO_RESTORE;
 	if ((*histo)->data)
 		ms_histo_insert_front(histo, ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
+	else
+		is_empty = 1;
 	ms_histo_clean(histo);
 	/* display history */
 	t_history *begin;
-	if (*histo)
-		while ((*histo)->previous)
-			*histo = (*histo)->previous;
+	while (*histo && (*histo)->previous)
+		*histo = (*histo)->previous;
 	begin = *histo;
 	printf("\n------\n");
 	while (*histo)
@@ -117,7 +121,10 @@ char	*ms_readline(const char *prompt, t_history **histo)
 	printf("------\n");
 	*histo = begin;
 	/* end of display history */
-	if (*histo)
+	// ne pas renvoyer quelque chose si aucune commande
+	if (is_empty)
+		return (NULL);
+	else if (*histo)
 		return ((*histo)->data);
 	return (NULL);
 }

@@ -30,7 +30,7 @@ void	ms_put_line(char *buffer, int cpos)
 {
 	(void)cpos;
 	tputs(tgetstr("dl", NULL), 0, ms_putchar);
-	ft_putstr_fd("\x1B[32mMinishell> \e[0m", 1);
+	ft_putstr_fd(PROMPT, 1);
 	ft_putstr_fd(buffer, 1);
 	tputs(tgetstr("rc", NULL), 0, ms_putchar);
 	if (cpos != 0)

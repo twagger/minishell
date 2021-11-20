@@ -126,14 +126,13 @@ void	ms_histo_clean(t_history **histo)
 	{
 		if ((*histo)->type == B_NEW)
 			ms_histo_del_one(histo, &begin);
-		else if ((*histo)->type == B_HISTO_RESTORE)
+		if (*histo && (*histo)->type == B_HISTO_RESTORE)
 		{
 			free((*histo)->data);
-			(*histo)->data = (*histo)->saved_data;
-			(*histo)->saved_data = NULL;
+			(*histo)->data = ft_strdup((*histo)->saved_data);
 			(*histo)->type = B_HISTO;
 		}
-		else
+		else if (*histo)
 		{
 			free((*histo)->saved_data);
 			(*histo)->saved_data = ft_strdup((*histo)->data);

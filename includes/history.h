@@ -18,6 +18,7 @@
 ** PARAMS
 */
 
+# define PROMPT "\x1B[32mMinishell> \e[0m"
 # define LINE_END -2
 # define ESCAPE_SEQUENCE 27
 # define BACKSPACE 127
@@ -57,7 +58,7 @@ int			ms_disable_raw_mode(struct termios *orig_termios);
 /*
 ** readline
 */
-char		*ms_readline(const char *prompt, t_history **histo);
+char		*ms_readline(t_history **histo);
 char		ms_ctrl_key(char key);
 int			ms_putchar(int i);
 int			ms_handle_move(t_history **histo, char *seq, int *cpos);

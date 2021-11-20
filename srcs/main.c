@@ -38,7 +38,7 @@ static int	ms_loop(char **envp)
 		status = ERROR;
 	while (status >=  0)
 	{
-		line = ms_readline("\x1B[32mMinishell> \e[0m", &histo);
+		line = ms_readline(&histo);
 		if (line)
 		{
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
