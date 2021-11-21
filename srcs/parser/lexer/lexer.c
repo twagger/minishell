@@ -31,10 +31,6 @@ t_token_types	catego_toketype(char *content)
 		return (T_END);
 	if (!ft_strcmp(content, "|"))
 		return (T_PIPE);
-	else if (!ft_strcmp(content, "&&"))
-		return (T_AND_IF);
-	else if (!ft_strcmp(content, "||"))
-		return (T_OR_IF);
 	else if (!ft_strcmp(content, "<<"))
 		return (T_DLESS);
 	else if (!ft_strcmp(content, ">>"))

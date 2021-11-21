@@ -17,7 +17,7 @@
 /*
 ** PARSER PARAMS
 */
-# define NB_TRANS 156
+# define NB_TRANS 100
 # define AUTOMATON "./srcs/parser/parser/parsing_table"
 # define NO_ACTION -1
 # define DEFAULT -1
@@ -29,8 +29,7 @@
 
 typedef enum e_rules
 {
-	R_AND_OR = 100,
-	R_PIPE_SEQUENCE,
+	R_PIPE_SEQUENCE = 100,
 	R_SIMPLE_COMMAND,
 	R_CMD_NAME,
 	R_CMD_WORD,
@@ -70,15 +69,11 @@ typedef enum e_token_types
 {
 	T_END = -2,
 	T_WORD = 0,
-	T_ASSIGNMENT_WORD,
-	T_IO_NUMBER,
-	T_AND_IF,
-	T_OR_IF,
+	T_RED_TO,
+	T_RED_FROM,
 	T_DLESS,
 	T_DGREAT,
-	T_PIPE,
-	T_RED_TO,
-	T_RED_FROM
+	T_PIPE	
 }	t_token_types;
 
 typedef struct s_token
@@ -187,6 +182,6 @@ void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
 t_node	*ms_fix_param_types(t_node *tree);
 int		ms_execute_ast(t_node *ast, char **envp);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
-			int reduc, t_node **node);
+		t_node **node);
 
 #endif

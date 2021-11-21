@@ -85,17 +85,16 @@ static int	ms_apply_reduction(\
 	node = ms_new_node(NULL, -1, reduction);
 	if (!node)
 		return (ERROR);
-	if (ms_build_subtree(builder, popped, reduction, &node) == ERROR)
+	if (ms_build_subtree(builder, popped, &node) == ERROR)
 		return (ERROR);
 	if (!(*builder)->ast \
 		|| ((*builder)->ast && (*builder)->ast == node->left) \
-		|| ((*builder)->ast && (*builder)->ast == node->right))
+		|| ((*builder)->ast && (*builder)->ast == node->right) \
+		|| ((*builder)->ast && node->left \
+			&& (*builder)->ast == node->left->left))
 		(*builder)->ast = node;
-	else
-	{
-		if (ms_buffer_add_back(builder, node) == ERROR)
-			return (ERROR);
-	}
+	else if (ms_buffer_add_back(builder, node) == ERROR)
+		return (ERROR);
 	return (EXIT_SUCCESS);
 }
 

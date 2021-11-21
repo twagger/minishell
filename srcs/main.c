@@ -42,6 +42,8 @@ static int	ms_loop(char **envp)
 		if (line)
 		{
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
+			if (!ast)
+				printf("Minishell: syntax error\n");
 			printf("TREE\n----------\n");
 			ms_visit_ast(ast, POST_ORDER);
 			printf("----------\n");

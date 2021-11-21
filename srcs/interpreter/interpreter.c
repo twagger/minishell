@@ -36,6 +36,8 @@ int	ms_execute_ast(t_node *ast, char **envp)
 	//  		return (EXIT_FAILURE);
 	// else
 	// 	ms_search_ast(ast, A_PIPE, 0);
+	if (!ast)
+		return (EXIT_FAILURE);
 	if (ms_search_ast(ast, A_PIPE, 0))
 	{
 		if (ms_exec_comb_command(ast, envp, \

@@ -12,13 +12,14 @@
 
 #include "parser.h"
 
-int	ms_build_subtree(\
-	t_ast_builder **builder, t_stack **term, int reduc, t_node **node)
+int	ms_build_subtree(t_ast_builder **builder, t_stack **term, t_node **node)
 {
 	int		i;
 	t_node	*child;
+	t_node	*init;
 
 	i = -1;
+	init = *node;
 	while (term[++i])
 	{
 		if (term[i]->type >= 100)
@@ -29,16 +30,12 @@ int	ms_build_subtree(\
 			return (ERROR);
 		if (i == 0)
 			(*node)->right = child;
-		if ((i == 1 && !term[i + 1]) || i == 2)
+		else
 			(*node)->left = child;
 		if (i == 1 && term[i + 1])
-		{
-			child->right = (*node)->right;
-			child->reduc = reduc;
-			free(*node);
-			*node = child;
-		}
+			*node = (*node)->left;
 	}
+	*node = init;
 	return (EXIT_SUCCESS);
 }
 

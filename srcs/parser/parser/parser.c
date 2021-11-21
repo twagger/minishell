@@ -122,14 +122,6 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
-
-	printf("%i : ", reduction->type);
-	int i;
-		i = -1;
-	while (popped[++i])
-		printf("%i ", popped[i]->type);
-	printf("\n");
-
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
 	return (EXIT_SUCCESS);
