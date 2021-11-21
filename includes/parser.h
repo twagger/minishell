@@ -124,15 +124,13 @@ typedef struct s_ast_builder
 typedef enum e_ast_types
 {
 	A_CMD = 0,
-	A_PARAM,
-	A_FILE,
-	A_AND_IF,
-	A_OR_IF,
+	A_RED_TO,
+	A_RED_FROM,
 	A_DLESS,
 	A_DGREAT,
 	A_PIPE,
-	A_RED_TO,
-	A_RED_FROM,
+	A_PARAM,
+	A_FILE,
 	A_LIMITER
 }	t_ast_types;
 
