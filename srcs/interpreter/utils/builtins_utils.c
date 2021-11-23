@@ -48,5 +48,11 @@ int	ms_execute_builtin(char **args, char **envp)
 		ret = ms_unset(ac, args, envp);
 	if (ft_strncmp(args[0], "exit", 5) == 0)
 		ret = ms_exit(ac, args);
+	errno = 0;
+	if (ret == ERROR)
+	{
+		errno = 1;
+		ret = 1;
+	}
 	return (ret);
 }

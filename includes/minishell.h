@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/15 21:06:05 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/23 15:42:45 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <curses.h>
 # include <term.h>
 # include <termios.h>
+# include <signal.h>
 # include "libft.h"
 
 /*

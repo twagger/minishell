@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/12 11:44:23 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 11:49:37 by twagner          ###   ########.fr       */
+/*   Created: 2021/11/23 15:42:03 by twagner           #+#    #+#             */
+/*   Updated: 2021/11/23 15:47:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_echo(int ac, char **av)
+void	ft_signal_handler(int sig, siginfo_t *siginfo, void *context)
 {
-	int		i;
-	char	nl;
-	char	sep;
-
-	nl = '\n';
-	sep = '\0';
-	if (ac < 2)
-		return (ERROR);
-	i = 0;
-	while (++i < ac)
+	if (context && siginfo)
+		usleep(1);
+	if (sig == SIGUSR1)
+		g_byte.c += 1 << (7 - g_byte.size);
+	++g_byte.size;
+	if (g_byte.size == 8)
 	{
-		if (i == 1 && !ft_strncmp(av[i], "-n", 3))
-			nl = '\0';
-		else
-		{
-			printf("%c%s", sep, av[i]);
-			sep = ' ';
-		}
+		write(1, &g_byte.c, 1);
+		ft_init_byte(&g_byte);
 	}
-	printf("%c", nl);
+}
+
+int	ms_activate_signal(void)
+{
+	struct sigaction	act;
+
+	act.sa_sigaction = &ft_signal_handler;
+	sigaction(SIGINT, &act, NULL);
 	return (0);
 }
