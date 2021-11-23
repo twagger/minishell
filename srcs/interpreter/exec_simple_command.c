@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 11:16:26 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/23 16:36:44 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,42 @@
 
 static int	ms_command_launcher(char **args, char **envp)
 {
+	int	ret;
+
 	(void)envp;
 	if (ms_getbin_path(&args[0]) == ERROR)
 		return (ERROR);
-	if (execve(args[0], args, NULL) == ERROR)
-		perror("Minishell");
-	return (EXIT_SUCCESS);
+	ret = execve(args[0], args, NULL);
+	if (ret == ERROR)
+	{
+		if (errno == EAGAIN)
+			ret = 126;
+		else
+			ret = 127;
+	}
+	return (ret);
 }
 
 int	ms_execute(char **args, char **envp)
 {
 	pid_t	pid;
 	pid_t	wpid;
+	int		ret;
 	int		status;
 
 	pid = fork();
+	ret = 0;
 	if (pid == ERROR)
-	{
-		perror("Minishell");
-		return (0);
-	}
+		return (ERROR);
 	if (pid == 0)
-	{
-		if (ms_command_launcher(args, envp) == ERROR)
-			return (EXIT_FAILURE);
-	}
+		ret = ms_command_launcher(args, envp);
 	else
 	{
 		wpid = waitpid(pid, &status, 0);
 		if (wpid == ERROR)
-		{
-			perror("Minishell");
-			return (EXIT_FAILURE);
-		}
+			return (ERROR);
 	}
-	return (EXIT_SUCCESS);
+	return (ret);
 }
 
 static char	**ms_visit(t_node *node, char **args, char **envp)
@@ -88,6 +89,7 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 int	ms_exec_simple_command(t_node *ast, char **envp)
 {
 	char	**args;
+	int		ret;
 
 	args = ms_init_arg_array();
 	args = ms_visit(ast, args, envp);
@@ -97,9 +99,13 @@ int	ms_exec_simple_command(t_node *ast, char **envp)
 		return (ERROR);
 	}
 	if (ms_is_builtin(args[0]))
-		ms_execute_builtin(args, envp);
+		ret = ms_execute_builtin(args, envp);
 	else
-		ms_execute(args, envp);
+		ret = ms_execute(args, envp);
 	ms_free_arg_array(args);
-	return (EXIT_SUCCESS);
+	if (ret == ERROR)
+		return (ERROR);
+	else if (ret > 0)
+		perror("Minishell");
+	return (errno);
 }
