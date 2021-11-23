@@ -66,23 +66,21 @@ static char	**ms_visit(t_node *node, char **args, char **envp)
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
 	if (node->type == A_PARAM)
-		args = ms_add_arg_back(args, node->data);
+	{
+		if (ft_strcmp(node->data, "$?") == 0)
+			args = ms_add_arg_back(args, ft_itoa(errno));
+		else
+			args = ms_add_arg_back(args, node->data);
+	}
 	else if (node->type == A_CMD)
 	{
 		if (ft_strcmp(node->data, "$?") == 0)
 		{
-			printf("%i\n", errno);
-			return (args);
+			args = ms_add_arg_back(args, "echo");
+			args = ms_add_arg_back(args, ft_itoa(errno));
 		}
-		args = ms_add_arg_front(args, node->data);
-		if (!args)
-			return (NULL);
-		if (ms_is_builtin(args[0]))
-			ms_execute_builtin(args, envp);
 		else
-			ms_execute(args, envp);
-		ms_free_arg_array(args);
-		args = ms_init_arg_array();
+			args = ms_add_arg_back(args, node->data);
 	}
 	return (args);
 }
@@ -98,6 +96,10 @@ int	ms_exec_simple_command(t_node *ast, char **envp)
 		ms_free_arg_array(args);
 		return (ERROR);
 	}
+	if (ms_is_builtin(args[0]))
+		ms_execute_builtin(args, envp);
+	else
+		ms_execute(args, envp);
 	ms_free_arg_array(args);
 	return (EXIT_SUCCESS);
 }

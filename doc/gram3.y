@@ -1,4 +1,5 @@
 %token  WORD
+%token  ASSIGNMENT_WORD
 %token  RET_TO
 %token  RET_FROM
 %token  PIPE
@@ -20,8 +21,8 @@ cmd_name		: WORD
 				;
 cmd_word		: WORD
 				;
-cmd_prefix		: io_redirect
-				| cmd_prefix io_redirect
+cmd_prefix      : io_redirect
+                | cmd_prefix io_redirect
 				;
 cmd_suffix		: io_redirect
 				| cmd_suffix io_redirect
