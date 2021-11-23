@@ -80,18 +80,18 @@ static int	ms_args_len(char **args)
 	return (i);
 }
 
-// static t_cmds	*ms_init_arg_array_com()
-// {
-// 	t_cmds	*args;
+static t_cmds	*ms_init_arg_com()
+{
+	t_cmds	*args;
 	
-// 	args = (t_cmds *)malloc(sizeof(*args));
-// 	if (!args)
-// 		return (NULL);
-// 	args->cmds = NULL;
-// 	args->next = NULL;
-// 	args->rediction = NULL;
-// 	return (args);
-// }
+	args = (t_cmds *)malloc(sizeof(*args));
+	if (!args)
+		return (NULL);
+	args->cmds = NULL;
+	args->next = NULL;
+	args->rediction = NULL;
+	return (args);
+}
 
 static t_cmds *ms_add_red_type(t_cmds *args, int type)
 {
@@ -100,7 +100,6 @@ static t_cmds *ms_add_red_type(t_cmds *args, int type)
 	t_cmds 	*head;
 
 	head = args;
-	printf("HEAD:%s\n", head->cmds[0]);
 	red = malloc(sizeof(t_red));
 	if (!red)
 		return (NULL);
@@ -118,7 +117,7 @@ static t_cmds *ms_add_red_type(t_cmds *args, int type)
 	while (args->rediction)
 		args->rediction = args->rediction->next;
 	args->rediction = red;
-	head->rediction = red_head;
+	//red_head->rediction = red_head;
 	return (head);
 }
 
@@ -139,7 +138,7 @@ static t_cmds *ms_add_red_arg(t_cmds *args, char *file)
 	return (head);
 }
 
-t_cmds	*ms_add_arg_back_com(t_cmds *args, char *data)
+t_cmds	*ms_add_arg_com(t_cmds *args, char *data)
 {
 	int		i;
 	int		ac;
@@ -153,7 +152,7 @@ t_cmds	*ms_add_arg_back_com(t_cmds *args, char *data)
 	new = (char **)malloc(sizeof(*new) * (ac + 2));
 	if (!new)
 	{
-		ms_free_arg_array(args->cmds);
+		//ms_free_arg_array(args->cmds);
 		return (NULL);
 	}
 	new[ac + 1] = NULL;
@@ -187,7 +186,7 @@ t_cmds	*ms_add_cmd_com(t_cmds *args, char *data)
 	new_cmd->cmds = new;
 	new_cmd->rediction = NULL;
 	new_cmd->next = NULL;
-	if (!args)
+	if (!args->cmds)
 		return (new_cmd);
 	head = args;
 	while(args->next)
@@ -496,15 +495,17 @@ t_cmds	*ms_add_cmd_com(t_cmds *args, char *data)
 void printf_out_cmd(t_cmds *args)
 {
 	int i;
+	printf("cmd:\n");
 	while(args)
 	{
-		printf("cmd:\n");
+		
 		i = 0;
 		while (args->cmds[i])
 		{
-			printf("cmd: |%s| ", args->cmds[i]);
+			printf("|%s| ", args->cmds[i]);
 			i++;
 		}
+		printf("x\n");
 		while(args->rediction)
 		{
 			printf("red->type:%d\n", args->rediction->type);
@@ -524,7 +525,7 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 	args = ms_visit(node->right, args, envp);
 	if (node->type == A_PARAM)
 	{
-		args = ms_add_arg_back_com(args, node->data);
+		args = ms_add_arg_com(args, node->data);
 		printf("PARAM\n");
 		printf_out_cmd(args);
 	}
@@ -578,7 +579,7 @@ int	ms_exec_comb_command(t_node *node, char **envp, int nb_pipe)
 
 	args = NULL;
 	pipex = pipex_creat(nb_pipe);
-	//args = ms_init_arg_array_com();
+	args = ms_init_arg_com();
 	// if (!args)
 	// {
 	// 	perror("initial arg : ");
