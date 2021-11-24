@@ -288,7 +288,7 @@ static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int n
 	// 	printf("node: %s,%d\n", node->data, node->type);
 	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
 	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
-	printf("Node: %s,%d\n", node->data, node->type);
+	printf("Node: %s,%d\n", (char *)node->data, node->type);
 	if (node->type == A_PIPE)
 	{
 		//printf("HELLOOOOO\n");

@@ -32,28 +32,15 @@ static int	ms_search_ast(t_node *node, int needle, int nb)
 
 int	ms_execute_ast(t_node *ast, char **envp)
 {
-	if (ms_exec_comb_command(ast, envp, ms_search_ast(ast, A_PIPE, 0)) == ERROR)
-	 		return (EXIT_FAILURE);
-	else
-		ms_search_ast(ast, A_PIPE, 0);
-	// if (!ast)
-	// 	return (EXIT_FAILURE);
-	// if (ms_search_ast(ast, A_PIPE, 0))
-	// {
-	// 	if (ms_exec_comb_command(ast, envp, \
-	// 		ms_search_ast(ast, A_PIPE, 0)) == ERROR)
-	// 		return (EXIT_FAILURE);
-	// }
-	// else if (ms_search_ast(ast, A_RED_TO, 0) \
-	// 		+ ms_search_ast(ast, A_RED_FROM, 0) \
-	// 		+ ms_search_ast(ast, A_DGREAT, 0) \
-	// 		+ ms_search_ast(ast, A_DLESS, 0))
-	// {
-	// 	if (ms_exec_comb_command(ast, envp, \
-	// 		ms_search_ast(ast, A_PIPE, 0)) == ERROR)
-	// 		return (EXIT_FAILURE);
-	// }
-	// else if (ms_exec_simple_command(ast, envp) == ERROR)
-	// 	return (EXIT_FAILURE);
+	if (!ast)
+		return (EXIT_FAILURE);
+	if (ms_search_ast(ast, A_PIPE, 0))
+	{
+		if (ms_exec_comb_command(ast, envp, \
+			ms_search_ast(ast, A_PIPE, 0)) == ERROR)
+			return (EXIT_FAILURE);
+	}
+	else if (ms_exec_simple_command(ast, envp) == ERROR)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
