@@ -110,51 +110,33 @@ static int	ms_args_len(char **args)
 	return (i);
 }
 
-static t_cmds	*ms_init_arg_com()
+static t_cmds	*ms_init_arg_com(t_cmds	*head)
 {
 	t_cmds	*args;
+	t_red	*red;
+	t_cmds	*temp;
 	
+	temp = head;
+	while(temp)
+		temp = temp->next;
+	red = (t_red *)malloc(sizeof(*red));
+	if (!red)
+		return (NULL);
+	red->type = 0;
+	red->file = NULL;
+	red->next = NULL;
 	args = (t_cmds *)malloc(sizeof(*args));
 	if (!args)
 		return (NULL);
 	args->cmds = NULL;
 	args->next = NULL;
-	args->rediction = NULL;
-	return (args);
+	args->rediction = red;
+	if (!head)
+		head = args;
+	temp = args;
+	return (head);
 }
-static t_cmds *ms_add_red_type_be(t_cmds *args, int type)
-{
-	t_cmds	*new_cmd;
-	t_red 	*red;
-	t_red	*temp;
-	t_cmds 	*replace;
 
-	red = (t_red *)malloc(sizeof(*red));
-	if (!red)
-		return (NULL);
-	red->type = type;
-	red->file = NULL;
-	red->next = NULL;
-	replace = args;
-	while (replace->cmds)
-		replace = replace->next;
-	if (!replace->rediction)
-	{
-		new_cmd = (t_cmds *)malloc(sizeof(*new_cmd));
-		if (!new_cmd)
-			return (NULL);
-		new_cmd->cmds = NULL;
-		new_cmd->next = NULL;
-		new_cmd->rediction = red;
-		replace->next = new_cmd;
-		return (args);
-	}
-	temp = replace->rediction;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = red;
-	return (args);
-}
 static t_cmds *ms_add_red_type(t_cmds *args, int type)
 {
 	t_red 	*red;
@@ -165,18 +147,19 @@ static t_cmds *ms_add_red_type(t_cmds *args, int type)
 	red = (t_red *)malloc(sizeof(*red));
 	if (!red)
 		return (NULL);
-	red->type = type;
+	red->type = 0;
 	red->file = NULL;
 	red->next = NULL;
 	while (replace->next)
 		replace = replace->next;
-	if (!replace->rediction)
+	if (!replace->rediction->type)
 	{
-		replace->rediction = red;
+		replace->rediction->type = type;
+		replace->rediction->next = red;
 		return (args);
 	}
 	temp = replace->rediction;
-	while (temp->next)
+	while (temp->type)
 		temp = temp->next;
 	temp->next = red;
 	return (args);
@@ -230,7 +213,6 @@ t_cmds	*ms_add_cmd_com(t_cmds *args, char *data)
 {
 	char	**new;
 	t_cmds 	*head;
-	t_cmds	*new_cmd;
 
 	new = (char **)malloc(sizeof(*new) * 2);
 	if (!new)
@@ -240,39 +222,11 @@ t_cmds	*ms_add_cmd_com(t_cmds *args, char *data)
 	}
 	new[1] = NULL;
 	new[0] = ft_strdup(data);
-	new_cmd = (t_cmds *)malloc(sizeof(*new_cmd));
-	if (!new_cmd)
-		return (NULL);
-	new_cmd->cmds = new;
-	new_cmd->rediction = NULL;
-	new_cmd->next = NULL;
-	if (!args->cmds)
-		return (new_cmd);
 	head = args;
 	while(args->next)
 		args = args->next;
-	args->next = new_cmd;
+	args->cmds = new;
 	return (head);
-}
-
-t_cmds	*ms_add_cmd_aft(t_cmds *args, char *data)
-{
-	char	**new;
-	t_cmds 	*replace;
-
-	new = (char **)malloc(sizeof(*new) * 2);
-	if (!new)
-	{
-		ms_free_arg_array(args->cmds);
-		return (NULL);
-	}
-	new[1] = NULL;
-	new[0] = ft_strdup(data);
-	replace = args;
-	while (replace->cmds)
-		replace = replace->next;
-	replace->cmds = new;
-	return (args);
 }
 
 // static void	read_line(int fd, char *keyword)
@@ -472,32 +426,6 @@ t_cmds	*ms_add_cmd_aft(t_cmds *args, char *data)
 // 	printf("ready out?\n");
 // }
 
-int check_cmd(t_cmds *args)
-{
-	t_cmds *temp;
-
-	temp = args;
-	while(temp->next)
-		temp = temp->next;
-	if (temp->cmds && temp->cmds[0])
-		return (1);
-	else
-		return (0);	
-}
-
-int check_red(t_cmds *args)
-{
-	t_cmds *temp;
-
-	temp = args;
-	while(temp->next)
-		temp = temp->next;
-	if (temp->rediction)
-		return (1);
-	else
-		return (0);	
-}
-
 static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 {
 	if (!node)
@@ -505,18 +433,17 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 	args = ms_visit(node->left, args, envp);
 	args = ms_visit(node->right, args, envp);
 	printf("NODE:|%s|, |%d|\n", (char *)node->data, node->type);
-	if (node->type == A_PARAM)
+	if (node->type == A_PIPE)
+	{
+		args = ms_init_arg_com(args);
+	}
+	else if (node->type == A_PARAM)
 	{
 		args = ms_add_arg_com(args, node->data);
 	}
 	else if (node->type == A_CMD)
 	{	
-		printf("CMD:check type: %d\n", check_red(args));
-		if (check_red(args) == 0)
-			args = ms_add_cmd_com(args, node->data);
-		else
-			args = ms_add_cmd_aft(args, node->data);
-		printf_out_cmd(args);
+		args = ms_add_cmd_com(args, node->data);
 	}
     else if (node->type == A_FILE || node->type == A_LIMITER)
 	{
@@ -525,12 +452,7 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 	else if (node->type == A_RED_TO || node->type == A_RED_FROM || 
 				node->type == A_DLESS || node->type == A_DGREAT)
 	{
-		printf("TYPE: check cmd : %d\n", check_cmd(args));
-		if (check_cmd(args) == 0)
-			args = ms_add_red_type_be(args, node->type);
-		else
-			args = ms_add_red_type(args, node->type);
-		printf_out_cmd(args);
+		args = ms_add_red_type(args, node->type);
 	}
 	return (args);
 }
@@ -563,8 +485,9 @@ int	ms_exec_comb_command(t_node *node, char **envp, int nb_pipe)
 	t_cmds	*args;
     int		*pipex;
 
+	args = NULL;
 	pipex = pipex_creat(nb_pipe);
-	args = ms_init_arg_com();
+	args = ms_init_arg_com(args);
 	if (!args)
 	{
 		perror("initial arg : ");
