@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 16:11:55 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 20:40:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,21 +129,6 @@ static char	*ms_add_to_history(t_history **histo)
 	else if (*histo)
 		return ((*histo)->data);
 	return (NULL);
-}
-
-/*
-** INIT READLINE
-** - Display prompt
-** - Save cursor initial position and set cpos (cursor position) value
-** - Initialize new history entry
-*/
-
-static void	ms_init_readline(t_history **histo, int *cpos)
-{
-	*cpos = 0;
-	ft_putstr_fd(PROMPT, 1);
-	tputs(tgetstr("sc", NULL), 0, ms_putchar);
-	ms_histo_insert_front(histo, ms_histo_new(NULL), B_NEW);
 }
 
 /*

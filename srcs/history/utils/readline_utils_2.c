@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 16:15:50 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 16:17:47 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 20:39:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ms_putchar(int i)
 void	ms_refresh_line(char *buffer, int len)
 {
 	int	i;
-	
+
 	tputs(tgetstr("rc", NULL), 0, ms_putchar);
 	i = -1;
 	while (++i < len)

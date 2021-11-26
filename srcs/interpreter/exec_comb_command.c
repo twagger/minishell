@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_comb_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 17:03:09 by wlo               #+#    #+#             */
-/*   Updated: 2021/11/19 17:03:13 by wlo              ###   ########.fr       */
+/*   Updated: 2021/11/26 20:22:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,36 +457,37 @@ static t_cmds *ms_visit(t_node *node, t_cmds *args, char **envp)
 	return (args);
 }
 
-static int		*pipex_creat(int nb_pipe)
-{
-	int		*pipex;
-	int		i;
+// static int		*pipex_creat(int nb_pipe)
+// {
+// 	int		*pipex;
+// 	int		i;
 
-	pipex = malloc(nb_pipe * 2 * sizeof(int));
-	if (!pipex)
-	{
-		perror("pipe");
-		exit(1);
-	}
-	i = -1;
-	while(++i < nb_pipe)
-	{
-		if (pipe(&pipex[2 * i]) < 0)
-		{
-			perror("pipe");
-			exit(1);
-		}
-	}
-	return pipex;
-}
+// 	pipex = malloc(nb_pipe * 2 * sizeof(int));
+// 	if (!pipex)
+// 	{
+// 		perror("pipe");
+// 		exit(1);
+// 	}
+// 	i = -1;
+// 	while(++i < nb_pipe)
+// 	{
+// 		if (pipe(&pipex[2 * i]) < 0)
+// 		{
+// 			perror("pipe");
+// 			exit(1);
+// 		}
+// 	}
+// 	return pipex;
+// }
 
 int	ms_exec_comb_command(t_node *node, char **envp, int nb_pipe)
 {
 	t_cmds	*args;
-    int		*pipex;
+    //int		*pipex;
 
 	args = NULL;
-	pipex = pipex_creat(nb_pipe);
+	(void)nb_pipe;
+	//pipex = pipex_creat(nb_pipe);
 	args = ms_init_arg_com(args);
 	if (!args)
 	{

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 16:30:43 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 20:40:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int			ms_handle_history(t_history **histo, char *seq, int *cpos);
 int			ms_handle_delete(t_history **histo, char *seq, int *cpos);
 int			ms_add_char(t_history **histo, char c, int where);
 char		*ms_del_char(t_history **histo, int index);
+void		ms_init_readline(t_history **histo, int *cpos);
 void		ms_insert_char(char c);
 void		ms_delete_char(void);
 void		ms_refresh_line(char *buffer, int cpos);
