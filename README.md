@@ -63,7 +63,7 @@ The work of the lexical analyser or **lexer** is to identify token in the input 
 
 For bash, you can find some documentation about token recognition online : [Shell token recognition (opengroup.org)](https://pubs.opengroup.org/onlinepubs/9699919799.2018edition/utilities/V3_chap02.html#tag_18_03)
 
-> **NOTE :** Working with token instead of "words" will be much more comfortable whe it will come to recognize grammar structure into the command line.
+> **NOTE :** Working with token instead of "words" will be much more comfortable when it will come to recognize grammar structure into the command line.
 
 ### Parser - Syntax analysis
 
@@ -110,9 +110,9 @@ here_end		: WORD
 
 ### Parser - Parsing table
 
-In order to create the **parsing table**, we used a specific program called **Bison**. Bison is a free version of flex. It can generate c code from a grammar.
+In order to create the **parsing table**, we used a specific program called **Bison**. Bison is the [GNU](https://fr.wikipedia.org/wiki/GNU) version of yacc. It is a parser generator that can generate c code from a grammar.
 
-As this code is not ok at all with the school norm and as it is not very right to get a generated code for a school project, we just used bison to create a textual **automaton** based on our grammar. From that automaton, we created the **parsing table**.
+As this code is not ok at all with the school norm and as it is not very right to get a generated code for a school project, we just used bison to create a textual **automaton** based on our grammar. From that automaton, we will deduce the **parsing table**.
 
 Install bison :
 ```shell
