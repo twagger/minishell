@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 15:48:24 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 16:30:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** PARAMS
 */
 
-# define PROMPT "\x1B[32mMinishell> \e[0m"
+# define PROMPT "\x1B[32mMinishell-1.0$ \e[0m"
 # define LINE_END -2
 # define ESCAPE_SEQUENCE 27
 # define BACKSPACE 127
