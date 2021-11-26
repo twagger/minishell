@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 11:32:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 15:09:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,15 @@
 */
 t_env	*g_my_envp;
 
-static int	ms_loop(char **envp)
+static void	ms_display_special_status(int status)
+{
+	if (status == 131)
+		printf("Quit : %i\n", status - 128);
+	else if (status > 128)
+		printf("\n");
+}
+
+static int	ms_loop(char **envp, struct termios *termios)
 {
 	char		*line;
 	int			status;
@@ -38,13 +46,17 @@ static int	ms_loop(char **envp)
 		status = ERROR;
 	while (status >= 0)
 	{
+		if (ms_enable_raw_mode(termios) == ERROR)
+			return (ERROR);
 		line = ms_readline(&histo);
+		ms_disable_raw_mode(termios);
 		if (line)
 		{
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
 			if (!ast)
 				printf("Minishell: syntax error\n");
 			status = ms_execute_ast(ast, envp, status);
+			ms_display_special_status(status);
 		}
 		else
 			printf("\n");
@@ -65,9 +77,7 @@ int	main(int ac, char **av, char **envp)
 	term_type = getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 		return (EXIT_FAILURE);
-	if (ms_enable_raw_mode(&orig_termios) == ERROR)
-		return (EXIT_FAILURE);
-	if (ms_loop(envp) == ERROR)
+	if (ms_loop(envp, &orig_termios) == ERROR)
 	{
 		ms_disable_raw_mode(&orig_termios);
 		return (EXIT_FAILURE);

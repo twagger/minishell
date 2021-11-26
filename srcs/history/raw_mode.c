@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:08 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 10:04:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 12:05:45 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@ int	ms_disable_raw_mode(struct termios *orig_termios)
 	return (tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios));
 }
 
-/*
-** voir BRKINT, ISIG pour autoriser les Ctrl C
-*/
-
 int	ms_enable_raw_mode(struct termios *orig_termios)
 {
 	struct termios	raw;
@@ -30,7 +26,7 @@ int	ms_enable_raw_mode(struct termios *orig_termios)
 	raw = *orig_termios;
 	raw.c_iflag &= ~(BRKINT | INPCK | ISTRIP | IXON);
 	raw.c_cflag |= (CS8);
-	raw.c_lflag &= ~(ECHO | ICANON | IEXTEN);
+	raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == ERROR)
 		return (ERROR);
 	return (EXIT_SUCCESS);

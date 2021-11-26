@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 10:07:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 12:38:16 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 16:16:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,6 @@
 char	ms_ctrl_key(char key)
 {
 	return (key & 0x1f);
-}
-
-int	ms_putchar(int i)
-{
-	char	c;
-
-	c = (char)i;
-	write(1, &c, 1);
-	return (1);
-}
-
-void	ms_put_line(char *buffer, int cpos)
-{
-	(void)cpos;
-	tputs(tgetstr("dl", NULL), 0, ms_putchar);
-	ft_putstr_fd(PROMPT, 1);
-	ft_putstr_fd(buffer, 1);
-	tputs(tgetstr("rc", NULL), 0, ms_putchar);
-	if (cpos != 0)
-		tputs(tgoto(tgetstr("RI", NULL), 0, cpos), 0, ms_putchar);
 }
 
 /*

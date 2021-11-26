@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/16 10:11:53 by twagner          ###   ########.fr        #
+#    Updated: 2021/11/26 16:16:36 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SRCS		= srcs/main.c \
 			  srcs/history/readline.c \
 			  srcs/history/utils/readline_handlers.c \
 			  srcs/history/utils/readline_utils.c \
+			  srcs/history/utils/readline_utils_2.c \
 			  srcs/history/utils/history_utils.c \
 			  srcs/builtins/cd.c \
 			  srcs/builtins/echo.c \

@@ -6,11 +6,37 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:45:05 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 16:11:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
+
+/*
+** HANDLE CONTROL KEYS IN INTERACTIVE MODE
+** Ctrl + c / Ctrl + d / Ctrl + \
+*/
+
+static int	ms_handle_ctrl_keys(t_history **histo, char c)
+{
+	char	*tmp;
+	
+	if (c == ms_ctrl_key('c'))
+	{
+		ms_histo_clean(histo);
+		return (1);
+	}
+	else if (c == ms_ctrl_key('d') && ft_strlen((*histo)->data) == 0)
+	{
+		tmp = (*histo)->data;
+		(*histo)->data = ft_strdup("exit");
+		printf("exit\n");
+		free(tmp);
+		return (2);
+	}
+	else
+		return (0);
+}
 
 /*
 ** HANDLE SPECIFIC INPUT
@@ -48,18 +74,19 @@ static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 		++(*cpos);
 		if (ms_add_char(histo, c, where) == ERROR)
 			return (ERROR);
-		ms_put_line((*histo)->data, *cpos);
+		ms_insert_char(c);
 	}
 	else if (c == '\n')
 	{
-		ft_putchar_fd(c, 1);
+		if (ft_strlen((*histo)->data))
+			ft_putchar_fd('\n', 1);
 		return (LINE_END);
 	}
 	else if (c == BACKSPACE && *cpos != 0)
 	{
 		--(*cpos);
+		tputs(tgetstr("le", NULL), 0, ms_putchar);
 		ms_handle_delete(histo, NULL, cpos);
-		ms_put_line((*histo)->data, *cpos);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -129,16 +156,22 @@ static void	ms_init_readline(t_history **histo, int *cpos)
 
 char	*ms_readline(t_history **histo)
 {
-	char	c[11];
+	char	c[10];
 	int		ret;
+	int		is_ctrl;
 	int		cpos;
 
 	ms_init_readline(histo, &cpos);
 	while (1)
 	{
-		ret = read(STDIN_FILENO, c, 10);
+		ret = read(STDIN_FILENO, c, 9);
 		if (ret == ERROR)
 			break ;
+		is_ctrl = ms_handle_ctrl_keys(histo, c[0]);
+		if (is_ctrl == CTRL_C)
+			return (NULL);
+		else if (is_ctrl == CTRL_D)
+			return (ms_add_to_history(histo));
 		c[ret] = '\0';
 		if (ret == 1)
 		{

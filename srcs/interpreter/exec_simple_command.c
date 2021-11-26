@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 11:46:41 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 15:10:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 ** no redirection, pipe or delimiter
 ** The input of the simple command is an arg list with the command as last arg
 */
+
+void	ms_sig_handler(int sig)
+{
+	exit(sig);
+}
 
 static int	ms_command_launcher(char **args, char **envp)
 {
@@ -49,8 +54,8 @@ int	ms_execute(char **args, char **envp)
 		return (ERROR);
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, ms_sig_handler);
+		signal(SIGQUIT, ms_sig_handler);
 		exit(ms_command_launcher(args, envp));
 	}
 	else
@@ -108,7 +113,7 @@ int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code)
 	ms_free_arg_array(args);
 	if (ret == ERROR)
 		return (ERROR);
-	else if (ret > 0)
+	else if (ret > 0 && ret < 128)
 		perror("Minishell");
 	return (ret);
 }

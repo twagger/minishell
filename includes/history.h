@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:23:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 15:48:24 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define B_NEW 0
 # define B_HISTO 1
 # define B_HISTO_RESTORE 2
+# define CTRL_C 1
+# define CTRL_D 2
 
 /*
 ** STRUCTURES
@@ -64,9 +66,11 @@ int			ms_putchar(int i);
 int			ms_handle_move(t_history **histo, char *seq, int *cpos);
 int			ms_handle_history(t_history **histo, char *seq, int *cpos);
 int			ms_handle_delete(t_history **histo, char *seq, int *cpos);
-void		ms_put_line(char *buffer, int cpos);
 int			ms_add_char(t_history **histo, char c, int where);
 char		*ms_del_char(t_history **histo, int index);
+void		ms_insert_char(char c);
+void		ms_delete_char(void);
+void		ms_refresh_line(char *buffer, int cpos);
 
 /*
 ** history

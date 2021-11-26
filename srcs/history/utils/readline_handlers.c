@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:11:40 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:42:03 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 16:02:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ int	ms_handle_move(t_history **histo, char *seq, int *cpos)
 
 int	ms_handle_history(t_history **histo, char *seq, int *cpos)
 {
+	int	len;
+
+	len = 0;
+	if (*histo)
+		len = ft_strlen((*histo)->data);
 	if (seq[1] == 91 && seq[2] == ARROW_UP)
 	{
 		if ((*histo)->next)
@@ -65,7 +70,7 @@ int	ms_handle_history(t_history **histo, char *seq, int *cpos)
 	if (seq[2] == ARROW_UP || seq[2] == ARROW_DOWN)
 	{
 		*cpos = ft_strlen((*histo)->data);
-		ms_put_line((*histo)->data, *cpos);
+		ms_refresh_line((*histo)->data, len);
 	}
 	return (0);
 }
@@ -89,7 +94,7 @@ int	ms_handle_delete(t_history **histo, char *seq, int *cpos)
 				free((*histo)->data);
 				(*histo)->data = NULL;
 			}
-			ms_put_line((*histo)->data, *cpos);
+			ms_delete_char();
 		}
 	}
 	return (0);
