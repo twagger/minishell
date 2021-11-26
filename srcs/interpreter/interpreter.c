@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:00:06 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 11:36:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	ms_search_ast(t_node *node, int needle, int nb)
 	return (nb);
 }
 
-int	ms_execute_ast(t_node *ast, char **envp)
+int	ms_execute_ast(t_node *ast, char **envp, int exit_code)
 {
 	if (!ast)
 		return (EXIT_FAILURE);
@@ -40,7 +40,7 @@ int	ms_execute_ast(t_node *ast, char **envp)
 			ms_search_ast(ast, A_PIPE, 0)) == ERROR)
 			return (EXIT_FAILURE);
 	}
-	else if (ms_exec_simple_command(ast, envp) == ERROR)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	else 
+		return (ms_exec_simple_command(ast, envp, exit_code));
+	return (0);
 }

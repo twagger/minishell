@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:37:37 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 11:32:31 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,7 @@ static int	ms_loop(char **envp)
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
 			if (!ast)
 				printf("Minishell: syntax error\n");
-			printf("TREE\n----------\n");
-			ms_visit_ast(ast, POST_ORDER);
-			printf("----------\n");
-			status = ms_execute_ast(ast, envp);
+			status = ms_execute_ast(ast, envp, status);
 		}
 		else
 			printf("\n");

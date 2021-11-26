@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:23 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/22 11:49:37 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 11:11:44 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	ms_echo(int ac, char **av)
 
 	nl = '\n';
 	sep = '\0';
-	if (ac < 2)
-		return (ERROR);
 	i = 0;
 	while (++i < ac)
 	{

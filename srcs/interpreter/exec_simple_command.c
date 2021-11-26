@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/23 16:36:44 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 11:46:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,59 +40,62 @@ static int	ms_command_launcher(char **args, char **envp)
 
 int	ms_execute(char **args, char **envp)
 {
-	pid_t	pid;
-	pid_t	wpid;
-	int		ret;
-	int		status;
+	pid_t				pid;
+	pid_t				wpid;
+	int					status;
 
 	pid = fork();
-	ret = 0;
 	if (pid == ERROR)
 		return (ERROR);
 	if (pid == 0)
-		ret = ms_command_launcher(args, envp);
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		exit(ms_command_launcher(args, envp));
+	}
 	else
 	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		wpid = waitpid(pid, &status, 0);
 		if (wpid == ERROR)
 			return (ERROR);
 	}
-	return (ret);
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (WEXITSTATUS(status));
 }
 
-static char	**ms_visit(t_node *node, char **args, char **envp)
+static char	**ms_visit(t_node *node, char **args, char **envp, int exit_code)
 {
 	if (!node)
 		return (args);
-	args = ms_visit(node->left, args, envp);
-	args = ms_visit(node->right, args, envp);
+	args = ms_visit(node->left, args, envp, exit_code);
+	args = ms_visit(node->right, args, envp, exit_code);
 	if (node->type == A_PARAM)
 	{
 		if (ft_strcmp(node->data, "$?") == 0)
-			args = ms_add_arg_back(args, ft_itoa(errno));
+			args = ms_add_arg_back(args, ft_itoa(exit_code));
 		else
 			args = ms_add_arg_back(args, node->data);
 	}
 	else if (node->type == A_CMD)
 	{
 		if (ft_strcmp(node->data, "$?") == 0)
-		{
-			args = ms_add_arg_back(args, "echo");
-			args = ms_add_arg_back(args, ft_itoa(errno));
-		}
+			args = ms_add_arg_back(args, ft_itoa(exit_code));
 		else
 			args = ms_add_arg_back(args, node->data);
 	}
 	return (args);
 }
 
-int	ms_exec_simple_command(t_node *ast, char **envp)
+int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code)
 {
 	char	**args;
 	int		ret;
 
 	args = ms_init_arg_array();
-	args = ms_visit(ast, args, envp);
+	args = ms_visit(ast, args, envp, exit_code);
 	if (!args)
 	{
 		ms_free_arg_array(args);
@@ -107,5 +110,5 @@ int	ms_exec_simple_command(t_node *ast, char **envp)
 		return (ERROR);
 	else if (ret > 0)
 		perror("Minishell");
-	return (errno);
+	return (ret);
 }
