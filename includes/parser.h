@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 11:33:14 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 19:15:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,15 @@
 # define AUTOMATON "./srcs/parser/parser/parsing_table"
 # define NO_ACTION -1
 # define DEFAULT -1
-# define SHIFT 0
-# define REDUCE 1
-# define ACCEPT 2
 # define TO_PROMOTE 0
 # define TO_CHILD 1
+
+typedef enum e_actions
+{
+	SHIFT,
+	REDUCE,
+	ACCEPT
+}	t_actions;
 
 typedef enum e_rules
 {
