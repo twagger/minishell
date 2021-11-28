@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 16:26:03 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/26 22:02:45 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code)
 	if (ret == ERROR)
 		return (ERROR);
 	else if (ret > 0 && ret < 128)
-		perror("Minishell");
+		printf("Minishell: %s\n", strerror(ret));
 	return (ret);
 }
