@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 14:02:26 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/28 11:28:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,23 @@ void	ms_visit_ast(t_node *node, int mode)
 	if (!node)
 		return ;
 	if (mode == PRE_ORDER)
-		printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	{
+		if (node->type != -1)
+			printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	}
 	ms_visit_ast(node->left, mode);
 	if (mode == IN_ORDER)
-		printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	{
+		if (node->type != -1)
+			printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+	}
 	ms_visit_ast(node->right, mode);
 	if (mode == POST_ORDER)
 	{
 		if (node->type != -1)
-			printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
+			printf("TYPE : %i\tDATA : %s\tREDUC : %i\n", node->type, (char *)node->data, node->reduc);
+		if (node->reduc == R_PIPE_SEQUENCE) // poignee pour le fork > executer la partie gauche
+			printf("TYPE : %i\tDATA : %s\n", node->type, "SIMPLE COMMAND");
 	}
 }
 
