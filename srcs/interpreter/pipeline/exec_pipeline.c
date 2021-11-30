@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/28 12:03:44 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/30 12:56:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,22 @@ static void	ms_handle_redir(t_node	*node, char **envp)
 ** to be given to execve for execution.
 */
 
-static void	ms_exec_left(t_node	*node, char **envp, int exit_code)
+static int	ms_exec_left(t_node	*node, char **envp, int exit_code)
 {
-	// visit the left branch of a node
-	// The left node is a simple command or a redir command
-	// if simple command :
-		// visit to build arg array
-		// execute the command with execve
 	// if redir command :
+	if (ms_search_ast(node->left, A_RED_TO, 0) \
+		|| ms_search_ast(node->left, A_RED_FROM, 0) \
+		|| ms_search_ast(node->left, A_DLESS, 0) \
+		|| ms_search_ast(node->left, A_DGREAT, 0))
+	{
+		// changer les stdin et out de la commande sur les redirections
 		// execute redir (dup) > Probably with a specific function
 		// visit to build arg array
 		// execute the command with execve
+	}
+	else // if simple command :
+		return (ms_exec_simple_command(node->left, envp, exit_code));
+	return (0);
 }
 
 /*
@@ -69,16 +74,17 @@ static void	ms_visit(t_node *node, char **envp, int exit_code)
 			return (ERROR);
 		if (pid == 0)
 		{
-			// the child process will close useless fd, enable signal management and "exec left" of the current node
-			close(pipefd[1]);
+			// the child process will close write fd, enable signal management and "exec left" of the current node then close the read fd
+			close(pipefd[0]);
 			signal(SIGINT, ms_sig_handler);
 			signal(SIGQUIT, ms_sig_handler);
+			// changer les stdin et out de la commande sur le pipe
 			ms_exec_left(t_node	*node, envp, exit_code);
-			close(pipefd[0]);
+			close(pipefd[1]);
 		}
 		else
 		{
-			// the current process will close useless fd and continue browse the tree (no waitpid)
+			// the current process will close read fd and continue browse the tree (no waitpid)
 			close(pipefd[0]);
 		}
 	}
