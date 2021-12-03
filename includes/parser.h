@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 19:15:22 by twagner          ###   ########.fr       */
+/*   Updated: 2021/11/30 15:01:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define DEFAULT -1
 # define TO_PROMOTE 0
 # define TO_CHILD 1
+# define ROOT -2
 
 typedef enum e_actions
 {
@@ -60,7 +61,6 @@ typedef enum e_rules
 # define POST_ORDER 2
 # define LEFT 0
 # define RIGHT 1
-# define ROOT 2
 
 /*
 ** STRUCTURES

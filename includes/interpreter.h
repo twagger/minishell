@@ -6,13 +6,24 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 12:52:29 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/03 12:29:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERPRETER_H
 # define INTERPRETER_H
 # include "parser.h"
+
+/*
+** STRUCTURES
+*/
+typedef struct s_pipe
+{
+	int				fd[2];
+	int				is_curr_in;
+	int				is_curr_out;
+	struct s_pipe	next;
+}					t_pipe;
 
 /*
 ** FUNCTIONS
@@ -31,5 +42,11 @@ int		ms_exec_pipeline(t_node *ast, char **envp, int nb_pipe);
 int		ms_exec_command(t_node *ast, char **envp);
 int		ms_exec_simple_command(t_node *ast, char **envp, int exit_code);
 int		ms_exec_comb_command(t_node *node, char **envp, int nb_pipe);
+
+t_pipe	*ms_init_pipes(int nb);
+void	ms_free_pipe_list(t_pipe *pipe);
+
+void	ms_activate_signal_handler(void);
+void	ms_ignore_signals(void);
 
 #endif

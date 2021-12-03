@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 11:51:34 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/03 10:12:23 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,17 @@ static int	ms_search_ast(t_node *node, int needle, int nb)
 
 int	ms_execute_ast(t_node *ast, char **envp, int exit_code)
 {
+	int	nb;
+
 	if (!ast)
 		return (EXIT_FAILURE);
-	if (ms_search_ast(ast, A_PIPE, 0))
-	{
-		if (ms_exec_comb_command(ast, envp, \
-			ms_search_ast(ast, A_PIPE, 0)) == ERROR)
-			return (EXIT_FAILURE);
-	}
-	else
-		return (ms_exec_simple_command(ast, envp, exit_code));
-	return (0);
+	nb = ms_search_ast(ast, A_PIPE, 0);
+	if (nb)
+		return (ms_exec_pipeline(ast, envp, exit_code, nb));
+	else if (ms_search_ast(ast, T_RED_TO, 0) \
+			|| ms_search_ast(ast, T_RED_FROM, 0) \
+			|| ms_search_ast(ast, T_DLESS, 0) \
+			|| ms_search_ast(ast, T_DGREAT, 0))
+		return (ms_exec_redir_command(ast, envp, exit_code));
+	return (ms_exec_simple_command(ast, envp, exit_code));
 }

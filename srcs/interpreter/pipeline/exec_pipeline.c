@@ -6,21 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 12:56:43 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/03 12:26:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
-
-/*
-** REDIRECTION HANDLER
-** This function handles all the redirection commands for a command
-*/
-
-static void	ms_handle_redir(t_node	*node, char **envp)
-{
-
-}
 
 /*
 ** COMMAND EXECUTION
@@ -29,7 +19,7 @@ static void	ms_handle_redir(t_node	*node, char **envp)
 ** to be given to execve for execution.
 */
 
-static int	ms_exec_left(t_node	*node, char **envp, int exit_code)
+static int	ms_exec(t_node	*node, char **envp, int exit_code)
 {
 	// if redir command :
 	if (ms_search_ast(node->left, A_RED_TO, 0) \
@@ -49,46 +39,47 @@ static int	ms_exec_left(t_node	*node, char **envp, int exit_code)
 
 /*
 ** VISIT
-** Browse the tree to find every command. Each new command will create a 
-** pipe to communicate with the previous one, and a fork to execute it.
+** Browse the tree to find every command. Each new command will use a 
+** pipe to communicate with the previous and next one, and a fork to execute.
 ** The execution of the command is then handled by a specitic exec function
 */
 
-static void	ms_visit(t_node *node, char **envp, int exit_code)
+static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 {
 	pid_t	pid;
-	int		pipefd[2];
+	int		ret;
 
 	if (!node)
 		return ;
-	ms_visit(node->left, envp, exit_code);
-	ms_visit(node->right, envp, exit_code);
-	// If I am on a PIPE SEQUENCE NODE
-	if (node->reduc == R_PIPE_SEQUENCE)
+	ms_visit(node->left, envp, exit_code, pipe);
+	ms_visit(node->right, envp, exit_code, pipe);
+	if (node->type == ROOT) // execute last process without fork (in the subshell then return its exit status)
 	{
-		// create a pipe
-		if (pipe(pipefd) == -1)
-			return :
-		pid = fork();// fork
+		ms_close_unused_fds(pipe);
+		ms_connect_read_fd(pipe);
+		ret = exec(node, envp, exit_code);
+		ms_free_pipe_list(pipe);
+		return (ret);
+	}
+	else if (node->reduc == R_PIPE_SEQUENCE) // fork
+	{
+		pid = fork(); // fork
 		if (pid == ERROR)
 			return (ERROR);
 		if (pid == 0)
 		{
-			// the child process will close write fd, enable signal management and "exec left" of the current node then close the read fd
-			close(pipefd[0]);
-			signal(SIGINT, ms_sig_handler);
-			signal(SIGQUIT, ms_sig_handler);
-			// changer les stdin et out de la commande sur le pipe
-			ms_exec_left(t_node	*node, envp, exit_code);
-			close(pipefd[1]);
+			ms_activate_signal_handler();
+			ms_close_unused_fds(pipe);
+			ms_connect_read_fd(pipe);
+			ms_connect_write_fd(pipe);
+			ret = ms_exec(node, envp, exit_code);
+			ms_free_pipe_list(pipe);
+			exit(ret);
 		}
-		else
-		{
-			// the current process will close read fd and continue browse the tree (no waitpid)
-			close(pipefd[0]);
-		}
+		ms_update_curr_fds(pipe);
+		// cut the branch si it is not executed again after
 	}
-	return (cmd);
+	return (0);
 }
 
 /*
@@ -96,23 +87,32 @@ static void	ms_visit(t_node *node, char **envp, int exit_code)
 ** Creates a subshell to execute all the commands of the pipeline
 */
 
-int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code)
+int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 {
 	pid_t				pid;
 	pid_t				wpid;
 	int					status;
+	t_pipe				pipe;
 
-	pid = fork();// 1 : fork to create a subshell
+	if (ast)
+		ast->type = -2;
+	// 0 : Signal are ignored by Minishell and the subshell but the child processes of subshell should have them handled
+	ms_ignore_signals();
+	// 1 : fork to create a subshell
+	pid = fork();
 	if (pid == ERROR)
 		return (ERROR);
-	// Signal are ignored by Minishell and the subshell but the child processes of subshell should have them handled
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	// 2 : Browse the tree into the subshell (and create pipes and fork for every command + exit the pipeline with the return code of the last command)
 	if (pid == 0)
-		exit(ms_visit(ast, envp, exit_code));// 2 : Browse the tree into the subshell (and create pipes and fork for every command)
-	else
 	{
-		wpid = waitpid(pid, &status, 0);// 2 : waitpid into the main shell (minishell)
+		pipe = ms_init_pipes(nb);
+		if (!pipe)
+			return (ERROR);
+		exit(ms_visit(ast, envp, exit_code, pipe));
+	}
+	else
+	{// 2 bis : waitpid into the main shell (minishell)
+		wpid = waitpid(pid, &status, 0);
 		if (wpid == ERROR)
 			return (ERROR);
 	}
