@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/03 12:26:53 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/03 12:34:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 			ms_free_pipe_list(pipe);
 			exit(ret);
 		}
-		ms_update_curr_fds(pipe);
+		else
+			ms_update_curr_fds(pipe); // update the fd to use for the next cmd
 		// cut the branch si it is not executed again after
 	}
 	return (0);

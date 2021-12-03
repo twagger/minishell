@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/03 12:29:55 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/03 12:33:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ int	ms_close_unused_fds(t_pipe *pipe)
 	// close all FD except when curr == 1
 }
 
+int	ms_update_curr_fds(t_pipe *pipe)
+{
+	// move the currs 
+}
+
 int	ms_connect_read_fd(t_pipe *pipe)
 {
 	// if pipe->is_curr_in && pipe->is_curr_out 
@@ -42,11 +47,6 @@ int	ms_connect_write_fd(t_pipe *pipe)
 {
 	// trouver le pipe avec un is_curr_out a 1
 	// dup2(1, pipe->fd[1])
-}
-
-int	ms_update_curr_fds(t_pipe *pipe)
-{
-	// update the curr FDS before fork
 }
 
 t_pipe	*ms_pipe_new()
