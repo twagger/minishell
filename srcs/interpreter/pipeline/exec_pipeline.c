@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/03 12:34:58 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/23 23:06:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 static int	ms_exec(t_node	*node, char **envp, int exit_code)
 {
-	// if redir command :
+	// if command with redir:
 	if (ms_search_ast(node->left, A_RED_TO, 0) \
 		|| ms_search_ast(node->left, A_RED_FROM, 0) \
 		|| ms_search_ast(node->left, A_DLESS, 0) \
@@ -29,7 +29,7 @@ static int	ms_exec(t_node	*node, char **envp, int exit_code)
 	{
 		// changer les stdin et out de la commande sur les redirections
 		// execute redir (dup) > Probably with a specific function
-		// visit to build arg array
+		// visit to build arg array > if (node->reduc == R_PIPE_SEQUENCE && node != root) return
 		// execute the command with execve
 	}
 	else // if simple command :
@@ -70,15 +70,13 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 		{
 			ms_activate_signal_handler();
 			ms_close_unused_fds(pipe);
-			ms_connect_read_fd(pipe);
-			ms_connect_write_fd(pipe);
+			ms_connect_pipe(pipe);
 			ret = ms_exec(node, envp, exit_code);
 			ms_free_pipe_list(pipe);
 			exit(ret);
 		}
 		else
 			ms_update_curr_fds(pipe); // update the fd to use for the next cmd
-		// cut the branch si it is not executed again after
 	}
 	return (0);
 }
@@ -93,7 +91,7 @@ int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 	pid_t				pid;
 	pid_t				wpid;
 	int					status;
-	t_pipe				pipe;
+	t_pipe				*pipe;
 
 	if (ast)
 		ast->type = -2;
