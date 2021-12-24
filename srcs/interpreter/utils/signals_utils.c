@@ -6,11 +6,16 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 12:06:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/03 12:27:04 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:01:23 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
+
+void	ms_sig_handler(int sig)
+{
+	exit(sig);
+}
 
 void	ms_activate_signal_handler(void)
 {

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/23 23:27:29 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:03:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ms_close_unused_fds(t_pipe *pipe)
 	pipe = begin;
 }
 
-int	ms_update_curr_fds(t_pipe *pipe)
+void	ms_update_curr_fds(t_pipe *pipe)
 {
 	int		change_next;
 	t_pipe	*begin;
@@ -67,7 +67,7 @@ int	ms_update_curr_fds(t_pipe *pipe)
 	pipe = begin;
 }
 
-void	ms_connect_read_fd(t_pipe *pipe)
+void	ms_connect_pipe(t_pipe *pipe)
 {
 	t_pipe	*begin;
 

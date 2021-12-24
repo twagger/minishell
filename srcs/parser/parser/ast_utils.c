@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 15:02:59 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:48:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ void	ms_visit_ast(t_node *node, int mode)
 	ms_visit_ast(node->right, mode);
 	if (mode == POST_ORDER)
 	{
+		if (node->reduc == R_IO_REDIRECT)
+			printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_REDIRECT");
+		if (node->reduc == R_IO_FILE)
+			printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_FILE");
+		if (node->reduc == R_IO_HERE)
+			printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_HERE");
 		if (node->type != -1 && node->type != -2)
 			printf("TYPE : %i\tDATA : %s\tREDUC : %i\n", node->type, (char *)node->data, node->reduc);
 		if (node->reduc == R_PIPE_SEQUENCE && node->type == ROOT)

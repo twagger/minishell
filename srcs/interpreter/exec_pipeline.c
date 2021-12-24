@@ -3,357 +3,118 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wlo <wlo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/12 09:55:34 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:05:42 by wlo              ###   ########.fr       */
+/*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
+/*   Updated: 2021/12/24 11:09:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
-#include "parser.h"
 
-typedef struct s_cmd
+/*
+** COMMAND EXECUTION
+** This function will check if the command contain redirections (to be done 
+** with "dup" before the command execution), and then will create an arg array
+** to be given to execve for execution.
+*/
+
+static int	ms_exec(t_node *node, char **envp, int exit_code)
 {
-	char			***cmds;
-	int				index;
-	int				times;
-}					t_cmd;
-
-// void print_args(char ***argv, int nb)
-// {
-// 	int x = -1;
-// 	int y;
-
-// 	printf("RESULT: %d\n", nb);
-// 	while (++x <= nb)
-// 	{
-// 		y = -1;
-// 		while(argv[x][++y])
-// 		{
-// 			printf("%s\n", argv[x][y]);
-// 		}
-// 		printf("\n");
-// 	}
-// 	printf("----------------\n");
-// }
-
-static int	ms_args_len_2(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-		++i;
-	return (i);
-}
-
-static t_cmd	*ms_init_arg_array_2(int nb_pipe)
-{
-	t_cmd	*args;
-	char	***array;
-	int		i;
-	char	**arr;
-	
-	args = malloc(sizeof(t_cmd));
-	if (!args)
-		return (NULL);
-	array = (char ***)malloc(sizeof(**array) * (2 * nb_pipe + 2));
-	if (!array)
-		return (NULL);
-	i = -1;
-	while(++i < 2 * nb_pipe + 2)
-		array[i] = NULL;
-	arr = (char **)malloc(sizeof(*arr));
-	if (!array)
-		return (NULL);
-	*arr = 0;
-	args->cmds = array;
-	args->index = 0;
-	args->times = 0;
-	*array = arr;
-	return (args);
-}
-
-static void	free_path(char **paths)
-{
-	int	i;
-
-	i = 0;
-	while (paths[i])
+	// if command with redir:
+	if (ms_search_ast(node->left, A_RED_TO, 0) \
+		|| ms_search_ast(node->left, A_RED_FROM, 0) \
+		|| ms_search_ast(node->left, A_DLESS, 0) \
+		|| ms_search_ast(node->left, A_DGREAT, 0))
 	{
-		free(paths[i]);
-		i++;
+		node = NULL;
+		// changer les stdin et out de la commande sur les redirections
+		// execute redir (dup) > Probably with a specific function
+		// visit to build arg array > if (node->reduc == R_PIPE_SEQUENCE && node != root) return
+		// execute the command with execve
 	}
-	free(paths);
+	return (ms_exec_simple_command(node->left, envp, exit_code));
 }
 
-static char	*get_path(char *cmd, char **envp)
-{
-	char	**paths;
-	char	*path;
-	int		i;
-	char	*part_path;
+/*
+** VISIT
+** Browse the tree to find every command. Each new command will use a 
+** pipe to communicate with the previous and next one, and a fork to execute.
+** The execution of the command is then handled by a specitic exec function
+*/
 
-	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
-		i++;
-	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (paths[i])
+static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
+{
+	pid_t	pid;
+	int		ret;
+
+	if (!node)
+		return (0);
+	ms_visit(node->left, envp, exit_code, pipe);
+	ms_visit(node->right, envp, exit_code, pipe);
+	if (node->type == ROOT) // execute last process without fork (in the subshell then return its exit status)
 	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
-		free(part_path);
-		if (access(path, F_OK) == 0)
+		ms_close_unused_fds(pipe);
+		ms_connect_pipe(pipe);
+		ret = ms_exec(node, envp, exit_code);
+		ms_free_pipe_list(pipe);
+		return (ret);
+	}
+	else if (node->reduc == R_PIPE_SEQUENCE)
+	{
+		pid = fork();
+		if (pid == ERROR)
+			return (ERROR);
+		if (pid == 0)
 		{
-			free_path(paths);
-			return (path);
+			ms_activate_signal_handler();
+			ms_close_unused_fds(pipe);
+			ms_connect_pipe(pipe);
+			ret = ms_exec(node, envp, exit_code);
+			ms_free_pipe_list(pipe);
+			exit(ret);
 		}
-		free(path);
-		i++;
+		else
+			ms_update_curr_fds(pipe); // update the fd to use for the next cmd
 	}
-	if (paths)
-		free_path(paths);
 	return (0);
 }
-static void pipe_execte(int *pipex, t_cmd *args, int nb_pipe, char **envp)
+
+/*
+** PIPELINE EXECUTION
+** Creates a subshell to execute all the commands of the pipeline
+*/
+
+int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 {
-	int		i;
-	char	*path;
-	fprintf(stderr, "**BULL:%d, %s\n", args->index, args->cmds[args->index][0]);
-	//if not last cmds
-    if (args->times != nb_pipe)
+	pid_t				pid;
+	pid_t				wpid;
+	int					status;
+	t_pipe				*pipe;
+
+	if (ast)
+		ast->type = -2;
+	// 0 : Signal are ignored by Minishell and the subshell but the child processes of subshell should have them handled
+	ms_ignore_signals();
+	// 1 : fork to create a subshell
+	pid = fork();
+	if (pid == ERROR)
+		return (ERROR);
+	// 2 : Browse the tree into the subshell (and create pipes and fork for every command + exit the pipeline with the return code of the last command)
+	if (pid == 0)
 	{
-		fprintf(stderr,"not last one : %d\n", args->times);
-        if (dup2(pipex[2 * (args->times) + 1], STDOUT_FILENO) < 0)
-		{
-			perror("dup a");
-			exit(1);
-		}
-    }
-	//if not first cmd
-	if (args->times != 0)
-	{
-		fprintf(stderr,"not first one : %d\n", args->times);
-        if (dup2(pipex[2 * (args->times - 1)], STDIN_FILENO) < 0)
-		{
-			perror("dup b");
-			exit(1);
-		}
-    }
-	i = -1;
-	while(++i < nb_pipe * 2)	
-		close(pipex[i]);
-	fprintf(stderr, "BULL:%d, %s\n", args->index, args->cmds[args->index][0]);
-	if (ms_is_builtin(args->cmds[args->index][0]))
-		ms_execute_builtin(args->cmds[args->index], envp);
+		pipe = ms_init_pipes(nb);
+		if (!pipe)
+			return (ERROR);
+		exit(ms_visit(ast, envp, exit_code, pipe));
+	}
 	else
-	{
-		fprintf(stderr, "INSDIE\n");
-		path = get_path(args->cmds[args->index][0], envp);
-		//path and cmd not free?
-    	if (!path)
-		{
-			//free_path(cmd);
-			perror("no path:");
-		}
-		if (execve(path, args->cmds[args->index], envp) == -1)
-		{
-		//free(path);
-		//free_path(cmd);
-			perror("execve:");
-		}
+	{// 2 bis : waitpid into the main shell (minishell)
+		wpid = waitpid(pid, &status, 0);
+		if (wpid == ERROR)
+			return (ERROR);
 	}
-}
-static void pipe_fork(int *pipex, t_cmd *args, int nb_pipe, char **envp)
-{
-	//int		index;
-	pid_t	child;
-	int		i;
-
-	//if not last cmds
-	args->index = 0;
-	args->times = -1;
-	while(args->index < 2 *nb_pipe + 1)
-	{
-		if (ft_strncmp(args->cmds[args->index][0], "|", 2))
-			args->times = args->times + 1;
-		if (ft_strncmp(args->cmds[args->index][0], "|", 2) == 0)
-		{
-			//printf("pipp\n");
-			args->index= args->index + 1;
-			continue ;
-		}
-		child = fork();
-		if (child < 0)
-		{
-			perror("fork:");
-			exit(1);
-		}
-		if (child == 0)
-		{
-			printf("args->times:%d, args->index:%d\n", args->times, args->index);
-			pipe_execte(pipex, args, nb_pipe, envp);
-		}
-		args->index =  args->index + 1;
-		//free
-	}
-	i = -1;
-    while(++i < nb_pipe * 2)	
-		close(pipex[i]);
-	free(pipex);
-	//free();
-	while (errno != ECHILD)
-		wait(NULL);
-}
-
-static t_cmd	*ms_add_arg_back_2(t_cmd *args, char *data)
-{
-	int		i;
-	int 	len2;
-	char	**new;
-
-	if (!args)
-		return (NULL);
-	if (args->times == 0)
-		len2 = 0;
-	else
-		len2 = ms_args_len_2(args->cmds[args->index]);
-	//printf("len2 in back :%d, %d\n", args->times, len2);
-	new = (char **)malloc(sizeof(*new) * (len2 + 2));
-	if (!new)
-	{
-		//ms_free_arg_array(args);
-		return (NULL);
-	}
-	i = -1;
-	while (args->cmds[args->index] != NULL && args->cmds[args->index][++i])
-	{
-		new[i] = ft_strdup(args->cmds[args->index][i]);
-	}
-	if (i == -1)
-		i = 0;
-	new[i] = ft_strdup(data);
-	new[i + 1] = NULL;
-	args->cmds[args->index] = new;
-	args->times = args->times + 1;
-	//ms_free_arg_array(args);
-	return (args);
-}
-
-static t_cmd *ms_add_arg_front_2(t_cmd *args, char *data)
-{
-	int		i;
-	int 	len2;
-	char	**new;
-
-	if (!args)
-		return (NULL);
-	if (args->times == 0)
-		len2 = 0;
-	else
-		len2 = ms_args_len_2(args->cmds[args->index]);
-	args->times = 0;
-	new = (char **)malloc(sizeof(*new) * (len2 + 2));
-	if (!new)
-	{
-		//ms_free_arg_array_2(args);
-		return (NULL);
-	}
-	new[0] = ft_strdup(data);
-	i = -1;
-	while (args->cmds[args->index] != NULL && args->cmds[args->index][++i])
-	{
-		new[i + 1] = ft_strdup(args->cmds[args->index][i]);
-	}
-	if (i == -1)
-		i = 0;
-	new[i + 1] = NULL;
-	//ms_free_arg_array(args);
-	args->cmds[args->index] = new;
-	new[len2 + 1] = NULL;
-	args->index = args->index + 1;
-	// printf("good front\n");
-	// if (args->index == 2)
-	// 	printf("seconde:%s\n", args->cmds[args->index-1][1]);
-	return (args);
-}
-
-static t_cmd *ms_visit(t_node *node, t_cmd *args, char **envp, int *pipex, int nb_pipe)
-{
-	if (!node)
-		return (args);
-	// if (node->type != -1)
-	// 	printf("node: %s,%d\n", node->data, node->type);
-	args = ms_visit(node->left, args, envp, pipex, nb_pipe);
-	args = ms_visit(node->right, args, envp, pipex ,nb_pipe);
-	printf("Node: %s,%d\n", (char *)node->data, node->type);
-	if (node->type == A_PIPE)
-	{
-		//printf("HELLOOOOO\n");
-		args = ms_add_arg_back_2(args, node->data);
-		//print_args(args->cmds, args->index);
-		args->times = 0;
-		args->index = args->index + 1;
-		//printf("index:%d, %d\n", args->index, nb_pipe);
-		if (args->index == (2 * nb_pipe + 1))
-		{
-			//printf("run!\n");
-			pipe_fork(pipex, args, nb_pipe, envp);
-		}
-	}
-	if (node->type == A_PARAM)
-	{
-		//printf("param\n");
-		args = ms_add_arg_back_2(args, node->data);
-		//printf("index:%d\n", args->index);
-	}
-	else if (node->type == A_CMD)
-	{	
-		args = ms_add_arg_front_2(args, node->data);
-		//print_args(args->cmds, args->index-1);
-	}
-	return (args);
-}
-
-static int		*pipex_creat(int nb_pipe)
-{
-	int		*pipex;
-	int		i;
-
-	pipex = malloc(nb_pipe * 2 * sizeof(int));
-	if (!pipex)
-	{
-		perror("pipe");
-		exit(1);
-	}
-	i = -1;
-	while(++i < nb_pipe)
-	{
-		if (pipe(&pipex[2 * i]) < 0)
-		{
-			perror("pipe");
-			exit(1);
-		}
-	}
-	return pipex;
-}
-
-
-int	ms_exec_pipeline(t_node *node, char **envp, int nb_pipe)
-{
-	t_cmd	*args;
-	int		*pipex;
-
-	pipex = pipex_creat(nb_pipe);
-	args = ms_init_arg_array_2(nb_pipe);
-	args = ms_visit(node, args, envp, pipex, nb_pipe);
-	// if (!args)
-	// {
-	// 	ms_free_arg_array(args);
-	// 	return (ERROR);
-	// }
-	// ms_free_arg_array(args);
-	return (EXIT_SUCCESS);
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (WEXITSTATUS(status));
 }

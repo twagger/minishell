@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 12:52:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:01:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@
 ** no redirection, pipe or delimiter
 ** The input of the simple command is an arg list with the command as last arg
 */
-
-void	ms_sig_handler(int sig)
-{
-	exit(sig);
-}
 
 static int	ms_command_launcher(char **args, char **envp)
 {
@@ -54,8 +49,7 @@ int	ms_execute(char **args, char **envp)
 		return (ERROR);
 	if (pid == 0)
 	{
-		signal(SIGINT, ms_sig_handler);
-		signal(SIGQUIT, ms_sig_handler);
+		ms_activate_signal_handler();
 		exit(ms_command_launcher(args, envp));
 	}
 	else

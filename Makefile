@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/11/26 16:16:36 by twagner          ###   ########.fr        #
+#    Updated: 2021/12/24 11:06:56 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,13 +50,14 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/builder_utils.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/interpreter/interpreter.c \
-			  srcs/interpreter/exec_pipeline.c \
-			  srcs/interpreter/exec_command.c \
 			  srcs/interpreter/exec_simple_command.c \
-			  srcs/interpreter/exec_comb_command.c \
+			  srcs/interpreter/exec_pipeline.c \
+			  srcs/interpreter/redirections.c \
 			  srcs/interpreter/utils/arg_array_utils.c \
 			  srcs/interpreter/utils/path_utils.c \
 			  srcs/interpreter/utils/builtins_utils.c \
+			  srcs/interpreter/utils/pipe_utils.c \
+			  srcs/interpreter/utils/signals_utils.c \
 			  srcs/history/raw_mode.c \
 			  srcs/history/readline.c \
 			  srcs/history/utils/readline_handlers.c \

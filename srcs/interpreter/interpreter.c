@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/03 10:12:23 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:08:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** to the right executer (pipeline, command, simple command)
 */
 
-static int	ms_search_ast(t_node *node, int needle, int nb)
+int	ms_search_ast(t_node *node, int needle, int nb)
 {
 	if (!node)
 		return (nb);
@@ -43,6 +43,6 @@ int	ms_execute_ast(t_node *ast, char **envp, int exit_code)
 			|| ms_search_ast(ast, T_RED_FROM, 0) \
 			|| ms_search_ast(ast, T_DLESS, 0) \
 			|| ms_search_ast(ast, T_DGREAT, 0))
-		return (ms_exec_redir_command(ast, envp, exit_code));
+		ms_do_redirections(ast, envp, exit_code);
 	return (ms_exec_simple_command(ast, envp, exit_code));
 }

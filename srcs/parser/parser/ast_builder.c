@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:14:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/24 11:47:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,10 @@ t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
 */
 
 static int	ms_apply_reduction(\
-	t_ast_builder **builder, t_stack **popped, int reduction, int nb)
+	t_ast_builder **builder, t_stack **popped, int reduction)
 {
 	t_node	*node;
 
-	if (nb == 1)
-	{
-		node = ms_get_popped(builder, popped[0]->type, KEEP);
-		if (!node)
-			return (ERROR);
-		node->reduc = reduction;
-		return (EXIT_SUCCESS);
-	}
 	node = ms_new_node(NULL, -1, reduction);
 	if (!node)
 		return (ERROR);
@@ -118,7 +110,7 @@ int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc)
 	}
 	else
 	{
-		if (ms_apply_reduction(builder, popped, reduc, nb) == ERROR)
+		if (ms_apply_reduction(builder, popped, reduc) == ERROR)
 			return (ERROR);
 	}
 	return (EXIT_SUCCESS);
