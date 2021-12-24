@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/23 23:06:58 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/23 23:38:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 	if (node->type == ROOT) // execute last process without fork (in the subshell then return its exit status)
 	{
 		ms_close_unused_fds(pipe);
-		ms_connect_read_fd(pipe);
+		ms_connect_pipe(pipe);
 		ret = exec(node, envp, exit_code);
 		ms_free_pipe_list(pipe);
 		return (ret);
 	}
-	else if (node->reduc == R_PIPE_SEQUENCE) // fork
+	else if (node->reduc == R_PIPE_SEQUENCE)
 	{
-		pid = fork(); // fork
+		pid = fork();
 		if (pid == ERROR)
 			return (ERROR);
 		if (pid == 0)
