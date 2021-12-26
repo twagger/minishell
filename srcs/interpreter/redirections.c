@@ -6,16 +6,26 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 11:05:38 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 09:30:22 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 14:50:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 
+/*
+** HERE DOC
+** This function handle the here doc operator
+*/
+
 void	ms_handle_here_doc(t_node *node)
 {
 	(void)node;
 }
+
+/*
+** FILE REDIRECTIONS
+** The functions below handle file redirection (>, <, >>)
+*/
 
 void	ms_handle_ret_append(t_node *node)
 {
@@ -55,7 +65,6 @@ void	ms_handle_ret_to(t_node *node)
 {
 	int	fd;
 
-	printf("DATA : %s\n", node->right->data);
 	fd = open(node->right->data, O_RDWR | O_CREAT, 0666);
 	if (fd == ERROR)
 	{
@@ -76,16 +85,14 @@ void	ms_handle_ret_to(t_node *node)
 
 void	ms_do_redirections(t_node *node)
 {
-	if (!node)
+	if (!node || (node && node->type == A_PIPE))
 		return ;
 	ms_do_redirections(node->left);
 	ms_do_redirections(node->right);
-	if (node->type == A_PIPE)
-		return ;
 	if (node->reduc == R_IO_FILE)
 	{
 		if (node->left->type == T_RED_TO)
-			ms_handle_ret_to(node);	
+			ms_handle_ret_to(node);
 		if (node->left->type == T_RED_FROM)
 			ms_handle_ret_from(node);
 		if (node->left->type == T_DGREAT)

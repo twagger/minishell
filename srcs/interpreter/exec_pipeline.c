@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 09:29:57 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 14:44:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,21 @@
 
 static int	ms_exec(t_node *node, char **envp, int exit_code)
 {
-	int	fd[2];
-	
-	fd[0] = -1;
-	if (ms_search_ast(node->left, A_RED_TO, 0) \
-		|| ms_search_ast(node->left, A_RED_FROM, 0) \
-		|| ms_search_ast(node->left, A_DLESS, 0) \
-		|| ms_search_ast(node->left, A_DGREAT, 0))
-	{
-		ms_save_std_fd((int *)fd);
+	if (ms_search_ast(node, A_RED_TO, 0, A_PIPE) \
+		|| ms_search_ast(node, A_RED_FROM, 0, A_PIPE) \
+		|| ms_search_ast(node, A_DLESS, 0, A_PIPE) \
+		|| ms_search_ast(node, A_DGREAT, 0, A_PIPE))
 		ms_do_redirections(node);
-	}
-	return (ms_exec_simple_command(node->left, envp, exit_code, fd));
+	return (ms_exec_piped_command(node, envp, exit_code));
 }
 
 /*
 ** VISIT
 ** Browse the tree to find every command. Each new command will use a 
-** pipe to communicate with the previous and next one, and a fork to execute.
-** The execution of the command is then handled by a specitic exec function
+** pipe to communicate with the previous and next one, and a fork to execute,
+** except for the last command (ROOT) which is executed in the subshell 
+** process. The execution of the command is then handled by a specitic exec 
+** function.
 */
 
 static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
@@ -51,15 +47,14 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 		return (0);
 	ms_visit(node->left, envp, exit_code, pipe);
 	ms_visit(node->right, envp, exit_code, pipe);
-	if (node->type == ROOT) // execute last process without fork (in the subshell then return its exit status)
+	if (node->type == ROOT)
 	{
-		ms_close_unused_fds(pipe);
 		ms_connect_pipe(pipe);
 		ret = ms_exec(node, envp, exit_code);
 		ms_free_pipe_list(pipe);
 		return (ret);
 	}
-	else if (node->reduc == R_PIPE_SEQUENCE)
+	else if (node->type == A_PIPE)
 	{
 		pid = fork();
 		if (pid == ERROR)
@@ -67,39 +62,37 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 		if (pid == 0)
 		{
 			ms_activate_signal_handler();
-			ms_close_unused_fds(pipe);
 			ms_connect_pipe(pipe);
-			ret = ms_exec(node, envp, exit_code);
+			ms_exec(node->left, envp, exit_code);
 			ms_free_pipe_list(pipe);
-			exit (ret);
+			exit (0);
 		}
 		else
-			ms_update_curr_fds(pipe); // update the fd to use for the next cmd
+			ms_update_curr_fds(pipe);
 	}
 	return (0);
 }
 
 /*
 ** PIPELINE EXECUTION
-** Creates a subshell to execute all the commands of the pipeline
+** Initialize pipes then creates a subshell to execute all 
+** the commands of the pipeline. Gets the return status of the last
+** command of the pipeline and returns it to Minishell.
 */
 
 int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 {
-	pid_t				pid;
-	pid_t				wpid;
-	int					status;
-	t_pipe				*pipe;
+	pid_t	pid;
+	pid_t	wpid;
+	int		status;
+	t_pipe	*pipe;
 
 	if (ast)
 		ast->type = -2;
-	// 0 : Signal are ignored by Minishell and the subshell but the child processes of subshell should have them handled
 	ms_ignore_signals();
-	// 1 : fork to create a subshell
 	pid = fork();
 	if (pid == ERROR)
 		return (ERROR);
-	// 2 : Browse the tree into the subshell (and create pipes and fork for every command + exit the pipeline with the return code of the last command)
 	if (pid == 0)
 	{
 		pipe = ms_init_pipes(nb);
@@ -108,12 +101,10 @@ int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 		exit(ms_visit(ast, envp, exit_code, pipe));
 	}
 	else
-	{// 2 bis : waitpid into the main shell (minishell)
+	{
 		wpid = waitpid(pid, &status, 0);
 		if (wpid == ERROR)
 			return (ERROR);
 	}
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (WEXITSTATUS(status));
+	return (ms_get_exit_status(status));
 }

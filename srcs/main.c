@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 15:13:28 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 10:28:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ static int	ms_loop(char **envp, struct termios *termios)
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
 			if (!ast)
 				printf("Minishell: syntax error\n");
-			printf("TREE POST\n----------\n");
-			ms_visit_ast(ast, POST_ORDER);
-			printf("----------\n");
 			status = ms_execute_ast(ast, envp, status);
 			ms_display_special_status(status);
 		}

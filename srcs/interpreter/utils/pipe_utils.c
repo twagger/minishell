@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/24 11:03:34 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:04:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,66 +24,32 @@ void	ms_free_pipe_list(t_pipe *pipe)
 	}
 }
 
-void	ms_close_unused_fds(t_pipe *pipe)
-{
-	t_pipe	*begin;
-
-	begin = pipe;
-	while (pipe)
-	{
-		if (!pipe->is_curr_read)
-			close(pipe->fd[1]);
-		if (!pipe->is_curr_write)
-			close(pipe->fd[0]);
-		pipe = pipe->next;
-	}
-	pipe = begin;
-}
-
-void	ms_update_curr_fds(t_pipe *pipe)
-{
-	int		change_next;
-	t_pipe	*begin;
-
-	begin = pipe;
-	change_next = 0;
-	while (pipe)
-	{
-		if (change_next)
-		{
-			pipe->is_curr_write = 1;
-			change_next = 0;
-		}
-		else if (!pipe->is_curr_read && pipe->is_curr_write)
-		{
-			pipe->is_curr_read = 1;
-			pipe->is_curr_write = 0;
-			change_next = 0;
-		}
-		else if (pipe->is_curr_read && !pipe->is_curr_write)
-			pipe->is_curr_read = 0;
-		pipe = pipe->next;
-	}
-	pipe = begin;
-}
-
 void	ms_connect_pipe(t_pipe *pipe)
 {
 	t_pipe	*begin;
 
 	begin = pipe;
+	ms_close_unused_fds(pipe);
 	while (pipe)
 	{
 		if (pipe->is_curr_read)
-			dup2(0, pipe->fd[0]);
+		{
+			dup2(pipe->fd[0], STDIN_FILENO);
+			close(pipe->fd[0]);
+		}
 		if (pipe->is_curr_write)
-			dup2(1, pipe->fd[1]);
+		{
+			printf("TITI\n");
+			dup2(pipe->fd[1], STDOUT_FILENO);
+			printf("TOTO\n");
+			close(pipe->fd[1]);
+		}
 		pipe = pipe->next;
 	}
 	pipe = begin;
 }
 
-t_pipe	*ms_pipe_new()
+t_pipe	*ms_pipe_new(void)
 {
 	t_pipe	*new;
 
@@ -97,7 +63,7 @@ t_pipe	*ms_pipe_new()
 	return (new);
 }
 
-void	ms_pipe_add_back(t_pipe **lst, t_pipe *new) 
+void	ms_pipe_add_back(t_pipe **lst, t_pipe *new)
 {
 	t_pipe	*begin;
 
@@ -123,6 +89,6 @@ t_pipe	*ms_init_pipes(int nb)
 	while (++i < nb)
 		ms_pipe_add_back(&pipe, ms_pipe_new());
 	if (pipe)
-		pipe->is_curr_read = 1;
+		pipe->is_curr_write = 1;
 	return (pipe);
 }
