@@ -18,13 +18,11 @@ Minishell should be able to parse commands (simple commands, pipes, redirections
 	- [Tree visit](#tree-visit)
 	- [Pipeline execution](#pipeline-execution)
 	- [Redirection](#redirection)
-	- [Error management](#error-management)
 4. [Builtins](#builtins)
 	- [Builtin principle](#builtins-principle) 
 	- [Environment](#environment)
 5. [History and line management](#history-and-line-management)
-	- [Termcaps](#termcaps)
-	- [Termios](#termios)
+	- [History principle](#history-principle) 
 
 # Minishell
 
@@ -243,6 +241,17 @@ the principle of the interpretor is to browse the tree in POST ORDER, and to col
 
 We chose to visit the tree in POST ORDER, that means that we will start at the root of the tree, the explore left branch to the bottom, then right, and then have an action on the current node.
 
+The algorythm looks like this:
+
+```
+visit(node)
+    if node == null
+        return ;
+    visit(node->left)
+    visit(node->right)
+    <do something>
+```
+
 ![POST ORDER Visit](doc/img/post_order.png)
 
 For a command like 
@@ -256,7 +265,7 @@ the tree should be something like :
 ### Pipeline execution
 
 Useful document: 
-[Shell implementation of pipelines (uleth.ca)](https://www.cs.uleth.ca/~holzmann/C/system/shell_does_pipeline.pdf)
+* [Shell implementation of pipelines (uleth.ca)](https://www.cs.uleth.ca/~holzmann/C/system/shell_does_pipeline.pdf).
 
 This document explain the principle of creating a **subshell** to handle every command of the pipeline, then to **pipe** and **fork** before each command (except the last one which is executed in the subshell process and returns its exit status to minishell).
 
@@ -271,13 +280,44 @@ Before launching a command, we have of course to create a pipe between this comm
 This is done by connecting the **STDOUT** of a command to the **STDIN** of the next command. We use [pipe](https://man7.org/linux/man-pages/man2/pipe.2.html) and [dup2](https://man7.org/linux/man-pages/man2/dup.2.html) for that.
 
 ### Redirection
-### Error management
+
+The redirection is done in this project with **dup** and **dup2**.
+Nothing too difficult but you need to think about saving STDIN and STDOUT if you execute the redirection within the main process (for builtins when you are not in a pipeline for example).
+
 ## Builtins
 ### Builtin principle
 ### Environment
+
 ## History and line management
-### Termcaps
-### Termios
+
+For the history management, we did use Termios and Termcaps. the main behaviour that we want to achieve is :
+* Press UP arrow arrow display the previous command
+* Press UP arrow again to display the command before that
+* Press UP / DOWN arrow to navigate within the previous commands
+* You can change a previous command by navigating to the command and modifying it (if you then execute it, it will save it as a new previous command)
+* When you go back to the line you where typing, you still can complete the command
+* When you type CTRL+C, it stops the current typing and display a new prompte
+* When you type CTRL+D on a new line it exits Minishell
+
+To do that we have to :
+* Manage what is happening when you **type certain keys** (Up and Down Arrows, Ctrl+C, Ctrl+D, Ctrl+/)
+* Handle the **cursor movement** (Left arrow, Right arrow, End, Home, Backspace, Del)
+* **Save command lines** into a buffer
+* **Display command lines** into the terminal
+* Remove caracters from a line in the terminal
+
+### History principle
+
+* Everything I type on the keyboard is saved to a buffer
+* The buffer is attached to a linked list (as the first element) and tagget as "temporary"
+* Everytime I type on the keyboard, if this is a standard ascii character, it is added to the current buffer and the line is refreshed on the terminal
+* If it is a "special key", a specific action is launched
+	* UP and DOWN arrow : change the current buffer moving into the linked list of history and refresh the line on the terminal
+	* LEFT, RIGHT, END, HOME : Move the cursor
+	* BACKSPACE, DEL : Remove a character from the current buffer and refresh the line on the terminal
+	* Enter : **IF** the current buffer is temporary, set it as a non temporary in the hystory linked list. If it is an old one, duplicate it and set it as the new "first" item of the linked list.
+
+
 
 ## Installation
 
