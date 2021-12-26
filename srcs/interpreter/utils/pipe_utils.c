@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:10:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:22:45 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	ms_connect_pipe(t_pipe *pipe)
 	while (pipe)
 	{
 		if (pipe->is_curr_read)
-			dup2(pipe->fd[0], STDIN_FILENO);
+			dup2(pipe->fd[READ_END], STDIN_FILENO);
 		if (pipe->is_curr_write)
-			dup2(pipe->fd[1], STDOUT_FILENO);
-		close(pipe->fd[0]);
-		close(pipe->fd[1]);
+			dup2(pipe->fd[WRITE_END], STDOUT_FILENO);
+		close(pipe->fd[READ_END]);
+		close(pipe->fd[WRITE_END]);
 		pipe = pipe->next;
 	}
 	pipe = begin;

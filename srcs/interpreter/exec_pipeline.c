@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 14:44:40 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:20:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,9 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 			ms_connect_pipe(pipe);
 			ms_exec(node->left, envp, exit_code);
 			ms_free_pipe_list(pipe);
-			exit (0);
+			exit (1);
 		}
-		else
-			ms_update_curr_fds(pipe);
+		ms_update_curr_fds(pipe);
 	}
 	return (0);
 }

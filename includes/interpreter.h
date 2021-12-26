@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 14:44:49 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:22:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ typedef struct s_pipe
 	int				is_curr_write;
 	struct s_pipe	*next;
 }					t_pipe;
+
+typedef enum e_pipe_ends
+{
+	READ_END,
+	WRITE_END
+}	t_pipe_ends;
 
 /*
 ** FUNCTIONS
