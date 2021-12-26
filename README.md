@@ -257,14 +257,18 @@ the tree should be something like :
 
 Useful document: 
 [Shell implementation of pipelines (uleth.ca)](https://www.cs.uleth.ca/~holzmann/C/system/shell_does_pipeline.pdf)
+
 This document explain the principle of creating a **subshell** to handle every command of the pipeline, then to **pipe** and **fork** before each command (except the last one which is executed in the subshell process and returns its exit status to minishell).
 
 The principe with the tree is to browse the tree like in the schemas above and to stop on each **PIPE** node.
-When we get a **PIPE** node, we fork the subshell then I execute the tree **from** the pipe node (which is considered as the root for this command).
+When we get a **PIPE** node, we fork the subshell then we execute the tree **from** the pipe node (which is considered as the root for this command).
 
 ![Pipeline exec](doc/img/pipeline_exec.png)
 
 When we browse a part of the tree from the root or from a pipe, we consider that we stop browsing the left branch if we encounter another pipe, to avoid executing a command twice.
+
+Before launching a command, we have of course to create a pipe between this command and the previous and/or next one.
+This is done by connecting the **STDOUT** of a command to the **STDIN** of the next command. We use [pipe](https://man7.org/linux/man-pages/man2/pipe.2.html) and [dup2](https://man7.org/linux/man-pages/man2/dup.2.html) for that.
 
 ### Redirection
 ### Error management
