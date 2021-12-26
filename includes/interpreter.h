@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:22:57 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:50:32 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ms_update_curr_fds(t_pipe *pipe);
 void	ms_connect_pipe(t_pipe *pipe);
 void	ms_close_unused_fds(t_pipe *pipe);
 
-int		ms_search_ast(t_node *node, int needle, int nb, int limiter);
+int		ms_search_ast(t_node *node, int needle, int nb);
 
 void	ms_activate_signal_handler(void);
 void	ms_ignore_signals(void);

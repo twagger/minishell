@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:20:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 15:47:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,21 @@
 ** to be given to execve for execution.
 */
 
-static int	ms_exec(t_node *node, char **envp, int exit_code)
+static int	ms_exec_pipe_sequence(\
+	t_node *node, char **envp, int exit_code, t_pipe *pipe)
 {
-	if (ms_search_ast(node, A_RED_TO, 0, A_PIPE) \
-		|| ms_search_ast(node, A_RED_FROM, 0, A_PIPE) \
-		|| ms_search_ast(node, A_DLESS, 0, A_PIPE) \
-		|| ms_search_ast(node, A_DGREAT, 0, A_PIPE))
-		ms_do_redirections(node);
-	return (ms_exec_piped_command(node, envp, exit_code));
+	int	ret;
+
+	ms_activate_signal_handler();
+	ms_connect_pipe(pipe);
+	ms_do_redirections(node);
+	ret = ms_exec_piped_command(node, envp, exit_code);
+	ms_free_pipe_list(pipe);
+	return (ret);
 }
 
 /*
-** VISIT
+** VISIT AST FOR PIPELINE
 ** Browse the tree to find every command. Each new command will use a 
 ** pipe to communicate with the previous and next one, and a fork to execute,
 ** except for the last command (ROOT) which is executed in the subshell 
@@ -41,32 +44,20 @@ static int	ms_exec(t_node *node, char **envp, int exit_code)
 static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 {
 	pid_t	pid;
-	int		ret;
 
 	if (!node)
 		return (0);
 	ms_visit(node->left, envp, exit_code, pipe);
 	ms_visit(node->right, envp, exit_code, pipe);
 	if (node->type == ROOT)
-	{
-		ms_connect_pipe(pipe);
-		ret = ms_exec(node, envp, exit_code);
-		ms_free_pipe_list(pipe);
-		return (ret);
-	}
+		return (ms_exec_pipe_sequence(node, envp, exit_code, pipe));
 	else if (node->type == A_PIPE)
 	{
 		pid = fork();
 		if (pid == ERROR)
 			return (ERROR);
 		if (pid == 0)
-		{
-			ms_activate_signal_handler();
-			ms_connect_pipe(pipe);
-			ms_exec(node->left, envp, exit_code);
-			ms_free_pipe_list(pipe);
-			exit (1);
-		}
+			exit(ms_exec_pipe_sequence(node->left, envp, exit_code, pipe));
 		ms_update_curr_fds(pipe);
 	}
 	return (0);
