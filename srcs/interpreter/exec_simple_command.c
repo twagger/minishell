@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/24 11:01:49 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 09:27:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static char	**ms_visit(t_node *node, char **args, char **envp, int exit_code)
 		return (args);
 	args = ms_visit(node->left, args, envp, exit_code);
 	args = ms_visit(node->right, args, envp, exit_code);
+	if (node->type == A_PIPE)
+		return (args);
 	if (node->type == A_PARAM)
 	{
 		if (ft_strcmp(node->data, "$?") == 0)
@@ -88,26 +90,30 @@ static char	**ms_visit(t_node *node, char **args, char **envp, int exit_code)
 	return (args);
 }
 
-int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code)
+int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code, int *fd)
 {
 	char	**args;
 	int		ret;
 
 	args = ms_init_arg_array();
 	args = ms_visit(ast, args, envp, exit_code);
-	if (!args)
+	if (args)
+	{
+		if (ms_is_builtin(args[0]))
+			ret = ms_execute_builtin(args, envp);
+		else
+			ret = ms_execute(args, envp);
+		ms_free_arg_array(args);
+		if (ret > 0 && ret < 128)
+			printf("Minishell: %s\n", strerror(ret));
+	}
+	else
 	{
 		ms_free_arg_array(args);
-		return (ERROR);
+		ret = ERROR;
 	}
-	if (ms_is_builtin(args[0]))
-		ret = ms_execute_builtin(args, envp);
-	else
-		ret = ms_execute(args, envp);
-	ms_free_arg_array(args);
-	if (ret == ERROR)
-		return (ERROR);
-	else if (ret > 0 && ret < 128)
-		printf("Minishell: %s\n", strerror(ret));
+	if (fd[0] != -1)
+		if (ms_restore_std_fd(fd) == ERROR)
+			ret = ERROR;
 	return (ret);
 }

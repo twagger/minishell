@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/12/24 11:06:56 by twagner          ###   ########.fr        #
+#    Updated: 2021/12/26 09:19:22 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/utils/builtins_utils.c \
 			  srcs/interpreter/utils/pipe_utils.c \
 			  srcs/interpreter/utils/signals_utils.c \
+			  srcs/interpreter/utils/fd_utils.c \
 			  srcs/history/raw_mode.c \
 			  srcs/history/readline.c \
 			  srcs/history/utils/readline_handlers.c \

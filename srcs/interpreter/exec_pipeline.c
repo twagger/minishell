@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/24 11:09:17 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 09:29:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,18 @@
 
 static int	ms_exec(t_node *node, char **envp, int exit_code)
 {
-	// if command with redir:
+	int	fd[2];
+	
+	fd[0] = -1;
 	if (ms_search_ast(node->left, A_RED_TO, 0) \
 		|| ms_search_ast(node->left, A_RED_FROM, 0) \
 		|| ms_search_ast(node->left, A_DLESS, 0) \
 		|| ms_search_ast(node->left, A_DGREAT, 0))
 	{
-		node = NULL;
-		// changer les stdin et out de la commande sur les redirections
-		// execute redir (dup) > Probably with a specific function
-		// visit to build arg array > if (node->reduc == R_PIPE_SEQUENCE && node != root) return
-		// execute the command with execve
+		ms_save_std_fd((int *)fd);
+		ms_do_redirections(node);
 	}
-	return (ms_exec_simple_command(node->left, envp, exit_code));
+	return (ms_exec_simple_command(node->left, envp, exit_code, fd));
 }
 
 /*
@@ -72,7 +71,7 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 			ms_connect_pipe(pipe);
 			ret = ms_exec(node, envp, exit_code);
 			ms_free_pipe_list(pipe);
-			exit(ret);
+			exit (ret);
 		}
 		else
 			ms_update_curr_fds(pipe); // update the fd to use for the next cmd
