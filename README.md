@@ -236,8 +236,36 @@ can be read : `When you are in the STATE 0, if the token you read from input is 
 ### Syntax tree
 ## Interpreter
 ### Interpreter principle
+
+the principle of the interpretor is to browse the tree in POST ORDER, and to collect the right information in the right order to execute commands and pipes and redirection.
+
 ### Tree visit
+
+We chose to visit the tree in POST ORDER, that means that we will start at the root of the tree, the explore left branch to the bottom, then right, and then have an action on the current node.
+
+![POST ORDER Visit](doc/img/post_order.png)
+
+For a command like 
+```sh
+ls -l | grep .. | wc -l > file
+```
+the tree should be something like :
+
+![POST ORDER Visit real](doc/img/post_order-real.png)
+
 ### Pipeline execution
+
+Useful document: 
+[Shell implementation of pipelines (uleth.ca)](https://www.cs.uleth.ca/~holzmann/C/system/shell_does_pipeline.pdf)
+This document explain the principle of creating a **subshell** to handle every command of the pipeline, then to **pipe** and **fork** before each command (except the last one which is executed in the subshell process and returns its exit status to minishell).
+
+The principe with the tree is to browse the tree like in the schemas above and to stop on each **PIPE** node.
+When we get a **PIPE** node, we fork the subshell then I execute the tree **from** the pipe node (which is considered as the root for this command).
+
+![Pipeline exec](doc/img/pipeline_exec.png)
+
+When we browse a part of the tree from the root or from a pipe, we consider that we stop browsing the left branch if we encounter another pipe, to avoid executing a command twice.
+
 ### Redirection
 ### Error management
 ## Builtins
