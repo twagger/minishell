@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 12:22:32 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 16:11:10 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,12 @@ static int	ms_pipeline_subshell(\
 	if (!pipe)
 		return (1);
 	wpid = ms_visit(ast, envp, exit_code, pipe);
+	ms_free_pipe_list(pipe);
 	if (wpid > 0 && waitpid(wpid, &status, 0) == ERROR)
 		return (1);
 	while (1)
 	{
-		if (wait(NULL) != ERROR)
+		if (wait(NULL) == ERROR)
 			break ;
 	}
 	return (status);

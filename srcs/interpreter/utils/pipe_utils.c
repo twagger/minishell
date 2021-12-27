@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 10:02:29 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 16:12:24 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	ms_free_pipe_list(t_pipe *pipe)
 	while (pipe)
 	{
 		next = pipe->next;
+		close(pipe->fd[0]);
+		close(pipe->fd[1]);
 		free(pipe);
 		pipe = next;
 	}
