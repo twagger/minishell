@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 11:35:51 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 12:13:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static int	ms_exec_pipe_sequence(\
 ** function.
 */
 
-static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
+static pid_t	ms_visit(\
+	t_node *node, char **envp, int exit_code, t_pipe *pipe)
 {
 	pid_t	pid;
 
@@ -49,16 +50,23 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 		return (0);
 	ms_visit(node->left, envp, exit_code, pipe);
 	ms_visit(node->right, envp, exit_code, pipe);
-	if (node->type == ROOT)
-		return (ms_exec_pipe_sequence(node, envp, exit_code, pipe));
-	else if (node->type == A_PIPE)
+	if (node->type == A_PIPE || node->type == ROOT)
 	{
 		pid = fork();
 		if (pid == ERROR)
 			return (ERROR);
 		if (pid == 0)
+		{
+			if (node->type == ROOT)
+				exit(ms_exec_pipe_sequence(node, envp, exit_code, pipe));
 			exit(ms_exec_pipe_sequence(node->left, envp, exit_code, pipe));
-		ms_update_curr_fds(pipe);
+		}
+		else
+		{
+			ms_update_curr_fds(pipe);
+			if (node->type == ROOT)
+				return (pid);
+		}
 	}
 	return (0);
 }
@@ -70,12 +78,31 @@ static int	ms_visit(t_node *node, char **envp, int exit_code, t_pipe *pipe)
 ** command of the pipeline and returns it to Minishell.
 */
 
+static int	ms_pipeline_subshell(\
+	t_node *ast, char **envp, int exit_code, int nb)
+{
+	t_pipe	*pipe;
+	pid_t	wpid;
+	int		status;
+
+	pipe = ms_init_pipes(nb);
+	if (!pipe)
+		return (1);
+	wpid = ms_visit(ast, envp, exit_code, pipe);
+	if (wpid > 0 && waitpid(wpid, &status, 0) == ERROR)
+		return (1);
+	while (1)
+	{
+		if (wait(NULL) != ERROR)
+			break ;
+	}
+	return (status);
+}
+
 int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 {
 	pid_t	pid;
-	pid_t	wpid;
 	int		status;
-	t_pipe	*pipe;
 
 	if (ast)
 		ast->type = -2;
@@ -83,17 +110,13 @@ int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 	pid = fork();
 	if (pid == ERROR)
 		return (ERROR);
-	if (pid == 0) // subshell
+	if (pid == 0)
 	{
-		pipe = ms_init_pipes(nb);
-		if (!pipe)
-			return (ERROR);
-		exit(ms_visit(ast, envp, exit_code, pipe));
+		exit(ms_pipeline_subshell(ast, envp, exit_code, nb));
 	}
-	else // minishell
+	else
 	{
-		wpid = waitpid(pid, &status, 0); // get the return of the subshell process
-		if (wpid == ERROR)
+		if (waitpid(pid, &status, 0) == ERROR)
 			return (ERROR);
 	}
 	return (ms_get_exit_status(status));
