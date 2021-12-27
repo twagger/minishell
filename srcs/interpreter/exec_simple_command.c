@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 22:27:25 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 10:13:26 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int	ms_exec_piped_command(t_node *ast, char **envp, int exit_code)
 	else
 	{
 		ms_free_arg_array(args);
-		ret = ERROR;
+		ret = 1;
 	}
 	return (ret);
 }

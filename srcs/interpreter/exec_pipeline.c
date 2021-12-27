@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:47:34 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 11:35:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,16 @@ int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 	pid = fork();
 	if (pid == ERROR)
 		return (ERROR);
-	if (pid == 0)
+	if (pid == 0) // subshell
 	{
 		pipe = ms_init_pipes(nb);
 		if (!pipe)
 			return (ERROR);
 		exit(ms_visit(ast, envp, exit_code, pipe));
 	}
-	else
+	else // minishell
 	{
-		wpid = waitpid(pid, &status, 0);
+		wpid = waitpid(pid, &status, 0); // get the return of the subshell process
 		if (wpid == ERROR)
 			return (ERROR);
 	}

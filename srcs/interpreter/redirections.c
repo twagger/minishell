@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 11:05:38 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 14:50:02 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 10:22:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ms_handle_ret_append(t_node *node)
 		perror("minishell");
 		exit(1);
 	}
-	if (dup2(1, fd) == ERROR)
+	if (dup2(fd, 1) == ERROR)
 	{
 		perror("minishell");
 		exit(1);

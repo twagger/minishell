@@ -309,7 +309,7 @@ To do that we have to :
 ### History principle
 
 * Everything I type on the keyboard is saved to a buffer
-* The buffer is attached to a linked list (as the first element) and tagget as "temporary"
+* The buffer is attached to a linked list as the first element and tagged as "temporary"
 * Everytime I type on the keyboard, if this is a standard ascii character, it is added to the current buffer and the line is refreshed on the terminal
 * If it is a "special key", a specific action is launched
 	* UP and DOWN arrow : change the current buffer moving into the linked list of history and refresh the line on the terminal

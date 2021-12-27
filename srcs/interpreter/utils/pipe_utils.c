@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 15:48:17 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:22:45 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 10:02:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ void	ms_free_pipe_list(t_pipe *pipe)
 
 void	ms_connect_pipe(t_pipe *pipe)
 {
-	t_pipe	*begin;
-
-	begin = pipe;
 	while (pipe)
 	{
 		if (pipe->is_curr_read)
@@ -39,7 +36,6 @@ void	ms_connect_pipe(t_pipe *pipe)
 		close(pipe->fd[WRITE_END]);
 		pipe = pipe->next;
 	}
-	pipe = begin;
 }
 
 t_pipe	*ms_pipe_new(void)
