@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 16:11:10 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 16:56:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static int	ms_pipeline_subshell(\
 		if (wait(NULL) == ERROR)
 			break ;
 	}
-	return (status);
+	return (ms_get_exit_status(status));
 }
 
 int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)

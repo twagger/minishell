@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 12:15:42 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 16:55:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,12 @@ int	ms_execute(char **args, char **envp)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
+		ms_ignore_signals();
 		wpid = waitpid(pid, &status, 0);
 		if (wpid == ERROR)
 			return (ERROR);
 	}
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (WEXITSTATUS(status));
+	return (ms_get_exit_status(status));
 }
 
 /*
