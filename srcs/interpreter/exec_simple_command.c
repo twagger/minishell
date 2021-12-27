@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:42:41 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/26 22:27:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
-#include "parser.h"
 
 /*
 ** SIMPLE COMMAND
