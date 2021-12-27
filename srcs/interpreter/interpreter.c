@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 22:27:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 12:30:23 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	ms_execute_ast(t_node *ast, char **envp, int exit_code)
 	if (nb)
 		return (ms_exec_pipeline(ast, envp, exit_code, nb));
 	ms_save_std_fd((int *)fd);
-	ms_do_redirections(ast);
+	if (ms_do_redirections(ast, 0) == ERROR)
+		return (1);
 	return (ms_exec_simple_command(ast, envp, exit_code, fd));
 }

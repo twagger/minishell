@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 12:13:04 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 12:22:32 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static int	ms_exec_pipe_sequence(\
 
 	ms_activate_signal_handler();
 	ms_connect_pipe(pipe);
-	ms_do_redirections(node);
+	if (ms_do_redirections(node, 0) == ERROR)
+		exit (1);
 	ret = ms_exec_piped_command(node, envp, exit_code);
 	ms_free_pipe_list(pipe);
 	return (ret);

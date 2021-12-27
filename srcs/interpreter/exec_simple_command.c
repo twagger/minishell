@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 10:13:26 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/27 12:15:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code, int *fd)
 			ret = ms_execute(args, envp);
 		ms_free_arg_array(args);
 		if (ret > 0 && ret < 128)
-			printf("Minishell: %s\n", strerror(ret));
+			printf("minishell: %s\n", strerror(ret));
 	}
 	else
 	{
@@ -158,7 +158,7 @@ int	ms_exec_piped_command(t_node *ast, char **envp, int exit_code)
 			ret = ms_command_launcher(args, envp);
 		ms_free_arg_array(args);
 		if (ret > 0 && ret < 128)
-			printf("Minishell: %s\n", strerror(ret));
+			printf("minishell: %s\n", strerror(ret));
 	}
 	else
 	{
