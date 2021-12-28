@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 10:03:30 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 11:52:21 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/28 10:00:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ms_execute_builtin(char **args, char **envp)
 	while (args[ac])
 		++ac;
 	if (ft_strncmp(args[0], "cd", 3) == 0)
-		ret = ms_cd(ac, args);
+		ret = ms_cd(ac, args, envp);
 	if (ft_strncmp(args[0], "pwd", 4) == 0)
 		ret = ms_pwd(ac, args);
 	if (ft_strncmp(args[0], "echo", 3) == 0)

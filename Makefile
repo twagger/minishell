@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/12/26 09:19:22 by twagner          ###   ########.fr        #
+#    Updated: 2021/12/28 14:15:39 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,9 @@ SRCS		= srcs/main.c \
 			  srcs/builtins/exit.c \
 			  srcs/builtins/pwd.c \
 			  srcs/builtins/export.c \
-			  srcs/builtins/unset.c
+			  srcs/builtins/unset.c \
+			  srcs/builtins/utils/env_utils.c \
+			  srcs/builtins/utils/cd_utils.c
 
 OBJS		= $(SRCS:.c=.o)
 
