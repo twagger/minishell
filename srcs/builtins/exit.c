@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/13 10:12:37 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:44:47 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	ms_exit_arg_errors(int ac, char **av)
 int	ms_exit(int ac, char **av)
 {
 	int	code;
-	int ret;
+	int	ret;
 
 	ret = ms_exit_arg_errors(ac, av);
 	if (ret == ERROR)

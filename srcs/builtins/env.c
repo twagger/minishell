@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/15 21:06:42 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:57:13 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ static int	ms_env_arg_errors(int ac, char **av)
 	return (0);
 }
 
-// int	ms_env(int ac, char **av, char **envp)
-// {
-// 	if (ms_env_arg_errors(ac, av) == ERROR)
-// 		return (1);
-// 	while (*envp)
-// 	{
-// 		printf("%s\n", *envp);
-// 		++envp;
-// 	}
-// 	return (0);
-// }
+void	printf_out_env(t_env *list)
+{
+	t_env	*temp;
+
+	temp = list;
+	while (temp)
+	{
+		printf("%s=%s\n", temp->name, temp->content);
+		temp = temp->next;
+	}
+}
 
 int	ms_env(int ac, char **av, char **envp)
 {

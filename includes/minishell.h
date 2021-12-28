@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/23 15:42:45 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:53:31 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ int		ms_cd(int ac, char **av);
 int		ms_pwd(int ac, char **av);
 int		ms_env(int ac, char **av, char **envp);
 int		ms_export(int ac, char **av, char **envp);
-void	printf_out_env(t_env *list);
+int		ms_is_param_new(char *param, t_env *envp);
+int		ms_is_param_ok(char	*param);
+int		add_newenvp(char *cmd, t_env **envp);
 t_env	*init_env(char **envp);
 int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
