@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 17:53:31 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2021/12/28 18:05:04 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		ms_execute_builtin(char **args, char **envp);
 ** builtins
 */
 int		ms_echo(int ac, char **av);
-int		ms_cd(int ac, char **av);
+int		ms_cd(int ac, char **av, char **envp);
 int		ms_pwd(int ac, char **av);
 int		ms_env(int ac, char **av, char **envp);
 int		ms_export(int ac, char **av, char **envp);
@@ -73,5 +73,11 @@ int		add_newenvp(char *cmd, t_env **envp);
 t_env	*init_env(char **envp);
 int		ms_unset(int ac, char **av, char **envp);
 int		ms_exit(int ac, char **av);
+
+/*
+** builtins utils
+*/
+char	**ms_split_cdpath(char const *s, char c);
+char	*ms_convert_canonical(char *path);
 
 #endif

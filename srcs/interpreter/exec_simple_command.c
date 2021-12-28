@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 16:55:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/28 09:31:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ int	ms_exec_simple_command(t_node *ast, char **envp, int exit_code, int *fd)
 			ret = ms_execute_builtin(args, envp);
 		else
 			ret = ms_execute(args, envp);
-		ms_free_arg_array(args);
-		if (ret > 0 && ret < 128)
+		if (!ms_is_builtin(args[0]) && ret > 0 && ret < 128)
 			printf("minishell: %s\n", strerror(ret));
+		ms_free_arg_array(args);
 	}
 	else
 	{
