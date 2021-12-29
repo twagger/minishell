@@ -6,13 +6,28 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 16:04:37 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 12:27:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ms_go_home(void)
+char	*ms_join_with_slash(char *s1, char *s2)
+{
+	char	*step1;
+	char	*result;
+
+	step1 = ft_strjoin("/", s2);
+	if (!step1)
+		return (NULL);
+	result = ft_strjoin(s1, step1);
+	free(step1);
+	if (!result)
+		return (NULL);
+	return (result);
+}
+
+static int	ms_go_home(void)
 {
 	char	*home;
 
@@ -33,52 +48,55 @@ int	ms_go_home(void)
 	return (0);
 }
 
-char	*ms_set_pwd_currpath(char *rep)
-{
-	char	*pwd;
-	char	*step1;
-	char	*fullpath;
-
-	pwd = getenv("PWD");
-	step1 = ft_strjoin("/", rep);
-	if (!step1)
-		return (NULL);
-	fullpath = ft_strjoin(pwd, step1);
-	if (!fullpath)
-	{
-		free(step1);
-		return (NULL);
-	}
-	return (fullpath);
-}
-
-char	*ms_set_cdpath_currpath(char *rep)
+static char	*ms_set_cdpath_currpath(char *rep)
 {
 	char	**cdpath;
-	char	*step1;
 	char	*trypath;
+	int		i;
 
 	if (!getenv("CDPATH"))
 		return (ft_strdup(rep));
 	cdpath = ms_split_cdpath(getenv("CDPATH"), ':');
 	if (!cdpath)
 		return (NULL);
-	while (*cdpath)
+	i = -1;
+	while (cdpath[++i])
 	{
-		step1 = ft_strjoin("/", rep);
-		if ((*cdpath)[0] == 0)
-			trypath = ft_strjoin(".", step1);
-		else
-			trypath = ft_strjoin(*cdpath, step1);
-		free(step1);
-		if (!trypath)
-			return (NULL);
+		trypath = ms_join_with_slash(cdpath[i], rep);
 		if (access(trypath, F_OK | R_OK) == 0)
+		{
+			ms_clear_str_array(cdpath);
 			return (trypath);
+		}
 		free(trypath);
-		++cdpath;
 	}
+	ms_clear_str_array(cdpath);
 	return (ft_strdup(rep));
+}
+
+static char	*ms_build_curpath(char *input)
+{
+	char	*curpath;
+	char	*tmp;
+
+	if (input[0] == '/')
+		curpath = ft_strdup(input);
+	else if (!ft_strcmp(".", input) || !ft_strcmp("..", input))
+		curpath = ms_join_with_slash(getenv("PWD"), input);
+	else
+	{
+		curpath = ms_set_cdpath_currpath(input);
+		if (!ft_strcmp(curpath, input))
+			curpath = ms_join_with_slash(getenv("PWD"), input);
+	}
+	curpath = ms_convert_canonical(curpath);
+	tmp = curpath;
+	if (input[0] == '/')
+	{
+		curpath = ft_strjoin("/", tmp);
+		free(tmp);
+	}
+	return (curpath);
 }
 
 int	ms_cd(int ac, char **av, char **envp)
@@ -90,21 +108,11 @@ int	ms_cd(int ac, char **av, char **envp)
 		return (ms_go_home());
 	if (ac >= 2)
 	{
-		if (av[1][0] == '/')
-			curpath = ft_strdup(av[1]);
-		else if (!ft_strcmp(".", av[1]) || !ft_strcmp("..", av[1]))
-			curpath = ms_set_pwd_currpath(av[1]);
-		else
-		{
-			curpath = ms_set_cdpath_currpath(av[1]);
-			if (!ft_strcmp(curpath, av[1]))
-				curpath = ms_set_pwd_currpath(av[1]);
-		}
-		curpath = ms_convert_canonical(curpath);
+		curpath = ms_build_curpath(av[1]);
 		if (chdir(curpath) == ERROR)
 		{
 			ft_putstr_fd("minishell: cd: ", 2);
-			perror(av[1]);
+			perror(curpath);
 			free(curpath);
 			return (1);
 		}

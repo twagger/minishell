@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
+#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/12/28 18:05:07 by ifeelbored       ###   ########.fr        #
+#    Updated: 2021/12/29 10:36:06 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,8 @@ SRCS		= srcs/main.c \
 			  srcs/history/utils/readline_utils_2.c \
 			  srcs/history/utils/history_utils.c \
 			  srcs/builtins/cd.c \
+			  srcs/builtins/utils/cd_utils.c \
+			  srcs/builtins/utils/canonical_path.c \
 			  srcs/builtins/echo.c \
 			  srcs/builtins/env.c \
 			  srcs/builtins/exit.c \

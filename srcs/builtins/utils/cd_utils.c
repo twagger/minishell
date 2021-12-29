@@ -6,13 +6,25 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 12:02:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 14:24:14 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 11:13:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdlib.h>
 #include "libft.h"
+
+void	ms_clear_str_array(char **str)
+{
+	if (str)
+	{
+		while (*str)
+		{
+			free(*str);
+			++str;
+		}
+	}
+}
 
 static size_t	ft_nb_words(char const *s, char c)
 {

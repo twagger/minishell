@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 18:05:04 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2021/12/29 11:13:24 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,7 @@ int		ms_exit(int ac, char **av);
 */
 char	**ms_split_cdpath(char const *s, char c);
 char	*ms_convert_canonical(char *path);
+void	ms_clear_str_array(char **str);
+char	*ms_join_with_slash(char *s1, char *s2);
 
 #endif

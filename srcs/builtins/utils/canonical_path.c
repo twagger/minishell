@@ -6,39 +6,37 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 15:04:46 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 16:05:22 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 12:06:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ms_clear_components(char **components)
+void	*ms_canonical_cleaner(t_list **stack, char **component, char *path)
 {
-	if (components)
-	{
-		while (*components)
-		{
-			free(*components);
-			++components;
-		}
-		free (components);
-	}
+	if (stack)
+		ft_lstclear(stack, free);
+	if (component)
+		ms_clear_str_array(component);
+	if (path)
+		free(path);
+	return (NULL);
 }
 
 static void	ms_pop_stack(t_list **stack)
 {
 	if (!(*stack))
-		return;
+		return ;
 	else if (!(*stack)->next)
 	{
-		ft_lstdelone(*stack, free);
+		ft_lstdelone(*stack, NULL);
 		*stack = NULL;
 	}
 	else
 	{
 		while ((*stack)->next->next)
 			*stack = (*stack)->next;
-		ft_lstdelone((*stack)->next, free);
+		ft_lstdelone((*stack)->next, NULL);
 		(*stack)->next = NULL;
 	}
 }
@@ -47,7 +45,7 @@ static int	ms_add_stack(t_list **stack, char *component)
 {
 	t_list	*new;
 
-	new = ft_lstnew((void *)*component);
+	new = ft_lstnew((void *)component);
 	if (!new)
 	{
 		ft_lstclear(stack, free);
@@ -60,7 +58,7 @@ static int	ms_add_stack(t_list **stack, char *component)
 static char	*ms_stack_to_canonical_path(t_list *stack, char **components)
 {
 	char	*canonical;
-	char	*step1;
+	char	*tmp;
 	int		first;
 
 	first = 1;
@@ -69,24 +67,19 @@ static char	*ms_stack_to_canonical_path(t_list *stack, char **components)
 		return (NULL);
 	while (stack)
 	{
-		if (!first)
-		{
-			step1 = ft_strjoin("/", stack->content);
-			if (!step1)
-				return (NULL);
-			canonical = ft_strjoin(canonical, step1);
-		}
+		if (first--)
+			canonical = ft_strdup(stack->content);
 		else
-			canonical = ft_strjoin(canonical, step1);
-		if (!canonical)
 		{
-			free(step1);
-			return (NULL);
+			tmp = canonical;
+			canonical = ms_join_with_slash(canonical, stack->content);
+			free(tmp);
 		}
+		if (!canonical)
+			return (ms_canonical_cleaner(&stack, components, NULL));
 		stack = stack->next;
 	}
-	// free components
-	// free stack
+	ms_canonical_cleaner(&stack, components, NULL);
 	return (canonical);
 }
 
@@ -108,20 +101,18 @@ char	*ms_convert_canonical(char *path)
 		return (NULL);
 	components = ft_split(path, '/');
 	if (!components)
-		return (NULL);
+		return (ms_canonical_cleaner(NULL, NULL, path));
 	i = -1;
 	while (components[++i])
 	{
 		if (!ft_strcmp("..", components[i]))
 			ms_pop_stack(&stack);
-		else if (!(ft_strlen(components[i]) == 1 && components[i][0] == '.')) 
+		else if (!(ft_strlen(components[i]) == 1 && components[i][0] == '.'))
 		{
 			if (ms_add_stack(&stack, components[i]) == ERROR)
-			{
-				ms_clear_components(components);
-				return (NULL);
-			}
+				return (ms_canonical_cleaner(&stack, components, path));
 		}
 	}
+	ms_canonical_cleaner(NULL, NULL, path);
 	return (ms_stack_to_canonical_path(stack, components));
 }
