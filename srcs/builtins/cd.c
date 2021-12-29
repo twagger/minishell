@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 16:02:32 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 16:30:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,8 @@ static char	*ms_build_curpath(char *input)
 	}
 	curpath = ms_convert_canonical(curpath);
 	tmp = curpath;
-	if (input[0] == '/')
-	{
-		curpath = ft_strjoin("/", tmp);
-		free(tmp);
-	}
+	curpath = ft_strjoin("/", tmp);
+	free(tmp);
 	return (curpath);
 }
 

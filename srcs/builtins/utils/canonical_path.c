@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 15:04:46 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 12:06:18 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 16:39:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	*ms_canonical_cleaner(t_list **stack, char **component, char *path)
 
 static void	ms_pop_stack(t_list **stack)
 {
+	t_list	*begin;
+
 	if (!(*stack))
 		return ;
 	else if (!(*stack)->next)
@@ -34,10 +36,12 @@ static void	ms_pop_stack(t_list **stack)
 	}
 	else
 	{
+		begin = *stack;
 		while ((*stack)->next->next)
 			*stack = (*stack)->next;
 		ft_lstdelone((*stack)->next, NULL);
 		(*stack)->next = NULL;
+		*stack = begin;
 	}
 }
 
@@ -61,13 +65,13 @@ static char	*ms_stack_to_canonical_path(t_list *stack, char **components)
 	char	*tmp;
 	int		first;
 
-	first = 1;
+	first = 2;
 	canonical = NULL;
 	if (!stack)
 		return (NULL);
 	while (stack)
 	{
-		if (first--)
+		if (--first > 0)
 			canonical = ft_strdup(stack->content);
 		else
 		{
@@ -107,7 +111,7 @@ char	*ms_convert_canonical(char *path)
 	{
 		if (!ft_strcmp("..", components[i]))
 			ms_pop_stack(&stack);
-		else if (!(ft_strlen(components[i]) == 1 && components[i][0] == '.'))
+		else if (ft_strcmp(".", components[i]))
 		{
 			if (ms_add_stack(&stack, components[i]) == ERROR)
 				return (ms_canonical_cleaner(&stack, components, path));
