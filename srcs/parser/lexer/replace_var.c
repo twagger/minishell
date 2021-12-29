@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/10/29 09:27:52 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:44:06 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*replace_var(char *c, char *cmd, int index)
 		var[i] = c[i];
 	}
 	var[i] = '\0';
-	newvar = getenv(var);
+	newvar = ms_getenv(var);
 	cmd = replcace_var_2(cmd, var, newvar, index);
 	free(var);
 	return (cmd);

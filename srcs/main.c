@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:18:54 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:39:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,17 @@ int	main(int ac, char **av, char **envp)
 		return (EXIT_FAILURE);
 	term_type = getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
+	{
+		ms_clearenv();
 		return (EXIT_FAILURE);
+	}
 	if (ms_loop(&orig_termios) == ERROR)
 	{
 		ms_disable_raw_mode(&orig_termios);
+		ms_clearenv();
 		return (EXIT_FAILURE);
 	}
 	ms_disable_raw_mode(&orig_termios);
+	ms_clearenv();
 	return (EXIT_SUCCESS);
 }

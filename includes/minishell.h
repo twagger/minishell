@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:21:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 16:04:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,14 @@ extern t_env	*g_envp;
 */
 int		ms_is_builtin(char *command);
 int		ms_execute_builtin(char **args);
+
+/*
+** env
+*/
+int		ms_setenv(char *name, char *value);
+char	*ms_getenv(char *var);
+void	ms_clearenv(void);
+void	ft_envadd(t_env **lst, t_env *new);
 
 /*
 ** builtins

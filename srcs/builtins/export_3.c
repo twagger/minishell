@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2021/12/29 14:38:31 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:53:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,8 @@ void	ft_envadd(t_env **lst, t_env *new)
 		return ;
 	}
 	current = (*lst);
-	while (current->next != 0)
-	{
+	while (current->next != NULL)
 		current = current->next;
-	}
 	current->next = new;
 }
 
@@ -53,10 +51,10 @@ t_env	*ft_envnew(char *envp)
 
 	re = (t_env *)malloc(sizeof(t_env));
 	if (!re)
-		return (0);
+		return (NULL);
 	sep = ft_split(envp, '=');
 	if (!sep)
-		return (0);
+		return (NULL);
 	re->name = sep[0];
 	re->content = sep[1];
 	re->next = 0;
@@ -73,7 +71,7 @@ t_env	*init_env(char **envp)
 	{
 		new = ft_envnew(*envp);
 		if (!new)
-			return (0);
+			return (NULL);
 		ft_envadd(&list, new);
 		envp++;
 	}
