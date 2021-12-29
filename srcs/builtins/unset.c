@@ -3,26 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 15:36:47 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2021/12/29 15:27:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern t_env	*g_my_envp;
 
 void	delete_var(char *name)
 {
 	t_env	*tm;
 	t_env	*prev;
 
-	tm = g_my_envp;
+	tm = g_envp;
 	if (tm != NULL && (ft_strncmp(name, tm->name, ft_strlen(tm->name)) == 0))
 	{
-		(g_my_envp) = tm->next;
+		(g_envp) = tm->next;
 		free(tm->content);
 		free(tm->name);
 		return ;
@@ -44,7 +42,7 @@ void	if_var_exit(char *av)
 	size_t	len;
 	t_env	*head;
 
-	head = g_my_envp;
+	head = g_envp;
 	while (head)
 	{
 		len = ft_strlen(head->name);
@@ -57,12 +55,11 @@ void	if_var_exit(char *av)
 	}
 }
 
-int	ms_unset(int ac, char **av, char **envp)
+int	ms_unset(int ac, char **av)
 {
 	int	i;
 
 	(void)ac;
-	(void)envp;
 	i = 0;
 	while (av[++i])
 		if_var_exit(av[i]);

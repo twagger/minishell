@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 17:57:13 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2021/12/29 15:24:13 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern t_env	*g_my_envp;
 
 static int	ms_env_arg_errors(int ac, char **av)
 {
@@ -29,11 +27,11 @@ static int	ms_env_arg_errors(int ac, char **av)
 	return (0);
 }
 
-void	printf_out_env(t_env *list)
+void	printf_out_env(void)
 {
 	t_env	*temp;
 
-	temp = list;
+	temp = g_envp;
 	while (temp)
 	{
 		printf("%s=%s\n", temp->name, temp->content);
@@ -41,12 +39,10 @@ void	printf_out_env(t_env *list)
 	}
 }
 
-int	ms_env(int ac, char **av, char **envp)
+int	ms_env(int ac, char **av)
 {
 	if (ms_env_arg_errors(ac, av) == ERROR)
 		return (1);
-	if (!g_my_envp)
-		g_my_envp = init_env(envp);
-	printf_out_env(g_my_envp);
+	printf_out_env();
 	return (0);
 }

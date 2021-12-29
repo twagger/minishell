@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 16:56:21 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:18:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 */
 
 static int	ms_exec_pipe_sequence(\
-	t_node *node, char **envp, int exit_code, t_pipe *pipe)
+	t_node *node, int exit_code, t_pipe *pipe)
 {
 	int	ret;
 
@@ -28,7 +28,7 @@ static int	ms_exec_pipe_sequence(\
 	ms_connect_pipe(pipe);
 	if (ms_do_redirections(node, 0) == ERROR)
 		exit (1);
-	ret = ms_exec_piped_command(node, envp, exit_code);
+	ret = ms_exec_piped_command(node, exit_code);
 	ms_free_pipe_list(pipe);
 	return (ret);
 }
@@ -43,14 +43,14 @@ static int	ms_exec_pipe_sequence(\
 */
 
 static pid_t	ms_visit(\
-	t_node *node, char **envp, int exit_code, t_pipe *pipe)
+	t_node *node, int exit_code, t_pipe *pipe)
 {
 	pid_t	pid;
 
 	if (!node)
 		return (0);
-	ms_visit(node->left, envp, exit_code, pipe);
-	ms_visit(node->right, envp, exit_code, pipe);
+	ms_visit(node->left, exit_code, pipe);
+	ms_visit(node->right, exit_code, pipe);
 	if (node->type == A_PIPE || node->type == ROOT)
 	{
 		pid = fork();
@@ -59,8 +59,8 @@ static pid_t	ms_visit(\
 		if (pid == 0)
 		{
 			if (node->type == ROOT)
-				exit(ms_exec_pipe_sequence(node, envp, exit_code, pipe));
-			exit(ms_exec_pipe_sequence(node->left, envp, exit_code, pipe));
+				exit(ms_exec_pipe_sequence(node, exit_code, pipe));
+			exit(ms_exec_pipe_sequence(node->left, exit_code, pipe));
 		}
 		else
 		{
@@ -77,10 +77,11 @@ static pid_t	ms_visit(\
 ** Initialize pipes then creates a subshell to execute all 
 ** the commands of the pipeline. Gets the return status of the last
 ** command of the pipeline and returns it to Minishell.
+** In a pipeline, any update to an env variable is lost after execution.
 */
 
 static int	ms_pipeline_subshell(\
-	t_node *ast, char **envp, int exit_code, int nb)
+	t_node *ast, int exit_code, int nb)
 {
 	t_pipe	*pipe;
 	pid_t	wpid;
@@ -89,7 +90,7 @@ static int	ms_pipeline_subshell(\
 	pipe = ms_init_pipes(nb);
 	if (!pipe)
 		return (1);
-	wpid = ms_visit(ast, envp, exit_code, pipe);
+	wpid = ms_visit(ast, exit_code, pipe);
 	ms_free_pipe_list(pipe);
 	if (wpid > 0 && waitpid(wpid, &status, 0) == ERROR)
 		return (1);
@@ -101,7 +102,7 @@ static int	ms_pipeline_subshell(\
 	return (ms_get_exit_status(status));
 }
 
-int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
+int	ms_exec_pipeline(t_node *ast, int exit_code, int nb)
 {
 	pid_t	pid;
 	int		status;
@@ -114,7 +115,7 @@ int	ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb)
 		return (ERROR);
 	if (pid == 0)
 	{
-		exit(ms_pipeline_subshell(ast, envp, exit_code, nb));
+		exit(ms_pipeline_subshell(ast, exit_code, nb));
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 12:34:38 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:18:54 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 ** ms_visit_ast(ast, POST_ORDER);
 ** printf("----------\n");
 */
-t_env	*g_my_envp;
+t_env	*g_envp = NULL;
 
 static void	ms_display_special_status(int status)
 {
@@ -31,7 +31,7 @@ static void	ms_display_special_status(int status)
 		printf("\n");
 }
 
-static int	ms_loop(char **envp, struct termios *termios)
+static int	ms_loop(struct termios *termios)
 {
 	char		*line;
 	int			status;
@@ -55,7 +55,7 @@ static int	ms_loop(char **envp, struct termios *termios)
 			ast = ms_parser(ms_tokenizer(line), parsing_table);
 			if (!ast)
 				printf("minishell: syntax error\n");
-			status = ms_execute_ast(ast, envp, status);
+			status = ms_execute_ast(ast, status);
 			ms_display_special_status(status);
 		}
 		else
@@ -71,13 +71,15 @@ int	main(int ac, char **av, char **envp)
 	struct termios	orig_termios;
 	char			*term_type;
 
-	g_my_envp = 0;
 	(void)ac;
 	(void)av;
+	g_envp = init_env(envp);
+	if (g_envp == NULL)
+		return (EXIT_FAILURE);
 	term_type = getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 		return (EXIT_FAILURE);
-	if (ms_loop(envp, &orig_termios) == ERROR)
+	if (ms_loop(&orig_termios) == ERROR)
 	{
 		ms_disable_raw_mode(&orig_termios);
 		return (EXIT_FAILURE);

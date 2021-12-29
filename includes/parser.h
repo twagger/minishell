@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/30 15:01:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:14:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int		ms_buffer_add_back(t_ast_builder **builder, t_node *new);
 t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
 t_node	*ms_fix_param_types(t_node *tree);
-int		ms_execute_ast(t_node *ast, char **envp, int exit_code);
+int		ms_execute_ast(t_node *ast, int exit_code);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
 		t_node **node);
 

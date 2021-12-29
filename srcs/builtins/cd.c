@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 12:27:14 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:21:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,10 @@ static char	*ms_build_curpath(char *input)
 	return (curpath);
 }
 
-int	ms_cd(int ac, char **av, char **envp)
+int	ms_cd(int ac, char **av)
 {
 	char	*curpath;
 
-	(void)envp;
 	if (ac == 1)
 		return (ms_go_home());
 	if (ac >= 2)
@@ -116,7 +115,7 @@ int	ms_cd(int ac, char **av, char **envp)
 			free(curpath);
 			return (1);
 		}
-		// change PWD
+		// change PWD with a change to 
 		// change OLDPWD
 		free(curpath);
 	}

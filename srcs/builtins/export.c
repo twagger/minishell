@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 17:59:15 by wlo              ###   ########.fr       */
+/*   Updated: 2021/12/29 15:25:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern t_env	*g_my_envp;
 
 char	*ft_strduplen(char *s, size_t len)
 {
@@ -85,9 +83,9 @@ static void	ms_export_2(char **av, int i)
 			printf("Not a valid identifier\n");
 			continue ;
 		}
-		if (ms_is_param_new(av[i], g_my_envp))
+		if (ms_is_param_new(av[i], g_envp))
 		{
-			if (add_newenvp(av[i], &g_my_envp))
+			if (add_newenvp(av[i], &g_envp))
 			{
 				printf("Error happened while exporting var\n");
 				continue ;
@@ -95,7 +93,7 @@ static void	ms_export_2(char **av, int i)
 		}
 		else
 		{
-			if (realloc_var(av[i], g_my_envp))
+			if (realloc_var(av[i], g_envp))
 			{
 				printf("Error happened while realloc var\n");
 				continue ;
@@ -104,15 +102,11 @@ static void	ms_export_2(char **av, int i)
 	}
 }
 
-int	ms_export(int ac, char **av, char **envp)
+int	ms_export(int ac, char **av)
 {
 	int		i;
 
 	(void)ac;
-	if (!g_my_envp)
-		g_my_envp = init_env(envp);
-	if (g_my_envp == NULL)
-		return (1);
 	i = 0;
 	ms_export_2(av, i);
 	return (0);

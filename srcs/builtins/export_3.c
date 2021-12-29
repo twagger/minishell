@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   export_3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2021/12/28 17:54:04 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2021/12/29 14:38:31 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 /*
 ** Count the number of new params to add to the current envp
 */
+
 int	total_params(t_env *envp)
 {
 	int	total;

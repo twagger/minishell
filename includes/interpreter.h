@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 12:23:09 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/29 15:15:46 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,11 @@ char	**ms_add_arg_front(char **array, char *cmd);
 void	ms_free_arg_array(char **array);
 
 int		ms_is_builtin(char *command);
-int		ms_execute_builtin(char **args, char **envp);
+int		ms_execute_builtin(char **args);
 
-int		ms_exec_pipeline(t_node *ast, char **envp, int exit_code, int nb);
-int		ms_exec_command(t_node *ast, char **envp);
-int		ms_exec_simple_command(t_node *ast, char **envp, int exit_code, int *fd);
-int		ms_exec_piped_command(t_node *ast, char **envp, int exit_code);
-int		ms_exec_comb_command(t_node *node, char **envp, int nb_pipe);
+int		ms_exec_pipeline(t_node *ast, int exit_code, int nb);
+int		ms_exec_simple_command(t_node *ast, int exit_code, int *fd);
+int		ms_exec_piped_command(t_node *ast, int exit_code);
 
 int		ms_do_redirections(t_node *node, int ret);
 void	ms_save_std_fd(int *fd);
