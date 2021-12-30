@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 11:05:38 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 14:44:50 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:18:30 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,4 @@ int	ms_do_redirections(t_node *node, int ret)
 	if (node->reduc == R_IO_HERE)
 		ret = ms_handle_here_doc(node);
 	return (ret);
-
 }

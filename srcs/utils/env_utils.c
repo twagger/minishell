@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 10:01:48 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 14:11:39 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:19:32 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	**ms_g_envp_to_envp(void)
 	int		i;
 	t_env	*tmp;
 	char	**envp;
-	
+
 	i = 0;
 	tmp = g_envp;
 	while (tmp)
@@ -34,7 +34,7 @@ char	**ms_g_envp_to_envp(void)
 	while (tmp)
 	{
 		envp[++i] = ft_strjoin(tmp->name, ft_strjoin("=", tmp->content));
-		tmp = tmp->next;	
+		tmp = tmp->next;
 	}
 	return (envp);
 }
