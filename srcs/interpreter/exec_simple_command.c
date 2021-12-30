@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 11:12:18 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 14:12:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@
 
 static int	ms_command_launcher(char **args)
 {
-	int	ret;
+	int		ret;
+	char	**envp;
 
 	if (ms_getbin_path(&args[0]) == ERROR)
 		return (ERROR);
-	ret = execve(args[0], args, NULL);
+	envp = ms_g_envp_to_envp();
+	if (!envp)
+		return (ERROR);
+	ret = execve(args[0], args, envp);
+	ms_free_str_array(envp);
 	if (ret == ERROR)
 	{
 		if (errno == EAGAIN)
@@ -122,7 +127,7 @@ int	ms_exec_simple_command(t_node *ast, int exit_code, int *fd)
 			if (!ms_is_builtin(args[0]) && ret > 0 && ret < 128)
 				printf("minishell: %s\n", strerror(ret));
 		}
-		ms_free_arg_array(args);
+		ms_free_str_array(args);
 	}
 	else
 		ret = ERROR;
@@ -157,7 +162,7 @@ int	ms_exec_piped_command(t_node *ast, int exit_code)
 			if (ret > 0 && ret < 128)
 				printf("minishell: %s\n", strerror(ret));
 		}
-		ms_free_arg_array(args);
+		ms_free_str_array(args);
 	}
 	else
 		ret = 1;

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 15:04:46 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 16:39:41 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 13:34:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ms_canonical_cleaner(t_list **stack, char **component, char *path)
 	if (stack)
 		ft_lstclear(stack, free);
 	if (component)
-		ms_clear_str_array(component);
+		ms_free_str_array(component);
 	if (path)
 		free(path);
 	return (NULL);

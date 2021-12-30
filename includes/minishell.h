@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 16:04:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 13:43:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int		ms_setenv(char *name, char *value);
 char	*ms_getenv(char *var);
 void	ms_clearenv(void);
 void	ft_envadd(t_env **lst, t_env *new);
+char	**ms_g_envp_to_envp(void);
 
 /*
 ** builtins
@@ -88,7 +89,11 @@ int		ms_exit(int ac, char **av);
 */
 char	**ms_split_cdpath(char const *s, char c);
 char	*ms_convert_canonical(char *path);
-void	ms_clear_str_array(char **str);
 char	*ms_join_with_slash(char *s1, char *s2);
+
+/*
+** global utils
+*/
+void	ms_free_str_array(char **str);
 
 #endif

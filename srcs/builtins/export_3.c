@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2021/12/29 15:53:29 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 11:30:03 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_env	*ft_envnew(char *envp)
 	t_env		*re;
 	char		**sep;
 
-	re = (t_env *)malloc(sizeof(t_env));
+	re = (t_env *)malloc(sizeof(*re));
 	if (!re)
 		return (NULL);
 	sep = ft_split(envp, '=');

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:32:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 12:39:06 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 13:41:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	ms_getbin_path(char **bin)
 
 	if (ft_strchr(*bin, '/'))
 		return (0);
-	path = getenv("PATH");
+	path = ms_getenv("PATH");
 	dir = ft_split(path, ':');
 	if (!dir)
 		return (ERROR);

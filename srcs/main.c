@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 11:13:30 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 14:27:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,25 @@
 ** printf("----------\n");
 */
 t_env	*g_envp = NULL;
+
+static int	ms_increment_shlvl(void)
+{
+	int		ret;
+	int		i_level;
+	char	*level;
+
+	ret = 0;
+	level = ms_getenv("SHLVL");
+	if (!level)
+		ret = ms_setenv("SHLVL", "2");
+	else
+	{
+		i_level = ft_atoi(level);
+		++i_level;
+		ret = ms_setenv("SHLVL", ft_itoa(i_level));
+	}
+	return (ret);
+}
 
 static void	ms_display_special_status(int status)
 {
@@ -74,9 +93,9 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	g_envp = init_env(envp);
-	if (g_envp == NULL)
+	if (g_envp == NULL || ms_increment_shlvl() == ERROR)
 		return (EXIT_FAILURE);
-	term_type = getenv("TERM");
+	term_type = ms_getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 	{
 		ms_clearenv();
