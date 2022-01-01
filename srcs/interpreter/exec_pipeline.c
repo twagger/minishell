@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:18:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:13:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static int	ms_exec_pipe_sequence(\
 		exit (1);
 	ret = ms_exec_piped_command(node, exit_code);
 	ms_free_pipe_list(pipe);
+	if (ret == ST_EXIT)
+		ret = 0;
 	return (ret);
 }
 

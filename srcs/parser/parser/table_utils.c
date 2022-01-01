@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:53:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:12:41 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:55:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 static int	ms_free_line_args(char *line, char **args, int code)
 {
+	char	**begin;
+
 	if (line)
 		free(line);
 	if (args)
 	{
+		begin = args;
 		while (*args)
 		{
 			free(*args);
 			++args;
 		}
+		free(begin);
 	}
 	return (code);
 }
@@ -46,13 +50,17 @@ static t_trans	*ms_new_transition(char **args)
 
 void	ms_free_table(t_trans **trans)
 {
+	t_trans	**begin;
+
 	if (trans)
 	{
+		begin = trans;
 		while (*trans)
 		{
 			free(*trans);
 			++trans;
 		}
+		free(begin);
 	}
 }
 
@@ -70,10 +78,10 @@ int	ms_create_all_transitions(int fd, t_trans **trans)
 	{
 		args = ft_split(line, 9);
 		trans[++i] = ms_new_transition(args);
-		if (!trans[i])
-			ms_free_line_args(line, args, ERROR);
 		ms_free_line_args(line, args, 0);
 		line = NULL;
+		if (!trans[i])
+			return (ERROR);
 		if (ret == 0)
 			break ;
 		ret = ft_get_next_line(fd, &line, 0);

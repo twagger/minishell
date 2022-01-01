@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 10:01:48 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 15:19:32 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 23:07:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,12 @@ char	**ms_g_envp_to_envp(void)
 	int		i;
 	t_env	*tmp;
 	char	**envp;
+	char	*tmp_join;
 
 	i = 0;
 	tmp = g_envp;
-	while (tmp)
-	{
-		++i;
+	while (tmp && ++i)
 		tmp = tmp->next;
-	}
 	envp = (char **)malloc(sizeof(*envp) * (i + 1));
 	if (!envp)
 		return (NULL);
@@ -33,7 +31,11 @@ char	**ms_g_envp_to_envp(void)
 	i = -1;
 	while (tmp)
 	{
-		envp[++i] = ft_strjoin(tmp->name, ft_strjoin("=", tmp->content));
+		tmp_join = ft_strjoin("=", tmp->content);
+		if (!tmp_join)
+			return (NULL);
+		envp[++i] = ft_strjoin(tmp->name, tmp_join);
+		free(tmp_join);
 		tmp = tmp->next;
 	}
 	return (envp);

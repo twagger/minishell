@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2021/11/12 15:14:17 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 22:32:19 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	**ft_split_qu(char *s, char c)
 	count_ws = count_w_qu(s, c);
 	arr = (char **)malloc((count_ws + 1) * sizeof(char *));
 	if (!arr)
-		return (0);
+		return (NULL);
 	ft_split_2_qu(&arr, s, c, count_ws);
 	return (arr);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 15:17:44 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 09:57:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	ms_handle_ctrl_keys(t_history **histo, char c)
 	if (c == ms_ctrl_key('c'))
 	{
 		ms_histo_clean(histo);
-		return (1);
+		return (CTRL_C);
 	}
 	else if (c == ms_ctrl_key('d') && ft_strlen((*histo)->data) == 0)
 	{
@@ -32,7 +32,7 @@ static int	ms_handle_ctrl_keys(t_history **histo, char c)
 		(*histo)->data = ft_strdup("exit");
 		printf("exit\n");
 		free(tmp);
-		return (2);
+		return (CTRL_D);
 	}
 	else
 		return (0);

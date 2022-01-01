@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:32:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 13:41:00 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 22:59:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char	*ms_getgood_path(char **dir, char *bin)
 		free(*dir);
 		++dir;
 	}
+	free(dir);
 	return (bin);
 }
 

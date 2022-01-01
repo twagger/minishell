@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:25:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 14:59:27 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:53:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,17 @@
 
 void	ms_free_str_array(char **str)
 {
+	char	**begin;
+
 	if (str)
 	{
+		begin = str;
 		while (*str)
 		{
 			free(*str);
 			++str;
 		}
+		free(begin);
 	}
 }
 

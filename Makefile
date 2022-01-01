@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2021/12/30 13:33:37 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/01 09:43:47 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -103,6 +103,11 @@ LADDFLAGS	:= -lreadline -ltermcap
 ifeq ($(DEBUG), true)
 	CFLAGS	+= -fsanitize=address -g3 -O0
 endif
+
+ifeq ($(OPTI), false)
+	CFLAGS	+= -O0
+endif
+
 
 ################################################################################
 #                                    RULES                                     #

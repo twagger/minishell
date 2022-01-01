@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 14:45:08 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:36:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_env	*g_envp = NULL;
 static int	ms_increment_shlvl(void)
 {
 	int		ret;
+	char	*str_inc_level;
 	int		i_level;
 	char	*level;
 
@@ -36,8 +37,11 @@ static int	ms_increment_shlvl(void)
 	else
 	{
 		i_level = ft_atoi(level);
-		++i_level;
-		ret = ms_setenv("SHLVL", ft_itoa(i_level));
+		str_inc_level = ft_itoa(++i_level);
+		if (!str_inc_level)
+			return (ERROR);
+		ret = ms_setenv("SHLVL", str_inc_level);
+		free(str_inc_level);
 	}
 	return (ret);
 }
@@ -89,6 +93,7 @@ int	main(int ac, char **av, char **envp)
 {
 	struct termios	orig_termios;
 	char			*term_type;
+	int				exit_code;
 
 	(void)ac;
 	(void)av;
@@ -101,13 +106,10 @@ int	main(int ac, char **av, char **envp)
 		ms_clearenv();
 		return (EXIT_FAILURE);
 	}
-	if (ms_loop(&orig_termios) == ERROR)
-	{
-		ms_disable_raw_mode(&orig_termios);
-		ms_clearenv();
-		return (EXIT_FAILURE);
-	}
+	exit_code = ms_loop(&orig_termios);
 	ms_disable_raw_mode(&orig_termios);
 	ms_clearenv();
-	return (EXIT_SUCCESS);
+	if (exit_code == ERROR)
+		return (EXIT_FAILURE);
+	return ((exit_code * -1) - 2);
 }

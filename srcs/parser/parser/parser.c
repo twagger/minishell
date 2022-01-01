@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 11:13:23 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 11:24:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,14 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 {
 	t_stack	*s_tok;
 	t_stack	*s_state;
+	char	*tmp;
 
 	if (!*input)
 		return (ERROR);
-	s_tok = ms_new_stack_item(ft_strdup((*input)->value), (*input)->type, -1);
+	tmp = ft_strdup((*input)->value);
+	if ((*input)->value && !tmp)
+		return (ERROR);
+	s_tok = ms_new_stack_item(tmp, (*input)->type, -1);
 	if (!s_tok)
 		return (ERROR);
 	ms_add_front(stack, s_tok);

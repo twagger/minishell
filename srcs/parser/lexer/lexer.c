@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 15:14:08 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 22:35:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,6 @@ t_token	*ms_tokenizer(char *line)
 		ft_tokenadd_back(&token, current);
 		i++;
 	}
+	free(res);
 	return (token);
 }

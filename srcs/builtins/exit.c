@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/28 17:44:47 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/01 10:29:48 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ int	ms_exit(int ac, char **av)
 	if (ac == 2)
 	{
 		if (code >= 0 && code <= 255)
-			exit(code);
+			return (ST_EXIT + (code * -1));
 		else
-			exit(EXIT_FAILURE);
+			return (EXIT_FAILURE);
 	}
-	exit(EXIT_SUCCESS);
+	return (ST_EXIT);
 }
