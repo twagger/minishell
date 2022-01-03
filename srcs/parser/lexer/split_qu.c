@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/03 12:38:33 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/03 12:46:06 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	**ft_split_qu(char *s, char c)
 	printf("count words:%d\n", count_ws);
 	arr = (char **)malloc((count_ws + 1) * sizeof(char *));
 	if (!arr)
-		return (0);
+		return (NULL);
 	ft_split_2_qu(&arr, s, c, count_ws);
 	return (arr);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:17:09 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:00:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@
 
 static int	ms_command_launcher(char **args)
 {
-	int	ret;
+	int		ret;
+	char	**envp;
 
 	if (ms_getbin_path(&args[0]) == ERROR)
 		return (ERROR);
-	ret = execve(args[0], args, NULL);
+	envp = ms_g_envp_to_envp();
+	if (!envp)
+		return (ERROR);
+	ret = execve(args[0], args, envp);
+	ms_free_str_array(envp);
 	if (ret == ERROR)
 	{
 		if (errno == EAGAIN)
@@ -75,7 +80,7 @@ static int	ms_execute(char **args)
 
 static char	**ms_visit(t_node *node, char **args, int exit_code)
 {
-	if (!node || (node && node->type == A_PIPE))
+	if (!args || !node || (node && node->type == A_PIPE))
 		return (args);
 	args = ms_visit(node->left, args, exit_code);
 	args = ms_visit(node->right, args, exit_code);
@@ -109,23 +114,23 @@ int	ms_exec_simple_command(t_node *ast, int exit_code, int *fd)
 	char	**args;
 	int		ret;
 
-	args = ms_init_arg_array();
-	args = ms_visit(ast, args, exit_code);
+	ret = 0;
+	args = ms_visit(ast, ms_init_arg_array(), exit_code);
 	if (args)
 	{
-		if (ms_is_builtin(args[0]))
-			ret = ms_execute_builtin(args);
-		else
-			ret = ms_execute(args);
-		if (!ms_is_builtin(args[0]) && ret > 0 && ret < 128)
-			printf("minishell: %s\n", strerror(ret));
-		ms_free_arg_array(args);
+		if (args[0])
+		{
+			if (ms_is_builtin(args[0]))
+				ret = ms_execute_builtin(args);
+			else
+				ret = ms_execute(args);
+			if (!ms_is_builtin(args[0]) && ret > 0 && ret < 128)
+				printf("minishell: %s\n", strerror(ret));
+		}
+		ms_free_str_array(args);
 	}
 	else
-	{
-		ms_free_arg_array(args);
 		ret = ERROR;
-	}
 	if (fd[0] != -1)
 		if (ms_restore_std_fd(fd) == ERROR)
 			ret = ERROR;
@@ -144,22 +149,22 @@ int	ms_exec_piped_command(t_node *ast, int exit_code)
 	char	**args;
 	int		ret;
 
-	args = ms_init_arg_array();
-	args = ms_visit(ast, args, exit_code);
+	ret = 0;
+	args = ms_visit(ast, ms_init_arg_array(), exit_code);
 	if (args)
 	{
-		if (ms_is_builtin(args[0]))
-			ret = ms_execute_builtin(args);
-		else
-			ret = ms_command_launcher(args);
-		ms_free_arg_array(args);
-		if (ret > 0 && ret < 128)
-			printf("minishell: %s\n", strerror(ret));
+		if (args[0])
+		{
+			if (ms_is_builtin(args[0]))
+				ret = ms_execute_builtin(args);
+			else
+				ret = ms_command_launcher(args);
+			if (ret > 0 && ret < 128)
+				printf("minishell: %s\n", strerror(ret));
+		}
+		ms_free_str_array(args);
 	}
 	else
-	{
-		ms_free_arg_array(args);
 		ret = 1;
-	}
 	return (ret);
 }

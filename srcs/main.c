@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:39:15 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 10:36:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,29 @@
 ** printf("----------\n");
 */
 t_env	*g_envp = NULL;
+
+static int	ms_increment_shlvl(void)
+{
+	int		ret;
+	char	*str_inc_level;
+	int		i_level;
+	char	*level;
+
+	ret = 0;
+	level = ms_getenv("SHLVL");
+	if (!level)
+		ret = ms_setenv("SHLVL", "2");
+	else
+	{
+		i_level = ft_atoi(level);
+		str_inc_level = ft_itoa(++i_level);
+		if (!str_inc_level)
+			return (ERROR);
+		ret = ms_setenv("SHLVL", str_inc_level);
+		free(str_inc_level);
+	}
+	return (ret);
+}
 
 static void	ms_display_special_status(int status)
 {
@@ -70,25 +93,23 @@ int	main(int ac, char **av, char **envp)
 {
 	struct termios	orig_termios;
 	char			*term_type;
+	int				exit_code;
 
 	(void)ac;
 	(void)av;
 	g_envp = init_env(envp);
-	if (g_envp == NULL)
+	if (g_envp == NULL || ms_increment_shlvl() == ERROR)
 		return (EXIT_FAILURE);
-	term_type = getenv("TERM");
+	term_type = ms_getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 	{
 		ms_clearenv();
 		return (EXIT_FAILURE);
 	}
-	if (ms_loop(&orig_termios) == ERROR)
-	{
-		ms_disable_raw_mode(&orig_termios);
-		ms_clearenv();
-		return (EXIT_FAILURE);
-	}
+	exit_code = ms_loop(&orig_termios);
 	ms_disable_raw_mode(&orig_termios);
 	ms_clearenv();
-	return (EXIT_SUCCESS);
+	if (exit_code == ERROR)
+		return (EXIT_FAILURE);
+	return ((exit_code * -1) - 2);
 }

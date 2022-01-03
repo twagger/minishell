@@ -6,25 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 12:02:01 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 11:13:20 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 13:25:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
-#include <stdlib.h>
-#include "libft.h"
-
-void	ms_clear_str_array(char **str)
-{
-	if (str)
-	{
-		while (*str)
-		{
-			free(*str);
-			++str;
-		}
-	}
-}
+#include "minishell.h"
 
 static size_t	ft_nb_words(char const *s, char c)
 {
@@ -58,13 +44,13 @@ static	char	*ft_free_words(char **res, size_t nb)
 	return (NULL);
 }
 
-static	char	*ft_word_dup(char **tab, size_t i, const char *str, char sep)
+static	char	*ft_word_dup(char **arr, size_t i, const char *str, char sep)
 {
 	char	*word;
 
 	word = ft_substr(str, 0, ft_strchr(str, sep) - str);
 	if (!(word))
-		return (ft_free_words(tab, i));
+		return (ft_free_words(arr, i));
 	return (word);
 }
 

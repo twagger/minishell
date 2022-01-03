@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 16:30:35 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 13:26:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,12 @@ static char	*ms_set_cdpath_currpath(char *rep)
 		trypath = ms_join_with_slash(cdpath[i], rep);
 		if (access(trypath, F_OK | R_OK) == 0)
 		{
-			ms_clear_str_array(cdpath);
+			ms_free_str_array(cdpath);
 			return (trypath);
 		}
 		free(trypath);
 	}
-	ms_clear_str_array(cdpath);
+	ms_free_str_array(cdpath);
 	return (ft_strdup(rep));
 }
 

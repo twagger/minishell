@@ -6,7 +6,11 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/12/31 15:13:48 by ifeelbored       ###   ########.fr       */
+=======
+/*   Updated: 2022/01/01 22:35:51 by twagner          ###   ########.fr       */
+>>>>>>> b813838f5b4c587430e096643c0d981ba7e10332
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +95,6 @@ t_token	*ms_tokenizer(char *line)
 		ft_tokenadd_back(&token, current);
 		i++;
 	}
+	free(res);
 	return (token);
 }

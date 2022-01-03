@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2021/12/29 15:53:29 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/01 22:55:51 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,23 @@ void	ft_envadd(t_env **lst, t_env *new)
 t_env	*ft_envnew(char *envp)
 {
 	t_env		*re;
-	char		**sep;
+	char		*key;
+	char		*value;
 
-	re = (t_env *)malloc(sizeof(t_env));
+	re = (t_env *)malloc(sizeof(*re));
 	if (!re)
 		return (NULL);
-	sep = ft_split(envp, '=');
-	if (!sep)
+	key = ft_substr(envp, 0, ft_strchr(envp, '=') - envp);
+	value = ft_substr(envp, ft_strchr(envp, '=') - envp + 1, \
+		ft_strlen(envp) - ft_strlen(key) - 1);
+	if (!key || !value)
+	{
+		free(key);
+		free(value);
 		return (NULL);
-	re->name = sep[0];
-	re->content = sep[1];
+	}
+	re->name = key;
+	re->content = value;
 	re->next = 0;
 	return (re);
 }

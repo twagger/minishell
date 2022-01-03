@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:02:55 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/12 11:24:27 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:10:10 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,63 +22,31 @@ static int	ms_args_len(char **args)
 	return (i);
 }
 
-void	ms_free_arg_array(char **args)
-{
-	if (args)
-	{
-		while (*args)
-		{
-			free(*args);
-			++args;
-		}
-	}
-}
-
 char	**ms_add_arg_back(char **args, char *data)
 {
 	int		i;
-	int		ac;
 	char	**new;
 
 	if (!args)
 		return (NULL);
-	ac = ms_args_len(args);
-	new = (char **)malloc(sizeof(*new) * (ac + 2));
+	new = (char **)malloc(sizeof(*new) * (ms_args_len(args) + 2));
 	if (!new)
-	{
-		ms_free_arg_array(args);
-		return (NULL);
-	}
-	new[ac + 1] = NULL;
+		return (ms_free_str_array_null(args));
 	i = -1;
 	while (args[++i])
+	{
 		new[i] = ft_strdup(args[i]);
-	new[i] = ft_strdup(data);
-	ms_free_arg_array(args);
-	return (new);
-}
-
-char	**ms_add_arg_front(char **args, char *cmd)
-{
-	int		i;
-	int		ac;
-	char	**new;
-
-	if (!args)
-		return (NULL);
-	ac = ms_args_len(args);
-	new = (char **)malloc(sizeof(*new) * (ac + 2));
-	if (!new)
-	{
-		ms_free_arg_array(args);
-		return (NULL);
+		if (!new[i])
+		{
+			ms_free_str_array(args);
+			return (ms_free_str_array_null(new));
+		}
 	}
-	new[ac + 1] = NULL;
-	new[0] = ft_strdup(cmd);
-	i = -1;
-	while (args[++i])
-		new[i + 1] = ft_strdup(args[i]);
-	ms_free_arg_array(args);
+	ms_free_str_array(args);
+	new[i] = ft_strdup(data);
+	if (!new[i])
+		return (ms_free_str_array_null(new));
+	new[i + 1] = NULL;
 	return (new);
 }
 

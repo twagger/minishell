@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:15:46 by twagner          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:06:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ typedef enum e_pipe_ends
 int		ms_getbin_path(char **bin);
 char	**ms_init_arg_array(void);
 char	**ms_add_arg_back(char **array, char *data);
-char	**ms_add_arg_front(char **array, char *cmd);
 void	ms_free_arg_array(char **array);
 
 int		ms_is_builtin(char *command);
