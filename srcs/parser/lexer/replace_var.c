@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:44:06 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/03 12:44:16 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	*replace_var(char *c, char *cmd, int index)
 	return (cmd);
 }
 
-char	*check_if_envvar(char *cmd)
+char	*check_if_envvar(char *cmd, char c)
 {
 	int		i;
 	char	*new;
