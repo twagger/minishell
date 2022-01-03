@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 12:44:16 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/03 21:29:55 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char	*replace_var(char *c, char *cmd, int index)
 	int		i;
 
 	len = env_len(c);
+	//printf("cmd:%s, %d, %d\n",c, len, index);
 	if (!len)
 		return (0);
 	var = malloc((len + 1) * sizeof(char));
@@ -86,18 +87,22 @@ char	*replace_var(char *c, char *cmd, int index)
 		var[i] = c[i];
 	}
 	var[i] = '\0';
+	//printf("var:%s\n",var);
 	newvar = ms_getenv(var);
 	cmd = replcace_var_2(cmd, var, newvar, index);
+	//printf("cmddd:%s\n",cmd);
 	free(var);
 	return (cmd);
 }
 
-char	*check_if_envvar(char *cmd, char c)
+char	*check_if_envvar(char *cmd)
 {
 	int		i;
 	char	*new;
+	int 	len;
 
 	i = -1;
+	len = 0;
 	new = NULL;
 	while (cmd[++i])
 	{
@@ -105,11 +110,32 @@ char	*check_if_envvar(char *cmd, char c)
 		{
 			if (cmd[i + 1])
 				new = replace_var(&cmd[i + 1], cmd, i);
+			if (new)
+				cmd = new;
+			//printf("new :%s\n", new);
 		}
 	}
+	// while (*cmd)
+	// {
+	// 	printf("CHECK!:%s\n", cmd);
+	// 	i++;
+	// 	if (*cmd == '$')
+	// 	{
+	// 		if (*(cmd + 1))
+	// 		{
+	// 			new = replace_var(cmd + 1, cmd, i + len, &len);
+	// 			printf("NEW:%s\n", new);
+	// 			cmd = new;
+	// 			cmd = cmd + len + 1;
+	// 		}
+	// 	}
+	// 	else
+	// 		cmd++;
+
+	// }
 	if (new)
 	{
-		free(cmd);
+		//free(cmd);
 		return (new);
 	}
 	return (cmd);

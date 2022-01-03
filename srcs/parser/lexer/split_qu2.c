@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 09:26:04 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 12:38:32 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/03 22:33:24 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,15 @@ int	count_w_qu_2(int state, char *s, int *count, int index)
 		state = check_quote('\'', s, index, state);	
 	else if (sep(s[index], '\"') == 1)
 		state = check_quote('\"', s, index, state);
-	else if (state < 2 && sep(s[index - 1], ' ') == 1)
+	else if (state < 2 && index > 0 && sep(s[index - 1], ' ') == 1)
 		state = 1;
 	else
 	{	
 		if (state == 1)
 			(*count) = (*count) + 1;
 		state = 0;
-	}
+	}	
+	//printf("state:%d\n", state);
 	return (state);
 }
 
@@ -106,16 +107,16 @@ int	len_w_qu(char *s, char c)
 		return (0);
 	while (*s && sep(*s, c) == 0)
 	{
-		if (*s ! '\'' && *s != '\"')
+		//if ((*s != '\'') && (*s != '\"'))
+		count++;
+		s++;
+	}
+	while (*s && sep(*s, ' ') == 0)
+	{
+		if (*s != ' ')
 			count++;
 		s++;
 	}
-	// while (*s && sep(*s, ' ') == 0)
-	// {
-	// 	if (*s != ' ')
-	// 		count++;
-	// 	s++;
-	// }
 	return (count);
 }
 
@@ -125,19 +126,21 @@ int	int_word(char *s, char c, int index, char ***arr)
 	int	i;
 
 	len_ws = len_w_qu(s, c);
-	printf("len: %d\n", len_ws);
+	//printf("len: %d\n", len_ws);
 	if (!len_ws)
 		len_ws = len_w_qu(s, '\0');
 	(*arr)[index] = (char *)malloc((len_ws + 1) * sizeof(char));
 	if (!(*arr)[index])
 		return (0);
 	i = 0;
-	while (*s && i < len_ws)
+	while (*s && i < len_ws && *s != ' ')
 	{
-		//if (*s != '\"' && *s != '\'')
-		(*arr)[index][i++] = *s++;
+		if (*s != '\"' && *s != '\'')
+			(*arr)[index][i++] = *s;
+		s++;
 	}
 	(*arr)[index][i] = '\0';
-	(*arr)[index] = check_if_envvar((*arr)[index]);
+	if (c == '\"')
+		(*arr)[index] = check_if_envvar((*arr)[index]);
 	return (len_ws);
 }
