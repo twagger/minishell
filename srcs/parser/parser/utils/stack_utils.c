@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 15:27:36 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 16:41:54 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ms_add_front(t_stack **stack, t_stack *item)
 		return (ERROR);
 	item->next = *stack;
 	*stack = item;
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 void	ms_free_stack_item(t_stack *stack)

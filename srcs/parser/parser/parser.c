@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 15:44:04 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 16:41:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 	}
 	ms_add_front(stack, s_state);
 	*input = (*input)->next;
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 /*
@@ -185,11 +185,11 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 	{
 		ft_tokenadd_back(&tok_list, tok_end);
 		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
-			builder->ast = NULL;
+			builder->ast = NULL; // posssible leak
 		else if (!builder->ast && builder->buffer[0])
 			builder->ast = builder->buffer[0];
 	}
 	ms_free_tokens(tok_list);
-	free(stack);
+	ms_free_stack_item(stack);
 	return (ms_fix_param_types(builder));
 }
