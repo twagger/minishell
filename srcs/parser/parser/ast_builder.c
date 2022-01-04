@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/24 11:47:09 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 12:28:27 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static int	ms_stack_to_buffer(\
 		ms_free_tree(new);
 		return (ERROR);
 	}
-	ms_free_stack_item(item);
 	return (EXIT_SUCCESS);
 }
 
@@ -106,12 +105,13 @@ int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc)
 	if (nb == 1 && popped[0]->type < 100)
 	{
 		if (ms_stack_to_buffer(popped[0], reduc, builder) == ERROR)
-			return (ERROR);
+			return (ms_free_stack(popped, ERROR));
 	}
 	else
 	{
 		if (ms_apply_reduction(builder, popped, reduc) == ERROR)
-			return (ERROR);
+			return (ms_free_stack(popped, ERROR));
 	}
+	ms_free_stack(popped, ERROR);
 	return (EXIT_SUCCESS);
 }

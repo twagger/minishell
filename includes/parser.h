@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 15:10:40 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/04 14:00:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action);
 int		ms_buffer_add_back(t_ast_builder **builder, t_node *new);
 t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
-t_node	*ms_fix_param_types(t_node *tree);
+t_node	*ms_fix_param_types(t_ast_builder *builder);
 int		ms_execute_ast(t_node *ast, int exit_code);
 int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
 		t_node **node);

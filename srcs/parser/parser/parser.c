@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 11:24:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 14:00:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,6 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 			builder->ast = builder->buffer[0];
 	}
 	ms_free_tokens(tok_list);
-	if (builder->ast && builder->ast->type == -1)
-		builder->ast->type = ROOT;
-	return (ms_fix_param_types(builder->ast));
+	free(stack);
+	return (ms_fix_param_types(builder));
 }

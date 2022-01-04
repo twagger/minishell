@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:32:01 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 22:05:10 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/04 09:16:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ char	*ms_build_bin_path(char *path, char *bin)
 char	*ms_getgood_path(char **dir, char *bin)
 {
 	char	*bin_path;
+	char	**begin;
 
+	begin = dir;
 	while (*dir)
 	{
 		bin_path = ms_build_bin_path(*dir, bin);
@@ -61,7 +63,7 @@ char	*ms_getgood_path(char **dir, char *bin)
 		free(*dir);
 		++dir;
 	}
-	//free(dir);
+	free(begin);
 	return (bin);
 }
 

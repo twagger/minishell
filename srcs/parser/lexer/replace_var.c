@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 21:29:55 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/04 11:45:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,8 @@ char	*check_if_envvar(char *cmd)
 {
 	int		i;
 	char	*new;
-	int 	len;
 
 	i = -1;
-	len = 0;
 	new = NULL;
 	while (cmd[++i])
 	{

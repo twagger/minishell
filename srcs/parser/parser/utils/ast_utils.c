@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 15:54:53 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/24 11:48:02 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 14:02:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,15 @@ static void	ms_visit_fix_types(t_node *node)
 	}
 }
 
-t_node	*ms_fix_param_types(t_node *tree)
+t_node	*ms_fix_param_types(t_ast_builder *builder)
 {
-	ms_visit_fix_types(tree);
-	return (tree);
+	t_node	*ast;
+
+	if (builder->ast && builder->ast->type == -1)
+		builder->ast->type = ROOT;
+	ms_visit_fix_types(builder->ast);
+	ast = builder->ast;
+	free(builder->buffer);
+	free(builder);
+	return (ast);
 }

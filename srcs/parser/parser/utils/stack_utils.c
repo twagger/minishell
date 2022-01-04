@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 11:21:43 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 12:10:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,17 @@ void	ms_free_stack_item(t_stack *stack)
 
 int	ms_free_stack(t_stack **stack, int return_code)
 {
+	t_stack	**begin;
+
 	if (stack)
 	{
+		begin = stack;
 		while (*stack)
 		{
 			ms_free_stack_item(*stack);
 			++stack;
 		}
+		free(begin);
 	}
 	return (return_code);
 }
