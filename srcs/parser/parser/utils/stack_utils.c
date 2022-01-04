@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 12:10:01 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 14:08:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_stack	**ms_pop_stack(t_stack **stack, int nb)
 		while (i < nb)
 		{
 			next = (*stack)->next;
-			free(*stack);
+			ms_free_stack_item(*stack);
 			*stack = next;
 			next = (*stack)->next;
 			popped[i] = *stack;
