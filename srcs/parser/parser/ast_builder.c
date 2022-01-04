@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 21:04:45 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 12:28:27 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 15:44:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action)
 */
 
 static int	ms_apply_reduction(\
-	t_ast_builder **builder, t_stack **popped, int reduction)
+	t_stack *popped, int reduction, t_ast_builder **builder)
 {
 	t_node	*node;
 
@@ -95,23 +95,27 @@ static int	ms_apply_reduction(\
 ** build a binary tree from bottom - left to top.
 */
 
-int	ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc)
+int	ms_ast_builder(t_ast_builder **builder, t_stack *popped, int reduc)
 {
-	int	nb;
+	int		nb;
+	t_stack	*tmp;
 
 	nb = 0;
-	while (popped[nb])
-		++nb;
-	if (nb == 1 && popped[0]->type < 100)
+	tmp = popped;
+	while (tmp)
 	{
-		if (ms_stack_to_buffer(popped[0], reduc, builder) == ERROR)
-			return (ms_free_stack(popped, ERROR));
+		tmp = tmp->next;
+		++nb;
+	}
+	if (nb == 1 && popped->type < 100)
+	{
+		if (ms_stack_to_buffer(popped, reduc, builder) == ERROR)
+			return (ERROR);
 	}
 	else
 	{
-		if (ms_apply_reduction(builder, popped, reduc) == ERROR)
-			return (ms_free_stack(popped, ERROR));
+		if (ms_apply_reduction(popped, reduc, builder) == ERROR)
+			return (ERROR);
 	}
-	ms_free_stack(popped, ERROR);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 14:12:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 15:44:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static int	ms_reduce(\
 	int		num_state;
 	t_stack	*reduction;
 	t_stack	*state;
-	t_stack	**popped;
+	t_stack	*popped;
 
 	popped = ms_pop_stack(stack, table[i_table]->nb_reduce);
 	if (!popped)
@@ -128,6 +128,7 @@ static int	ms_reduce(\
 	ms_add_front(stack, state);
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
+	ms_free_stack(popped, 0);
 	return (EXIT_SUCCESS);
 }
 

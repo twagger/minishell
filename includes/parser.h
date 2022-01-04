@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 14:00:36 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 14:45:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,11 +163,11 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table);
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
 t_stack	*ms_new_stack_item(void *content, int type, int state);
-t_stack	**ms_pop_stack(t_stack **stack, int nb);
+t_stack	*ms_pop_stack(t_stack **stack, int nb);
 int		ms_add_front(t_stack **stack, t_stack *item);
 void	ms_free_stack_item(t_stack *stack);
-int		ms_free_stack(t_stack **stack, int return_code);
-int		ms_ast_builder(t_ast_builder **builder, t_stack **popped, int reduc);
+int		ms_free_stack(t_stack *stack, int return_code);
+int		ms_ast_builder(t_ast_builder **builder, t_stack *popped, int reduc);
 
 /*
 ** ast
@@ -182,7 +182,6 @@ t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
 void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
 t_node	*ms_fix_param_types(t_ast_builder *builder);
 int		ms_execute_ast(t_node *ast, int exit_code);
-int		ms_build_subtree(t_ast_builder **builder, t_stack **popped, \
-		t_node **node);
+int		ms_build_subtree(t_ast_builder **builder, t_stack *term, t_node **node);
 
 #endif

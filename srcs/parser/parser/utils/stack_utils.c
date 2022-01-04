@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 12:27:24 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 14:08:49 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 15:27:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,17 @@ t_stack	*ms_new_stack_item(void *content, int type, int state)
 	return (new);
 }
 
-t_stack	**ms_pop_stack(t_stack **stack, int nb)
+t_stack	*ms_pop_stack(t_stack **stack, int nb)
 {
 	int		i;
 	t_stack	*next;
-	t_stack	**popped;
+	t_stack	*popped;
+	t_stack	*begin;
 
 	popped = NULL;
+	begin = NULL;
 	if (stack)
 	{
-		popped = (t_stack **)malloc(sizeof(*popped) * (nb + 1));
-		if (!popped)
-			return (NULL);
-		popped[nb] = NULL;
 		i = 0;
 		while (i < nb)
 		{
@@ -46,12 +44,22 @@ t_stack	**ms_pop_stack(t_stack **stack, int nb)
 			ms_free_stack_item(*stack);
 			*stack = next;
 			next = (*stack)->next;
-			popped[i] = *stack;
+			if (!popped)
+			{
+				popped = *stack;
+				begin = popped;
+			}
+			else
+			{
+				popped->next = *stack;
+				popped = popped->next;
+			}
 			*stack = next;
 			++i;
 		}
+		popped->next = NULL;
 	}
-	return (popped);
+	return (begin);
 }
 
 int	ms_add_front(t_stack **stack, t_stack *item)
@@ -72,19 +80,15 @@ void	ms_free_stack_item(t_stack *stack)
 	}
 }
 
-int	ms_free_stack(t_stack **stack, int return_code)
+int	ms_free_stack(t_stack *stack, int return_code)
 {
-	t_stack	**begin;
+	t_stack	*next;
 
-	if (stack)
+	while (stack)
 	{
-		begin = stack;
-		while (*stack)
-		{
-			ms_free_stack_item(*stack);
-			++stack;
-		}
-		free(begin);
+		next = stack->next;
+		ms_free_stack_item(stack);
+		stack = next;
 	}
 	return (return_code);
 }

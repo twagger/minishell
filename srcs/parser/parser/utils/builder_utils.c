@@ -6,34 +6,36 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 10:22:47 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/11 15:39:09 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 15:32:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-int	ms_build_subtree(t_ast_builder **builder, t_stack **term, t_node **node)
+int	ms_build_subtree(t_ast_builder **builder, t_stack *term, t_node **node)
 {
 	int		i;
 	t_node	*child;
 	t_node	*init;
 
-	i = -1;
+	i = 0;
 	init = *node;
-	while (term[++i])
+	while (term)
 	{
-		if (term[i]->type >= 100)
-			child = ms_get_popped(builder, term[i]->type, POP);
+		if (term->type >= 100)
+			child = ms_get_popped(builder, term->type, POP);
 		else
-			child = ms_new_node(ft_strdup(term[i]->data), term[i]->type, -1);
+			child = ms_new_node(ft_strdup(term->data), term->type, -1);
 		if (!child)
 			return (ERROR);
 		if (i == 0)
 			(*node)->right = child;
 		else
 			(*node)->left = child;
-		if (i == 1 && term[i + 1])
+		if (i == 1 && term->next)
 			*node = (*node)->left;
+		term = term->next;
+		++i;
 	}
 	*node = init;
 	return (EXIT_SUCCESS);
