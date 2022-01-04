@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:25:20 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/04 15:42:53 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	realloc_var_2(char *cmd, t_env **envp)
 	}
 	else
 	{
-		content = ft_strdup(ft_strchr(cmd, '='));
+		content = ft_strdup(ft_strchr(cmd, '=') + 1);
 		if (!content)
 			return (1);
 		free((*envp)->content);
@@ -55,14 +55,14 @@ int	realloc_var_2(char *cmd, t_env **envp)
 
 int	realloc_var(char *cmd, t_env *envp)
 {
-	size_t	len;
+	long	len;
 	char	*name;
 
 	len = 0;
 	len = ft_strchr(cmd, '+') - cmd;
-	if (!len)
+	if (len < 0)
 		len = ft_strchr(cmd, '=') - cmd;
-	name = ft_strduplen(cmd, len);
+	name = ft_strduplen(cmd, (size_t)len);
 	if (!name)
 		return (1);
 	while (envp)
