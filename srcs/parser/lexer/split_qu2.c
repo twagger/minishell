@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 09:26:04 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 22:33:24 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/04 12:41:30 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,11 @@ int	int_word(char *s, char c, int index, char ***arr)
 {
 	int	len_ws;
 	int	i;
+	int status;
 
+	status = 0;
 	len_ws = len_w_qu(s, c);
-	//printf("len: %d\n", len_ws);
+	printf("len: %d\n", len_ws);
 	if (!len_ws)
 		len_ws = len_w_qu(s, '\0');
 	(*arr)[index] = (char *)malloc((len_ws + 1) * sizeof(char));
@@ -135,12 +137,20 @@ int	int_word(char *s, char c, int index, char ***arr)
 	i = 0;
 	while (*s && i < len_ws && *s != ' ')
 	{
-		if (*s != '\"' && *s != '\'')
+		if (!status)
+		{
+			if (*s == '\'')
+				status = 1;
+			if (*s == '\"')
+				status = 2;
+		}
+		if (status == 0 ||(*s != '\"' && status == 2) ||  (*s != '\'' && status == 1))
 			(*arr)[index][i++] = *s;
 		s++;
 	}
 	(*arr)[index][i] = '\0';
-	if (c == '\"')
+	printf("(*arr)[index][i]:%s\n", (*arr)[index]);
+	if (status == 2 || status == 0)
 		(*arr)[index] = check_if_envvar((*arr)[index]);
 	return (len_ws);
 }

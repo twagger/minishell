@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/03 22:37:29 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/04 12:09:03 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_token	*ms_tokenizer(char *line)
 	res = ft_split_qu(line, ' ');
 	while (res[i])
 	{
-		//printf("res[i]:%s\n", res[i]);
+		printf("res[i]:|%s|\n", res[i]);
 		current = ft_newtoken(res[i]);
 		ft_tokenadd_back(&token, current);
 		i++;
