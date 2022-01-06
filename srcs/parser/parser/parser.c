@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 16:41:58 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/06 23:10:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,27 +150,26 @@ static int	ms_lr_parse(\
 		i_table = ms_get_table_index(input, NULL, (*stack)->state, table);
 		if (i_table == ERROR)
 			return (ERROR);
-		if (table[i_table]->action == SHIFT)
+		if (table[i_table]->action == ACT_SHIFT)
 		{
 			if (ms_shift(&input, stack, table[i_table]->next) == ERROR)
 				return (ERROR);
 		}
-		else if (table[i_table]->action == REDUCE)
+		else if (table[i_table]->action == ACT_REDUCE)
 		{
 			if (ms_reduce(stack, table, i_table, builder) == ERROR)
 				return (ERROR);
 		}
-		else if (table[i_table]->action == ACCEPT)
+		else if (table[i_table]->action == ACT_ACCEPT)
 			break ;
 		else
 			return (ERROR);
 	}
-	return (ACCEPT);
+	return (ACT_ACCEPT);
 }
 
 t_node	*ms_parser(t_token *tok_list, t_trans **table)
 {
-	t_token			*tok_end;
 	t_stack			*stack;
 	t_ast_builder	*builder;
 
@@ -180,15 +179,10 @@ t_node	*ms_parser(t_token *tok_list, t_trans **table)
 		return (NULL);
 	}
 	stack = NULL;
-	tok_end = ft_newtoken(NULL);
-	if (tok_end)
-	{
-		ft_tokenadd_back(&tok_list, tok_end);
-		if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
-			builder->ast = NULL; // posssible leak
-		else if (!builder->ast && builder->buffer[0])
-			builder->ast = builder->buffer[0];
-	}
+	if (ms_lr_parse(tok_list, table, &stack, &builder) == ERROR)
+		builder->ast = NULL; // posssible leak
+	else if (!builder->ast && builder->buffer[0])
+		builder->ast = builder->buffer[0];
 	ms_free_tokens(tok_list);
 	ms_free_stack_item(stack);
 	return (ms_fix_param_types(builder));

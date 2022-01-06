@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 14:45:21 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/06 22:26:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@
 
 typedef enum e_actions
 {
-	SHIFT,
-	REDUCE,
-	ACCEPT
+	ACT_SHIFT,
+	ACT_REDUCE,
+	ACT_ACCEPT,
+	ACT_REJECT
 }	t_actions;
 
 typedef enum e_rules
