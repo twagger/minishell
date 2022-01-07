@@ -6,60 +6,56 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:56:52 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 08:34:58 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:00:13 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser2.h"
 
-int	ms_push_input(t_stack **stack, t_token *input)
-{
-	t_stack	*new;
+/*
+** BASIC STACK MANIPULATION
+*/
 
-	new = (t_stack *)malloc(sizeof(*new));
-	if (!new)
-		return (ERROR);
-	new->type = input->type;
-	new->state = -1;
-	new->data = input->value;
-	new->next = *stack;
-	*stack = new;
-	return (OK);
+void	ms_add_popped(t_stack **popped, t_stack *stack)
+{
+	t_stack	*begin;
+
+	if (!(*popped))
+		*popped = stack;
+	else
+	{
+		while (popped->next)
+			popped = popped->next;
+		(*popped)->next = stack;
+		*popped = begin;
+	}
+	stack->next = NULL;
 }
 
-int	ms_push_reduction(t_stack **stack, int reduction)
+t_stack	*ms_pop_stack(t_stack **stack, int nb)
 {
-	t_stack	*new;
+	int		i;
+	t_stack	*next;
+	t_stack	*popped;
 
-	new = (t_stack *)malloc(sizeof(*new));
-	if (!new)
-		return (ERROR);
-	new->type = reduction;
-	new->state = -1;
-	new->data = NULL;
-	new->next = *stack;
-	*stack = new;
-	return (OK);
+	popped = NULL;
+	if (stack)
+	{
+		i = 0;
+		while (i < nb)
+		{
+			next = (*stack)->next;
+			free(*stack);
+			*stack = next;
+			next = (*stack)->next;
+			ms_add_popped(&popped, *stack);
+			*stack = next;
+			++i;
+		}
+		popped->next = NULL;
+	}
+	return (popped);
 }
-
-int	ms_push_state(t_stack **stack, int state)
-{
-	t_stack	*new;
-
-	if (state == ERROR)
-		return (ERROR);
-	new = (t_stack *)malloc(sizeof(*new));
-	if (!new)
-		return (ERROR);
-	new->type = -1;
-	new->state = state;
-	new->data = NULL;
-	new->next = *stack;
-	*stack = new;
-	return (OK);
-}
-
-// pop stack
 
 void	ms_clear_stack(t_stack *stack)
 {
@@ -86,4 +82,28 @@ t_stack	*ms_init_stack(void)
 	state_0->type = -1;
 	state_0->next = NULL;
 	return (state_0);
+}
+
+t_node	*ms_stack_to_node(t_stack *popped)
+{
+	t_node	*node;
+
+	node = (t_node *)malloc(sizeof(*node));
+	if (node)
+	{
+		node->type = popped->type;
+		node->reduc = -1;
+		if (popped->type >= R_PIPE_SEQUENCE)
+		{
+			node->type = -1;
+			node->reduc = popped->type;
+		}
+		node->data = popped->data;
+		popped->data = NULL;
+		node->left = NULL;
+		node->right = NULL;
+		node->next = NULL;
+		return (node);
+	}
+	return (NULL);
 }

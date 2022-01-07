@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 08:44:32 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 15:59:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,27 @@
 # include "parser.h"
 
 /*
-** STACK
+** PARSER
 */
-
-t_stack	*ms_init_stack(void);
-void	ms_clear_stack(t_stack *stack);
 int		ms_push_input(t_stack **stack, t_token *input);
 int		ms_push_reduction(t_stack **stack, int reduction);
 int		ms_push_state(t_stack **stack, int state);
+t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, int state);
+int		ms_get_next_state(t_stack *stack, t_trans **parsing_table);
 
 /*
-** PARSING TABLE
+** STACK
 */
-
-t_trans *ms_get_entry(t_token *input, t_trans **parsing_table, int state);
+t_stack	*ms_init_stack(void);
+void	ms_clear_stack(t_stack *stack);
+t_stack	*ms_pop_stack(t_stack **stack, int nb);
+void	ms_add_popped(t_stack **popped, t_stack *stack);
+t_node	*ms_stack_to_node(t_stack *popped);
 
 /*
-** INPUT
+** CLEANING
 */
-
 void	ms_clear_input(t_token *input);
-
-/*
-** TREE
-*/
-
 void	ms_clear_tree(t_node **node);
 
 #endif

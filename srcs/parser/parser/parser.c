@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 10:35:57 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/06 23:10:20 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 12:24:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,13 @@ static int	ms_shift(t_token **input, t_stack **stack, int state)
 ** FOR DEBUG, ADD THIS PART BEFORE ms_ast_builder :
 **
 **	printf("%i : ", reduction->type);
-**	int i;
-**	i = -1;
-**	while (popped[++i])
-**		printf("%i ", popped[i]->type);
+**	t_stack *tmp;
+**	tmp = popped;
+**	while (tmp)
+**	{
+**		printf("%i ", tmp->type);
+**		tmp = tmp->next;
+**	}
 **	printf("\n");
 */
 
@@ -126,6 +129,15 @@ static int	ms_reduce(\
 	if (!state)
 		return (ms_free_stack(popped, ERROR));
 	ms_add_front(stack, state);
+	printf("%i : ", reduction->type);
+	t_stack *tmp;
+	tmp = popped;
+	while (tmp)
+	{
+		printf("%i ", tmp->type);
+		tmp = tmp->next;
+	}
+	printf("\n");
 	if (ms_ast_builder(builder, popped, reduction->type) == ERROR)
 		return (ms_free_stack(popped, ERROR));
 	ms_free_stack(popped, 0);

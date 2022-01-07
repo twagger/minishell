@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/06 22:26:34 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 12:47:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_node
 	void			*data;
 	struct s_node	*left;
 	struct s_node	*right;
+	struct s_node	*next;
 }					t_node;
 
 typedef struct s_ast_builder
