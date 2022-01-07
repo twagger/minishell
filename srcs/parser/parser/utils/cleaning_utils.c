@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:58:18 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:05:11 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 22:59:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,17 @@ void	ms_clear_tree(t_node **node)
 			*node = NULL;
 		}
 	}
+}
+
+/*
+** PARSER CLEANING
+*/
+
+void	ms_parser_cleaning(\
+	t_node **tree, t_stack *stack, t_token *input, int ret)
+{
+	if (ret == ERROR)
+		ms_clear_tree(tree);
+	ms_clear_stack(stack);
+	ms_clear_input(input);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:16 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:12:47 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 23:05:29 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@
 ** Shift the current input into the stack and add the next state on top.
 */
 
-static int	ms_shift(t_stack **stack, t_token *input, int next_state)
+static int	ms_shift(t_stack **stack, t_token **input, int next_state)
 {
-	if (ms_push_input(stack, input) == ERROR)
+	if (ms_push_input(stack, *input) == ERROR)
 		return (ERROR);
 	if (ms_push_state(stack, next_state) == ERROR)
 		return (ERROR);
+	*input = (*input)->next;
 	return (RET_OK);
 }
 
@@ -87,15 +88,17 @@ int	ms_reject(void)
 ** and returns an output (synthax tree).
 */
 
-t_node	*ms_parser(t_token *input, t_trans **parsing_table)
+t_node	*ms_parser(t_token *input, t_trans **parsing_table)  //faire avancer l'input
 {
 	int		ret;
 	t_node	*tree;
 	t_trans	*pt_entry;
 	t_stack	*stack;
+	t_token *input_begin;
 
 	ret = RET_OK;
 	tree = NULL;
+	input_begin = input;
 	stack = ms_init_stack();
 	if (!stack)
 		return (NULL);
@@ -103,7 +106,7 @@ t_node	*ms_parser(t_token *input, t_trans **parsing_table)
 	{
 		pt_entry = ms_get_entry(input, parsing_table, stack->state);
 		if (pt_entry && pt_entry->action == ACT_SHIFT)
-			ret = ms_shift(&stack, input, pt_entry->next);
+			ret = ms_shift(&stack, &input, pt_entry->next);
 		else if (pt_entry && pt_entry->action == ACT_REDUCE)
 			ret = ms_reduce(&stack, parsing_table, pt_entry, &tree);
 		else if (pt_entry && pt_entry->action == ACT_ACCEPT)
@@ -111,9 +114,6 @@ t_node	*ms_parser(t_token *input, t_trans **parsing_table)
 		else
 			ret = ms_reject();
 	}
-	if (ret == ERROR)
-		ms_clear_tree(&tree);
-	ms_clear_stack(stack);
-	ms_clear_input(input);
+	ms_parser_cleaning(&tree, stack, input_begin, ret);
 	return (tree);
 }
