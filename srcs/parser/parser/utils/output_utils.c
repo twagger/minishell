@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:59:05 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 15:59:36 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:51:56 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser2.h"
+#include "parser.h"
 
 /*
 ** REMOVE NODE FROM LIST
@@ -23,24 +23,24 @@ void	ms_remove_node_from_list(t_node **tree, t_node *node)
 	t_node	*previous;
 	t_node	*tmp;
 
-	if (*tree == *node)
+	if (*tree == node)
 	{
-		*tree = *node->next;
+		*tree = node->next;
 		return ;
 	}
 	else
 	{
 		previous = NULL;
-		tmp = tree;
-		while (*tmp)
+		tmp = *tree;
+		while (tmp)
 		{
-			if (*tmp == *node)
+			if (tmp == node)
 			{
-				previous->next = (*tmp)->next;
+				previous->next = tmp->next;
 				return ;
 			}
-			previous = *tmp;
-			*tmp = (*tmp)->next;
+			previous = tmp;
+			tmp = tmp->next;
 		}
 	}
 }
@@ -63,7 +63,7 @@ t_node	*ms_search_reduction(t_node **tree, int reduction)
 		if ((*tree)->reduc == reduction)
 		{
 			result = *tree;
-			ms_remove_node_from_list(begin, *tree);
+			ms_remove_node_from_list(&begin, *tree);
 			break ;
 		}
 		*tree = (*tree)->next;
@@ -105,7 +105,7 @@ int	ms_build_tree(t_node **tree, t_node *reduc_node, t_stack **popped)
 {
 	int		i;
 	t_node	*child;
-	t_node	*begin;
+	t_stack	*begin;
 
 	i = -1;
 	begin = *popped;
@@ -118,11 +118,11 @@ int	ms_build_tree(t_node **tree, t_node *reduc_node, t_stack **popped)
 		if (!child)
 			return (ERROR);
 		if (++i == 0)
-			(*reduc_node)->right = child;
+			reduc_node->right = child;
 		else
-			(*reduc_node)->left = child;
+			reduc_node->left = child;
 		if (i == 1 && (*popped)->next)
-			*node = (*node)->left;
+			reduc_node = reduc_node->left;
 		(*popped) = (*popped)->next;
 	}
 	*popped = begin;

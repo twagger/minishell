@@ -5,13 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:11:39 by twagner          ###   ########.fr       */
+/*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
+/*   Updated: 2022/01/07 12:47:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER2_H
-# define PARSER2_H
+#ifndef PARSER_H
+# define PARSER_H
 # include "minishell.h"
 
 /*
@@ -141,7 +141,11 @@ typedef enum e_ast_types
 }	t_ast_types;
 
 /*
-** LEXER
+**FUNCTIONS
+*/
+
+/*
+** lexer
 */
 t_token	*ms_tokenizer(char *line);
 t_token	*ft_newtoken(void *content);
@@ -155,40 +159,31 @@ void	ft_tokenadd_back(t_token **lst, t_token *new);
 void	ms_free_tokens(t_token *tokens);
 
 /*
-** PARSER
+** parser
 */
-t_node	*ms_parser(t_token *input, t_trans **parsing_table);
-int		ms_push_input(t_stack **stack, t_token *input);
-int		ms_push_reduction(t_stack **stack, int reduction);
-int		ms_push_state(t_stack **stack, int state);
-t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, int state);
-int		ms_get_next_state(t_stack *stack, t_trans **parsing_table);
-
-/*
-** PARSING TABLE
-*/
+t_node	*ms_parser(t_token *tok_list, t_trans **table);
 t_trans	**ms_init_parsing_table(void);
 void	ms_free_table(t_trans **trans);
-
-/*
-** STACK
-*/
-t_stack	*ms_init_stack(void);
-void	ms_clear_stack(t_stack *stack);
+t_stack	*ms_new_stack_item(void *content, int type, int state);
 t_stack	*ms_pop_stack(t_stack **stack, int nb);
-void	ms_add_popped(t_stack **popped, t_stack *stack);
-t_node	*ms_stack_to_node(t_stack *popped);
+int		ms_add_front(t_stack **stack, t_stack *item);
+void	ms_free_stack_item(t_stack *stack);
+int		ms_free_stack(t_stack *stack, int return_code);
+int		ms_ast_builder(t_ast_builder **builder, t_stack *popped, int reduc);
 
 /*
-** CLEANING
+** ast
 */
-void	ms_clear_input(t_token *input);
-void	ms_clear_tree(t_node **node);
-
-/*
-** OUTPUT
-*/
-int		ms_add_tree(t_node **tree, t_stack **popped, int reduction);
+t_node	*ms_new_node(void *data, int type, int reduc);
+void	ms_free_tree(t_node	*node);
+void	ms_visit_ast(t_node *node, int mode);
+int		ms_init_ast_builder(t_ast_builder **builder);
+t_node	*ms_get_popped(t_ast_builder **builder, int reduc, int action);
+int		ms_buffer_add_back(t_ast_builder **builder, t_node *new);
+t_node	*ms_buffer_remove(t_ast_builder **builder, int to_remove);
+void	ms_free_ast_builder(t_ast_builder **builder, int to_free);
+t_node	*ms_fix_param_types(t_ast_builder *builder);
 int		ms_execute_ast(t_node *ast, int exit_code);
+int		ms_build_subtree(t_ast_builder **builder, t_stack *term, t_node **node);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/04 13:51:54 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/07 16:07:19 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,12 +43,12 @@ SRCS		= srcs/main.c \
 			  srcs/parser/lexer/split_qu2.c \
 			  srcs/parser/lexer/replace_var.c \
 			  srcs/parser/lexer/replace_var2.c \
-			  srcs/parser/parser/ast_builder.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/parser/parser/utils/table_utils.c \
+			  srcs/parser/parser/utils/cleaning_utils.c \
 			  srcs/parser/parser/utils/stack_utils.c \
-			  srcs/parser/parser/utils/ast_utils.c \
-			  srcs/parser/parser/utils/builder_utils.c \
+			  srcs/parser/parser/utils/output_utils.c \
+			  srcs/parser/parser/utils/parser_utils.c \
 			  srcs/interpreter/interpreter.c \
 			  srcs/interpreter/exec_simple_command.c \
 			  srcs/interpreter/exec_pipeline.c \

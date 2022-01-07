@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 14:55:15 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:00:02 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:55:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser2.h"
+#include "parser.h"
 
 /*
 ** PUSH INTO THE STACK
@@ -82,7 +82,7 @@ int	ms_get_next_state(t_stack *stack, t_trans **parsing_table)
 	{
 		if (parsing_table[i]->state == state)
 		{
-			if (parsing_table[i]->event == input_type)
+			if (parsing_table[i]->event == stack->type)
 				return (parsing_table[i]->next);
 			else if (parsing_table[i]->event == DEFAULT)
 				next_state = parsing_table[i]->next;

@@ -6,11 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:58:18 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 15:59:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:05:11 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser2.h"
+#include "parser.h"
 
 /*
 ** CLEAR INPUT
