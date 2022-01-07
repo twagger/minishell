@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 22:01:03 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/06 22:25:44 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 08:50:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,3 @@ t_trans *ms_get_entry(t_token *input, t_trans **parsing_table, int state)
 }
 
 // Get next state
-
-// Get reduction
-
-// Get nb tokens
-
-// Free table

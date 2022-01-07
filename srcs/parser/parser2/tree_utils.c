@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:59:05 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/06 23:12:13 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 08:50:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 // add tree
 
 // create node
+
+// create subtree
 
 void	ms_clear_tree(t_node **node)
 {

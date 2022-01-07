@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 10:11:29 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/07 08:45:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 ** PARAMS
 */
 # define ERROR -1
+# define OK 0
 # define ST_EXIT -2
 # define ERROR_BIN_NOT_FOUND 127
 
