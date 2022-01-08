@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 15:45:27 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 17:09:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ void	ms_ignore_signals(void);
 int		ms_get_exit_status(int status);
 
 void	ms_print_exec_error(char *cmd, int error_code);
+
+int		ms_do_heredoc(t_node *tree, int nb);
 
 #endif

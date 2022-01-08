@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 15:46:19 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 16:02:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ static int	ms_execute(char **args)
 		if (wpid == ERROR)
 			return (ERROR);
 	}
-	printf("status : %i\n", status);
 	return (ms_get_exit_status(status));
 }
 
