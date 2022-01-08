@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:09:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:45:27 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,7 @@ int		ms_search_ast(t_node *node, int needle, int nb);
 void	ms_activate_signal_handler(void);
 void	ms_ignore_signals(void);
 int		ms_get_exit_status(int status);
+
+void	ms_print_exec_error(char *cmd, int error_code);
 
 #endif

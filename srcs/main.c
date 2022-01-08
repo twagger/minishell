@@ -6,60 +6,19 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 14:58:41 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:24:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "history.h"
 
-/*
-** TMP
-*/
-
-void	ms_visit_ast(t_node *node)
-{
-	if (!node)
-		return ;
-	ms_visit_ast(node->left);
-	ms_visit_ast(node->right);
-	if (node->reduc == R_SIMPLE_COMMAND)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_SIMPLE_COMMAND");
-	if (node->reduc == R_CMD_NAME)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_CMD_NAME");
-	if (node->reduc == R_CMD_WORD)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_CMD_WORD");
-	if (node->reduc == R_CMD_PREFIX)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_CMD_PREFIX");
-	if (node->reduc == R_CMD_SUFFIX)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_CMD_SUFFIX");
-	if (node->reduc == R_IO_REDIRECT)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_REDIRECT");
-	if (node->reduc == R_IO_FILE)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_FILE");
-	if (node->reduc == R_FILENAME)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_FILENAME");
-	if (node->reduc == R_IO_HERE)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_IO_HERE");
-	if (node->reduc == R_HERE_END)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "R_HERE_END");
-	if (node->type != -1 && node->type != -2)
-		printf("TYPE : %i\tDATA : %s\n", node->type, (char *)node->data);
-	if (node->reduc == R_PIPE_SEQUENCE && node->type == ROOT)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "LAST SIMPLE COMMAND");
-	else if (node->reduc == R_PIPE_SEQUENCE)
-		printf("TYPE : %i\tDATA : %s\n", node->type, "SIMPLE COMMAND");
-}
+t_env	*g_envp = NULL;
 
 /*
 ** SHELL LOOP
 ** for DEBUG add part below after ast = ms_parser
-**
-** printf("TREE\n----------\n");
-** ms_visit_ast(ast, POST_ORDER);
-** printf("----------\n");
 */
-t_env	*g_envp = NULL;
 
 static int	ms_increment_shlvl(void)
 {
