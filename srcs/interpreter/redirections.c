@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 11:05:38 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 15:18:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 14:58:32 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ int	ms_handle_ret_append(t_node *node)
 {
 	int	fd;
 
-	fd = open(node->right->data, O_RDWR | O_CREAT | O_APPEND, 0666);
+	fd = open(node->right->right->data, O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (fd == ERROR)
 	{
-		perror(node->right->data);
+		perror(node->right->right->data);
 		return (ERROR);
 	}
 	if (dup2(fd, 1) == ERROR)
@@ -51,10 +51,10 @@ int	ms_handle_ret_from(t_node *node)
 {
 	int	fd;
 
-	fd = open(node->right->data, O_RDONLY);
+	fd = open(node->right->right->data, O_RDONLY);
 	if (fd == ERROR)
 	{
-		perror(node->right->data);
+		perror(node->right->right->data);
 		return (ERROR);
 	}
 	if (dup2(fd, 0) == ERROR)
@@ -69,10 +69,10 @@ int	ms_handle_ret_to(t_node *node)
 {
 	int	fd;
 
-	fd = open(node->right->data, O_RDWR | O_CREAT, 0666);
+	fd = open(node->right->right->data, O_RDWR | O_CREAT, 0666);
 	if (fd == ERROR)
 	{
-		perror(node->right->data);
+		perror(node->right->right->data);
 		return (ERROR);
 	}
 	if (dup2(fd, 1) == ERROR)

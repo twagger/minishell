@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:16 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 14:22:50 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:17:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,9 @@ t_node	*ms_parser(t_token *input, t_trans **parsing_table)
 	tree = NULL;
 	input_begin = input;
 	stack = ms_init_stack();
-	if (!stack)
-		return (NULL);
 	while (ret == RET_OK)
 	{
-		pt_entry = ms_get_entry(input, parsing_table, stack->state);
+		pt_entry = ms_get_entry(input, parsing_table, stack);
 		if (pt_entry && pt_entry->action == ACT_SHIFT)
 			ret = ms_shift(&stack, &input, pt_entry->next);
 		else if (pt_entry && pt_entry->action == ACT_REDUCE)

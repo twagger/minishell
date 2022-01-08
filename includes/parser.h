@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 12:26:13 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:16:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ t_node	*ms_parser(t_token *input, t_trans **parsing_table);
 int		ms_push_input(t_stack **stack, t_token *input);
 int		ms_push_reduction(t_stack **stack, int reduction);
 int		ms_push_state(t_stack **stack, int state);
-t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, int state);
+t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, t_stack *stack);
 int		ms_get_next_state(t_stack *stack, t_trans **parsing_table);
 
 /*
@@ -191,8 +191,7 @@ void	ms_parser_cleaning(\
 ** OUTPUT
 */
 int		ms_add_tree(t_node **tree, t_stack **popped, int reduction);
-int		ms_execute_ast(t_node *ast, int exit_code);
-void	ms_visit_ast(t_node *node);
 t_node	*ms_fix_param_types(t_node *tree);
+int		ms_execute_ast(t_node *ast, int exit_code);
 
 #endif

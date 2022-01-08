@@ -6,7 +6,7 @@
 #    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/07 16:07:19 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/08 14:44:37 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRCS		= srcs/main.c \
 			  srcs/parser/parser/utils/cleaning_utils.c \
 			  srcs/parser/parser/utils/stack_utils.c \
 			  srcs/parser/parser/utils/output_utils.c \
+			  srcs/parser/parser/utils/output_utils_2.c \
 			  srcs/parser/parser/utils/parser_utils.c \
 			  srcs/interpreter/interpreter.c \
 			  srcs/interpreter/exec_simple_command.c \

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:14:47 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 14:35:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ms_execute_ast(t_node *ast, int exit_code)
 	int	fd[2];
 
 	if (!ast)
-		return (EXIT_FAILURE);
+		return (1);
 	fd[0] = -1;
 	nb = ms_search_ast(ast, A_PIPE, 0);
 	if (nb)

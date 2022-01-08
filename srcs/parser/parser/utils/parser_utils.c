@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 14:55:15 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 13:46:34 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:16:10 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,14 @@ int	ms_get_next_state(t_stack *stack, t_trans **parsing_table)
 ** to the input and the current state.
 */
 
-t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, int state)
+t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, t_stack *stack)
 {
 	int		i;
 	int		input_type;
 	t_trans	*table_entry;
 
+	if (!stack)
+		return (NULL);
 	table_entry = NULL;
 	input_type = -1;
 	if (input)
@@ -111,7 +113,7 @@ t_trans	*ms_get_entry(t_token *input, t_trans **parsing_table, int state)
 	i = -1;
 	while (parsing_table[++i])
 	{
-		if (parsing_table[i]->state == state)
+		if (parsing_table[i]->state == stack->state)
 		{
 			if (parsing_table[i]->event == input_type)
 				return (parsing_table[i]);
