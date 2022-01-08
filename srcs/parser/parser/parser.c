@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:16 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 23:05:29 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 14:22:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,13 @@ int	ms_reject(void)
 ** and returns an output (synthax tree).
 */
 
-t_node	*ms_parser(t_token *input, t_trans **parsing_table)  //faire avancer l'input
+t_node	*ms_parser(t_token *input, t_trans **parsing_table)
 {
 	int		ret;
 	t_node	*tree;
 	t_trans	*pt_entry;
 	t_stack	*stack;
-	t_token *input_begin;
+	t_token	*input_begin;
 
 	ret = RET_OK;
 	tree = NULL;
@@ -115,5 +115,5 @@ t_node	*ms_parser(t_token *input, t_trans **parsing_table)  //faire avancer l'in
 			ret = ms_reject();
 	}
 	ms_parser_cleaning(&tree, stack, input_begin, ret);
-	return (tree);
+	return (ms_fix_param_types(tree));
 }

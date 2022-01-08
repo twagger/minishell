@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:56:52 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:14:19 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 13:36:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ t_stack	*ms_pop_stack(t_stack **stack, int nb)
 	popped = NULL;
 	if (stack)
 	{
-		i = 0;
-		while (i < nb)
+		i = -1;
+		while (++i < nb)
 		{
 			next = (*stack)->next;
 			free(*stack);
@@ -51,9 +51,7 @@ t_stack	*ms_pop_stack(t_stack **stack, int nb)
 			next = (*stack)->next;
 			ms_add_popped(&popped, *stack);
 			*stack = next;
-			++i;
 		}
-		popped->next = NULL;
 	}
 	return (popped);
 }

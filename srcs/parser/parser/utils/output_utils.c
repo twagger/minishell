@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:59:05 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:51:56 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 14:24:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ t_node	*ms_search_reduction(t_node **tree, int reduction)
 
 	result = NULL;
 	begin = *tree;
+	*tree = (*tree)->next;
 	while (*tree)
 	{
 		if ((*tree)->reduc == reduction)
@@ -91,6 +92,7 @@ t_node	*ms_add_reduction_front(t_node **tree, int reduction)
 		node->left = NULL;
 		node->right = NULL;
 		node->next = *tree;
+		*tree = node;
 		return (node);
 	}
 	return (NULL);

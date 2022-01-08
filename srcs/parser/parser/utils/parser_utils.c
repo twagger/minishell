@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 14:55:15 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 16:55:52 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 13:46:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	ms_push_input(t_stack **stack, t_token *input)
 	new->type = input->type;
 	new->state = -1;
 	new->data = input->value;
+	input->value = NULL;
 	new->next = *stack;
 	*stack = new;
 	return (RET_OK);
@@ -76,7 +77,7 @@ int	ms_get_next_state(t_stack *stack, t_trans **parsing_table)
 	int	state;
 	int	next_state;
 
-	state = stack->state;
+	state = stack->next->state;
 	i = -1;
 	while (parsing_table[++i])
 	{
