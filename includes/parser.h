@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 09:18:13 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 14:45:21 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/10 12:06:31 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,7 @@ t_token	*ms_tokenizer(char *line);
 t_token	*ft_newtoken(void *content);
 char	**ft_split_qu(char *s, char c);
 int		count_w_qu(char *s);
-int		int_word(char *s, char c, int index, char ***arr);
-char	*check_if_envvar(char *cmd);
+int		replace_var(char *arr, char *new, int *i_new);
 int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
