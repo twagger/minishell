@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/10 13:59:30 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/10 16:06:19 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,17 @@ int		count_len(char *s)
 	sq = 0;
 	while(*s)
 	{
-		//年再一起的引號算同一個字
 		if (*s == '\"')
 			dq++;
 		if (*s == '\'')
 			sq++;
-		if (*s == ' ' && dq%2 == 0 && sq%2 == 0)//沒有引號
+		if (*s == ' ' && dq%2 == 0 && sq%2 == 0)
 			break;
 		if (*s == ' ' && dq%2 == 1 && sq%2 == 2)
 		 	break;
 		if (*s == ' ' && dq%2 == 2 && sq%2 == 1)
 		 	break;
 		len++;
-		//printf("s:%s, %d: sq:%d, dq:%d\n", s, len, sq, dq);
 		s++;
 	}
 	return (len);
@@ -50,7 +48,6 @@ int		count_len(char *s)
 
 int if_quote_close(int *start, int len, char *s)
 {
-	//是誰先關了？
 	int sq;
 	int dq;
 	int status;
@@ -62,9 +59,17 @@ int if_quote_close(int *start, int len, char *s)
 	{
 		//"iuh'jio'" 不是引號先結束作為判斷...如果不是“‘”’這種情況
 		if (s[(*start)] == '\'')
+		{
+			if (sq == 2)
+				break;
 			sq++;
+		}
 		else if (s[(*start)] == '\"')
+		{
+			if (dq == 2)
+				break;
 			dq++;
+		}
 		if (sq == 1 && !status)
 			status = 1;
 		else if (dq == 1 && !status)
@@ -74,7 +79,7 @@ int if_quote_close(int *start, int len, char *s)
 			return (1);
 		else if (dq == 2 && status == 2)
 			return (2);
-		if ((sq == 2 && dq == 2) || sq > 2 || dq > 2) //為什麼是＆＆不是｜｜
+		if ((sq == 2 && dq == 2)) //為什麼是＆＆不是｜｜
 			break ;
 	}
 	if (sq >= 2 && status == 2)
@@ -92,24 +97,28 @@ int	check_envvar_qu(char *arr, char *new, int begin, int end,int *i_new)
 	printf("QU:%s\n", arr);
 	while (arr[begin] && begin < end)
 	{
+		printf("NEW ADD 1:%d\n", (*i_new));
 		if (arr[begin] == '$' && arr[begin + 1])
 		{
 			printf("chech env in qu:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			len_var = replace_var(&arr[begin + 1], new, i_new);
+			(*i_new) = (int)ft_strlen(new);
 			printf("chech env in quafter:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
-			begin = begin + len_var;
+			begin = begin + len_var + 1;
 		} 
 		else if (arr[begin] != '\"')
 		{
-			printf("chech env in quother:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
+			printf("chech env in quother1:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			new[*i_new] = arr[begin];
 			begin++;
+			printf("chech env in quother2:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			(*i_new) = (*i_new) + 1;
+			printf("chech env in quother3:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 		}
 		else
-			printf("chech env in qNOTHING:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			begin++;
 	}
+	new[(*i_new) + 1] = '\0';
 	(*i_new) = ft_strlen(new);
 	return (begin);
 }
@@ -126,6 +135,7 @@ int	check_envvar(char *arr, char *new, int *i_arr, int *i_new)
 	if (arr[temp + 1])
 		len_var = replace_var(&arr[(temp) + 1], new, i_new);
 	(*i_new) = ft_strlen(new);
+	(*i_arr) = (*i_arr) + len_var + 1;
 	printf("replace :|%s|, %d, %d, %d\n", new, (*i_new), (*i_arr), temp);
 	return (len_var);
 }
@@ -180,20 +190,22 @@ void	replace_quote(char *arr, char *new,int *i_arr, int *i_new)
 		else if (quote == 0)
 		{
 			printf("3\n");
-			new[(*i_new)] = arr[temp];
-			(*i_new) = (*i_new) + 1;
+			if (ft_strchr_do(arr, temp, (*i_arr)))
+			{
+				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
+				//(*i_arr) = temp + 2; //$"
+				printf("temp:%d, %s\n", temp, new);
+			}
+			else
+			{
+				new[(*i_new)] = arr[temp];
+				(*i_new) = (*i_new) + 1;
+			}
 		}
 		printf("NEW in loop:%s, %d\n", new, (*i_new));
 		temp++;
 	}
-	printf("NEW1:%s, %d\n", new ,(*i_new));
 	new[(*i_new)+1] = '\0';
-	printf("NEW2:%s, %d\n", new ,(*i_new));
-	// if (quote == 2)
-	// {
-	// 	if (ft_strchr(new, '$'))
-	// 		check_envvar(arr, new, &temp2, &start);
-	// }
 	(*i_new) = ft_strlen(new);
 	printf("NEW3:%s, %d\n", new ,(*i_new));
 }
@@ -230,7 +242,7 @@ char	*check_quote(char *arr, int len)
 		else if (arr[i_arr] == '$')
 		{
 			check_envvar(arr, new, &i_arr, &i_new);
-			i_arr++;
+			//i_arr++;
 		}
 		else
 			new[i_new++] = arr[i_arr++];
@@ -296,7 +308,6 @@ char	**ft_split_qu(char *s, char c)
 	if (!s)
 		return (0);
 	count_ws = count_w_qu(s);
-	printf("count words:%d\n", count_ws);
 	arr = (char **)malloc((count_ws + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 17:08:22 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/10 14:38:16 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	ms_execute_ast(t_node *ast, int exit_code)
 		return (1);
 	fd[0] = -1;
 	nb = ms_search_ast(ast, A_DLESS, 0);
-	if (nb)
-		if (ms_do_heredoc(ast, nb) == ERROR)
-			return (1);
+	// if (nb)
+	// 	if (ms_do_heredoc(ast, nb) == ERROR)
+	// 		return (1);
 	nb = ms_search_ast(ast, A_PIPE, 0);
 	if (nb)
 		return (ms_exec_pipeline(ast, exit_code, nb));
