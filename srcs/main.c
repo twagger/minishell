@@ -6,22 +6,19 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 10:36:41 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/08 15:24:22 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "history.h"
 
+t_env	*g_envp = NULL;
+
 /*
 ** SHELL LOOP
 ** for DEBUG add part below after ast = ms_parser
-**
-** printf("TREE\n----------\n");
-** ms_visit_ast(ast, POST_ORDER);
-** printf("----------\n");
 */
-t_env	*g_envp = NULL;
 
 static int	ms_increment_shlvl(void)
 {
@@ -79,6 +76,7 @@ static int	ms_loop(struct termios *termios)
 			if (!ast)
 				printf("minishell: syntax error\n");
 			status = ms_execute_ast(ast, status);
+			ms_clear_tree(&ast);
 			ms_display_special_status(status);
 		}
 		else
