@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/10 16:06:19 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/10 22:58:32 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,25 @@ int if_quote_close(int *start, int len, char *s)
 		if ((sq == 2 && dq == 2)) //為什麼是＆＆不是｜｜
 			break ;
 	}
-	if (sq >= 2 && status == 2)
+	if (sq >= 2 && status == 2 && dq != 0 )
 		return (1);
-	else if (dq >= 2 && status == 1)
+	else if (dq >= 2 && status == 1 && sq != 0)
 		return (2);
+	return (0);
+}
+int check_db(char *arr, int start, int end, char c)
+{
+	int n;
+
+	n = 0;
+	while(arr[start] && start <= end)
+	{
+		if(arr[start] == c)
+			n++;
+		start++;	
+	}
+	if(n == 1)
+		return (1);
 	return (0);
 }
 
@@ -93,30 +108,30 @@ int	check_envvar_qu(char *arr, char *new, int begin, int end,int *i_new)
 {
 	//如果是有引號的 引號裡面所有的var都要check
 	int len_var;
+	int temp;
 
-	printf("QU:%s\n", arr);
+	temp = begin;
+	//printf("QU:%s\n", arr);
 	while (arr[begin] && begin < end)
 	{
-		printf("NEW ADD 1:%d\n", (*i_new));
+		//printf("NEW ADD 1:%d, %d\n", (*i_new), check_db(arr, begin, end, '\"'));
+		//printf("chech env in quafter:|%s|, %d, %d, %d\n", arr, begin, end, *i_new);
 		if (arr[begin] == '$' && arr[begin + 1])
 		{
-			printf("chech env in qu:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			len_var = replace_var(&arr[begin + 1], new, i_new);
 			(*i_new) = (int)ft_strlen(new);
-			printf("chech env in quafter:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			begin = begin + len_var + 1;
 		} 
-		else if (arr[begin] != '\"')
+		else if ((arr[begin] == '\'' && !check_db(arr, temp, end, '\'')) || (arr[begin] == '\"' && !check_db(arr, temp , end, '\"')))
+			begin++;
+		else
 		{
-			printf("chech env in quother1:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			new[*i_new] = arr[begin];
 			begin++;
-			printf("chech env in quother2:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
 			(*i_new) = (*i_new) + 1;
-			printf("chech env in quother3:|%s|, %d, %d, %d\n", new, begin, end, *i_new);
+			//printf("chech env in quother1:|%s|, %d, %d, %d\n", new, begin, end, *i_new);			
 		}
-		else
-			begin++;
+			
 	}
 	new[(*i_new) + 1] = '\0';
 	(*i_new) = ft_strlen(new);
@@ -129,14 +144,12 @@ int	check_envvar(char *arr, char *new, int *i_arr, int *i_new)
 
 	temp = (*i_arr);
 	len_var = 0;
-	printf("Check_env:%s,|%s|,%d,%d\n",arr, new, *i_arr,*i_new);
 	while(arr[temp] != '$')
 		temp++;
 	if (arr[temp + 1])
 		len_var = replace_var(&arr[(temp) + 1], new, i_new);
 	(*i_new) = ft_strlen(new);
 	(*i_arr) = (*i_arr) + len_var + 1;
-	printf("replace :|%s|, %d, %d, %d\n", new, (*i_new), (*i_arr), temp);
 	return (len_var);
 }
 int ft_strchr_do(char *arr, int start, int end)
@@ -150,64 +163,78 @@ int ft_strchr_do(char *arr, int start, int end)
 	return (0);
 }
 
+int ft_strdb(char *s, char c)
+{
+	int i;
+	int y;
+
+	i = -1;
+	y = 0;
+	while(s[++i])
+	{
+		if(s[i] == c)
+		{
+			while(s[++i])
+			{
+				if(s[i] == '$')
+					return (1);
+				if(s[i] == c)
+					return (0);
+			}
+		}
+	}
+	return (0);
+}
 //當有quote
 void	replace_quote(char *arr, char *new,int *i_arr, int *i_new)
 {
 	int	quote;
 	int temp;
 	int	start;
-	int temp2;
 
-	temp = (*i_arr);//哪裡開始 check 引號
-	temp2 = 0;
-	start = (*i_new);//哪裡開始取代var
+	temp = (*i_arr);
+	start = (*i_new);
 	quote = if_quote_close(i_arr, ft_strlen(arr) , arr);
-	printf("QOUTE:|%d|,|%s|, |%s|, |%d|,|%d|\n", quote, arr, new, *i_arr, *i_new);
+	//printf("QU:%d\n", quote);
 	while(temp < (*i_arr))
 	{
 		if (quote == 1 && arr[temp] != '\'')
 		{
-			printf("1\n");
-			new[(*i_new)] = arr[temp];
-			(*i_new) = (*i_new) + 1;
+			//printf("CHECK:%d\n", ft_strdb(&arr[temp],'\''));
+			if (!ft_strdb(&arr[temp],'\'') && ft_strchr_do(arr, temp, (*i_arr)))
+				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
+			else if (arr[temp] != '\'')
+			{
+				new[(*i_new)] = arr[temp];
+				(*i_new) = (*i_new) + 1;
+			}
 		}
 		else if (quote == 2 && arr[temp] == '\"')
 		{
-			printf("1.5, %d, %d\n", temp, (*i_arr));
 			if (ft_strchr_do(arr, temp, (*i_arr)))
-			{
 				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
-				//(*i_arr) = temp + 2; //$"
-				printf("temp:%d, %s\n", temp, new);
-			}
 		}
 		else if (quote == 2 && arr[temp] != '\"')
 		{
-			printf("2:%d, %c, %d\n", *i_new, arr[temp], temp);
 			new[(*i_new)] = arr[temp];
 			(*i_new) = (*i_new) + 1;
 		}
 		else if (quote == 0)
 		{
-			printf("3\n");
 			if (ft_strchr_do(arr, temp, (*i_arr)))
-			{
 				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
-				//(*i_arr) = temp + 2; //$"
-				printf("temp:%d, %s\n", temp, new);
-			}
 			else
 			{
 				new[(*i_new)] = arr[temp];
 				(*i_new) = (*i_new) + 1;
 			}
 		}
-		printf("NEW in loop:%s, %d\n", new, (*i_new));
+		//printf("NEW in loop:%s, %d\n", new, (*i_new));
 		temp++;
 	}
 	new[(*i_new)+1] = '\0';
 	(*i_new) = ft_strlen(new);
-	printf("NEW3:%s, %d\n", new ,(*i_new));
+	//printf("NEW3:%s, %d\n", new ,(*i_new));
 }
 
 void initial(char *new)
@@ -218,40 +245,31 @@ void initial(char *new)
 	while(++i < 1000)
 		new[i] = '\0';
 }
-char	*check_quote(char *arr, int len)
+char	*check_quote(char *arr)
 {
 	char new[1000];
 	int i_arr;
 	int i_new;
 	char *try;
 
-	(void)len;
 	i_arr = 0;
 	i_new = 0;
 	initial(new);
-	printf("OUT LOOP:|%s|,|%s|, |%d|, |%d|\n",arr, new, i_arr, i_new);
 	while(arr[i_arr])
 	{
-		//如果需要重新malloc不要忘記加後面的cmd
 		if (arr[i_arr] == '\"' || arr[i_arr] == '\'')
-		{
-			printf("checkquote:%d\n", i_new);
 			replace_quote(arr, new, &i_arr,&i_new);
-			//i_new++;
-		}
 		else if (arr[i_arr] == '$')
-		{
 			check_envvar(arr, new, &i_arr, &i_new);
-			//i_arr++;
-		}
 		else
 			new[i_new++] = arr[i_arr++];
 		new[i_new] = '\0';
-		printf("IN LOOP:|%s|, |%d|, |%d|\n", new, i_arr, i_new);
-		//i_arr++;
+		//printf("IN LOOP:|%s|, |%d|, |%d|\n", new, i_arr, i_new);
 	}
 	new[i_new] = '\0';
 	try =ft_strdup(new);
+	if (arr)
+		free(arr);
 	return (try);
 }
 int		check_each(char ***arr, int len, char *s, int index)
@@ -262,19 +280,14 @@ int		check_each(char ***arr, int len, char *s, int index)
 	(*arr)[index] = (char *)malloc((len + 1) * sizeof(char));
 	if (!(*arr)[index])
 		return (0);
-	//複製字 判斷quote需要複製？
-	//要一起處理quote跟var嗎？
 	while (i < len)
 	{		
 		(*arr)[index][i++] = *s;
 		s++;
 	}
 	(*arr)[index][i] = '\0';
-	(*arr)[index] = check_quote((*arr)[index], len);
-	printf("(*arr)[index][i]:%s\n", (*arr)[index]);
-	//free((*arr)[index]);
-	return (len);//???
-
+	(*arr)[index] = check_quote((*arr)[index]);
+	return (len);
 }
 
 void	ft_split_2_qu(char ***arr, char *s, int count_ws)
@@ -288,12 +301,10 @@ void	ft_split_2_qu(char ***arr, char *s, int count_ws)
 	while (index < count_ws)
 	{
 		while (*s == ' ')
-				s++;
+			s++;
 		len = count_len(s);
-		printf("len for word:%d\n", len);
 		check_each(arr, len, s, index);
 		s = s + len + 1;
-		//printf("arr[index]:%s\n", (*arr)[index]);
 		index++;
 	}
 	(*arr)[index] = 0;
