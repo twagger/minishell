@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/10 20:34:01 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/11 08:18:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,7 @@ t_token	*ms_tokenizer(char *line);
 t_token	*ft_newtoken(void *content);
 char	**ft_split_qu(char *s, char c);
 int		count_w_qu(char *s);
-int		int_word(char *s, char c, int index, char ***arr);
-char	*check_if_envvar(char *cmd);
+int		replace_var(char *arr, char *new, int *i_new);
 int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
 void	ft_tokenadd_back(t_token **lst, t_token *new);

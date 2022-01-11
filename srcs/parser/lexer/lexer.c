@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/06 23:02:21 by twagner          ###   ########.fr       */
+/*   Created: 2022/01/10 14:34:58 by ifeelbored        #+#    #+#             */
+/*   Updated: 2022/01/10 16:12:41 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_token	*ms_tokenizer(char *line)
 	res = ft_split_qu(line, ' ');
 	while (res[i])
 	{
-		printf("res[i]:|%s|\n", res[i]);
+		//printf("res[i]:|%s|\n", res[i]);
 		current = ft_newtoken(res[i]);
 		ft_tokenadd_back(&token, current);
 		i++;
