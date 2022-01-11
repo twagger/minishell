@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 10:13:04 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/11 17:30:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@
 */
 
 static int	ms_exec_pipe_sequence(\
-	t_node *node, int exit_code, t_pipe *pipe)
+	t_node *node, int exit_code, t_pipe *pipe, int *hd_fds)
 {
 	int	ret;
 
 	ms_activate_signal_handler();
 	ms_connect_pipe(pipe);
-	if (ms_do_redirections(node, 0) == ERROR)
+	if (ms_do_redirections(node, 0, hd_fds) == ERROR)
 		exit (1);
 	ret = ms_exec_piped_command(node, exit_code);
 	ms_free_pipe_list(pipe);
@@ -45,14 +45,14 @@ static int	ms_exec_pipe_sequence(\
 */
 
 static pid_t	ms_visit(\
-	t_node *node, int exit_code, t_pipe *pipe)
+	t_node *node, int exit_code, t_pipe *pipe, int *hd_fds)
 {
 	pid_t	pid;
 
 	if (!node)
 		return (0);
-	ms_visit(node->left, exit_code, pipe);
-	ms_visit(node->right, exit_code, pipe);
+	ms_visit(node->left, exit_code, pipe, hd_fds);
+	ms_visit(node->right, exit_code, pipe, hd_fds);
 	if (node->type == A_PIPE || node->type == ROOT)
 	{
 		pid = fork();
@@ -61,8 +61,8 @@ static pid_t	ms_visit(\
 		if (pid == 0)
 		{
 			if (node->type == ROOT)
-				exit(ms_exec_pipe_sequence(node, exit_code, pipe));
-			exit(ms_exec_pipe_sequence(node->left, exit_code, pipe));
+				exit(ms_exec_pipe_sequence(node, exit_code, pipe, hd_fds));
+			exit(ms_exec_pipe_sequence(node->left, exit_code, pipe, hd_fds));
 		}
 		else
 		{
@@ -83,7 +83,7 @@ static pid_t	ms_visit(\
 */
 
 static int	ms_pipeline_subshell(\
-	t_node *ast, int exit_code, int nb)
+	t_node *ast, int exit_code, int nb, int *hd_fds)
 {
 	t_pipe	*pipe;
 	pid_t	wpid;
@@ -92,7 +92,7 @@ static int	ms_pipeline_subshell(\
 	pipe = ms_init_pipes(nb);
 	if (!pipe)
 		return (1);
-	wpid = ms_visit(ast, exit_code, pipe);
+	wpid = ms_visit(ast, exit_code, pipe, hd_fds);
 	ms_free_pipe_list(pipe);
 	if (wpid > 0 && waitpid(wpid, &status, 0) == ERROR)
 		return (1);
@@ -104,7 +104,7 @@ static int	ms_pipeline_subshell(\
 	return (ms_get_exit_status(status));
 }
 
-int	ms_exec_pipeline(t_node *ast, int exit_code, int nb)
+int	ms_exec_pipeline(t_node *ast, int exit_code, int nb, int *hd_fds)
 {
 	pid_t	pid;
 	int		status;
@@ -117,7 +117,7 @@ int	ms_exec_pipeline(t_node *ast, int exit_code, int nb)
 		return (ERROR);
 	if (pid == 0)
 	{
-		exit(ms_pipeline_subshell(ast, exit_code, nb));
+		exit(ms_pipeline_subshell(ast, exit_code, nb, hd_fds));
 	}
 	else
 	{
