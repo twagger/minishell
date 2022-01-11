@@ -6,48 +6,91 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 17:08:54 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 17:35:53 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/09 09:28:58 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 
-static void ms_tmp_filename(char **name, int num)
+static char *ms_tmp_filename(int num)
 {
-	
+	char	*tmp;
+	char	*name;
+
+	name = ft_itoa(num);
+	if (name)
+	{
+		tmp = name;
+		name = ft_strjoin("hd_", name);
+		free(tmp);
+		if (name)
+			return (name);
+	}
+	return (NULL);
 }
 
-static int	ms_save_heredoc(char *limiter, int ret)
+static int	ms_save_heredoc(char *limiter, int ret, int *heredoc_fds)
 {
-	static int	num = 1;
+	static int	num = -1;
 	int			fd;
-	char		filename[4];
+	char		*file_name;
+	char		*file_content;
 
 	if (ret != 0)
 		return (ret);
-	// create a new file
-	ms_tmp_filename((char **)&filename, num);
-	fd = open((char *)filename, O_RDWR | O_CREAT, 0666);
-	// read on fd 0 until delim > Store in a char *
-	// when delim, write in the file fd and close it
-	// num ++
-	return (0);
+	file_name = ms_tmp_filename(num);
+	fd = open(file_name, O_RDWR | O_CREAT, 0666);
+	free(file_name);
+	if (fd > 0)
+	{
+		heredoc_fds[++num] = fd;
+		limiter = ms_quote_removal(limiter);
+		if (limiter)
+		{
+			file_content = ms_get_next_heredoc(limiter);
+			if (file_content)
+			{
+				write(fd, file_content, ft_strlen(file_content));
+				return (0);
+			}
+		}
+	}
+	return (ERROR);
 }
 
-static int	ms_visit_heredoc(t_node *node, int ret)
+static int	ms_visit_heredoc(t_node *node, int ret, int *heredoc_fds)
 {
-	if (!node)
+	if (!node || ret == ERROR)
 		return (ret);
 	if (node->type == A_LIMITER)
-		ret = ms_save_heredoc(node->data, ret);
-	ret = ms_visit_heredoc(node->left, ret);
-	ret = ms_visit_heredoc(node->right, ret);
+		ret = ms_save_heredoc(node->data, ret, heredoc_fds);
+	ret = ms_visit_heredoc(node->left, ret, heredoc_fds);
+	ret = ms_visit_heredoc(node->right, ret, heredoc_fds);
 	return (ret);
 }
 
-int	ms_do_heredoc(t_node *tree, int nb)
+int	ms_clear_heredoc(int *heredoc_fds, int ret)
 {
-	if (!ms_visit_heredoc(tree, 0))
-		return (0);
-	return (ERROR);
+	int	i;
+
+	i = -1;
+	while (heredoc_fds[++i] > 0)
+		close(heredoc_fds[i]);
+	free(heredoc_fds);
+	return (ret);
+}
+
+int	*ms_do_heredoc(t_node *tree, int nb)
+{
+	int	*heredoc_fds;
+
+	heredoc_fds = (int *)malloc(sizeof(*heredoc_fds) * (nb + 1));
+	if (heredoc_fds)
+	{
+		heredoc_fds[nb] = -1;
+		if (!ms_visit_heredoc(tree, 0, heredoc_fds))
+			return (heredoc_fds);
+	}
+	free(heredoc_fds);	
+	return (NULL);
 }

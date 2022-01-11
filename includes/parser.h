@@ -6,12 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 15:16:22 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/10 20:34:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER2_H
-# define PARSER2_H
+#ifndef PARSER_H
+# define PARSER_H
 # include "minishell.h"
 
 /*
