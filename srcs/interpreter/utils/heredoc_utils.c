@@ -6,23 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 09:16:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/09 12:14:40 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/11 16:14:11 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
-
-/*
-** CLEAR GET NEXT HEREDOC
-** Free the temporary allocations
-*/
-
-void	ms_clear_gnh(char *limiter_start, char *limiter_in, int ret)
-{
-	free(limiter_start);
-	free(limiter_in);
-	return (ret);
-}
 
 /*
 ** CREATE LIMITER
@@ -48,6 +36,8 @@ char	*ms_create_limiter_to_search(char *limiter, int type)
 		{
 			result[0] = '\n';
 			ft_strcpy(result + 1, limiter);
+			result[len - 1] = '\n';
+			result[len] = '\0';
 		}
 		return (result);
 	}
@@ -74,51 +64,50 @@ char	*ms_search_limiter(char *buffer, char *limiter)
 		p_limiter = ft_strnstr(buffer, limiter_in, ft_strlen(buffer));
 		if (p_limiter)
 		{
-			ms_clear_gnh(limiter_start, limiter_in, 0);
+			free(limiter_start);
+			free(limiter_in);
 			return (p_limiter);
 		}
 		else
 			return (NULL);
 	}
-	ms_clear_gnh(limiter_start, limiter_in, 0);
+	free(limiter_start);
+	free(limiter_in);
 	return (p_limiter);
 }
 
 /*
 ** CREATE HEREDOC
-** Get content from keep_buffer and/or current buffer and returns it.
-** Update the keep_buffer with what has been read after the limiter.
+** Get content from keep_buffer and returns it.
+** Update the buffer with what has been read after the limiter.
 */
 
-char	*ms_create_heredoc(char **keep_buffer, char **buffer, char *p_limiter)
+char	*ms_create_heredoc(char **buffer, char *p_limiter)
 {
 	int		l_limiter;
 	char	*result;
-	char	*buf;
 	char	*tmp;
 
-	l_limiter = (ft_strchr(p_limiter, '\n') - p_limiter) + 1;
+	l_limiter = 0;
+	if (p_limiter == NULL)
+		p_limiter = ft_strchr(*buffer, 0);
+	else
+		l_limiter = (ft_strchr(p_limiter, '\n') - p_limiter) + 1;
 	if (p_limiter[0] == '\n')
 		l_limiter = (ft_strchr(p_limiter + 1, '\n') - p_limiter) + 2;
-	buf = *keep_buffer;
-	if (buffer && *keep_buffer)
-		buf = ft_strjoin(keep_buffer, buffer);
-	else if (buffer)
-		buf = buffer;
-	if (buf)
+	if (*buffer)
 	{
-		result = ft_substr(buf, 0, p_limiter - buf);
+		result = ft_substr(*buffer, 0, (p_limiter - *buffer) + 1);
 		if (result)
 		{
-			// mise à jour du keep buffer
-			tmp = *keep_buffer;
-			*keep_buffer = ft_substr(buf, )
-			// free (buffer)
+			tmp = *buffer;
+			*buffer = ft_substr(*buffer, (p_limiter + l_limiter) - *buffer, \
+				ft_strchr(*buffer, 0) - (p_limiter + l_limiter));
+			free(tmp);
 			return (result);
 		}
 	}
-	free(*keep_buffer);
-	free(buffer);
+	free(*buffer);
 	return (NULL);
 }
 
@@ -127,29 +116,58 @@ char	*ms_create_heredoc(char **keep_buffer, char **buffer, char *p_limiter)
 ** Search the fd 0 for a limiter then return what has been entered before.
 */
 
-char	*ms_get_next_heredoc(char *limiter)
+char	*ms_init_keep_buffer(void)
+{
+	char	*keep_buffer;
+
+	keep_buffer = (char *)malloc(sizeof(*keep_buffer));
+	if (!keep_buffer)
+		return (NULL);
+	keep_buffer[0] = 0;
+	return (keep_buffer);
+}
+
+char	*ms_get_next_heredoc(char *limiter, int tofree)
 {
 	static char	*keep_buffer = NULL;
 	char		*p_limiter;
-	char		*result;
 	char		*tmp;
+	char		buffer[BUFFER_SIZE + 1];
+	int			ret;
 
-	// 0 - Regarder si la chaine \nlimiter\n ou <debut>limiter\n existe dans le keep_buffer
+	if (tofree)
+	{
+		free(keep_buffer);
+		keep_buffer = NULL;
+	}
+	if (!keep_buffer)
+	{
+		keep_buffer = ms_init_keep_buffer();
+		if (!keep_buffer)
+			return (NULL);
+	}
 	p_limiter = ms_search_limiter(keep_buffer, limiter);
 	if (!p_limiter)
 	{
-		// 0.2 - Sinon : Etape 1
-
-		// 1 - Lire un certain nombre de caractères sur le fd 0
-
-		// 2 - Regarder, si dans ce que j'ai lu, j'ai :
-		//		- <début>limiter\n
-		//		- \nlimiter\n
-
-		// 3 - Si j'ai pas : etape 1
-
-		// 4 - Si j'ai : etape 5
+		ret = read(0, buffer, BUFFER_SIZE);
+		while (ret >= 0)
+		{
+			buffer[ret] = 0;
+			tmp = keep_buffer;
+			keep_buffer = ft_strjoin(keep_buffer, buffer);
+			free(tmp);
+			p_limiter = ms_search_limiter(keep_buffer, limiter);
+			if (p_limiter || ret == 0)
+				return (ms_create_heredoc(&keep_buffer, p_limiter));
+			ret = read(0, buffer, BUFFER_SIZE + 1);
+		}
+		if (ret == ERROR)
+		{
+			free(keep_buffer);
+			keep_buffer = NULL;
+		}
 	}
 	else
-		return (ms_create_heredoc(&keep_buffer, NULL, p_limiter));
+		return (ms_create_heredoc(&keep_buffer, p_limiter));
+	return (NULL);
 }

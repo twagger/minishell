@@ -6,13 +6,15 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/09 09:14:43 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/11 16:18:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERPRETER_H
 # define INTERPRETER_H
 # include "parser.h"
+
+# define BUFFER_SIZE 32
 
 /*
 ** STRUCTURES
@@ -65,7 +67,11 @@ int		ms_get_exit_status(int status);
 
 void	ms_print_exec_error(char *cmd, int error_code);
 
-int		*ms_do_heredoc(t_node *tree, int nb);
+int		*ms_do_heredoc(t_node *tree, int nb, int *interrupt);
 int		ms_clear_heredoc(int *heredoc_fds, int ret);
+char	*ms_get_next_heredoc(char *limiter, int tofree);
+void	ms_restore_default_signals(void);
+void	ms_activate_hd_signal_handler(void);
+
 
 #endif

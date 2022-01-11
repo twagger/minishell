@@ -1,37 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   heredoc_sig_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/03 12:06:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 14:36:48 by twagner          ###   ########.fr       */
+/*   Created: 2022/01/11 14:27:50 by twagner           #+#    #+#             */
+/*   Updated: 2022/01/11 16:15:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 
-void	ms_sig_handler(int sig)
+void	ms_hd_sig_handler(int sig)
 {
-	exit(sig);
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		close(0);
+	}
 }
 
-void	ms_activate_signal_handler(void)
+void	ms_activate_hd_signal_handler(void)
 {
-	signal(SIGINT, ms_sig_handler);
-	signal(SIGQUIT, ms_sig_handler);
+	signal(SIGINT, ms_hd_sig_handler);
+	signal(SIGQUIT, ms_hd_sig_handler);
 }
 
-void	ms_ignore_signals(void)
+void	ms_restore_default_signals(void)
 {
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-int	ms_get_exit_status(int status)
-{
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (WEXITSTATUS(status));
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
