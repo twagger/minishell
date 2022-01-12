@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/10 22:58:32 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/12 11:23:43 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,15 @@ int check_db(char *arr, int start, int end, char c)
 	return (0);
 }
 
-int	check_envvar_qu(char *arr, char *new, int begin, int end,int *i_new)
+int	check_envvar_qu(char *arr, char *new, int begin, int end,int *i_new, int quote)
 {
 	//如果是有引號的 引號裡面所有的var都要check
 	int len_var;
 	int temp;
 
 	temp = begin;
-	//printf("QU:%s\n", arr);
+	//printf("QU:%s, %d, %d\n", arr, begin, end);
+	//printf("QU: %d, %d\n", arr, begin, end);
 	while (arr[begin] && begin < end)
 	{
 		//printf("NEW ADD 1:%d, %d\n", (*i_new), check_db(arr, begin, end, '\"'));
@@ -122,7 +123,7 @@ int	check_envvar_qu(char *arr, char *new, int begin, int end,int *i_new)
 			(*i_new) = (int)ft_strlen(new);
 			begin = begin + len_var + 1;
 		} 
-		else if ((arr[begin] == '\'' && !check_db(arr, temp, end, '\'')) || (arr[begin] == '\"' && !check_db(arr, temp , end, '\"')))
+		else if ((arr[begin] == '\'' && !check_db(arr, temp, end, '\'') && quote == 1) || (arr[begin] == '\"' && !check_db(arr, temp , end, '\"') && quote == 2))
 			begin++;
 		else
 		{
@@ -198,21 +199,23 @@ void	replace_quote(char *arr, char *new,int *i_arr, int *i_new)
 	//printf("QU:%d\n", quote);
 	while(temp < (*i_arr))
 	{
-		if (quote == 1 && arr[temp] != '\'')
+		if (quote == 1 && arr[temp] == '\'')
 		{
-			//printf("CHECK:%d\n", ft_strdb(&arr[temp],'\''));
-			if (!ft_strdb(&arr[temp],'\'') && ft_strchr_do(arr, temp, (*i_arr)))
-				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
-			else if (arr[temp] != '\'')
-			{
-				new[(*i_new)] = arr[temp];
-				(*i_new) = (*i_new) + 1;
-			}
+
+			//printf("CHECK:%d\n", ft_strdb(arr,'\''));
+			if (!ft_strdb(arr,'\'') && ft_strchr_do(arr, temp, (*i_arr)))
+				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new, quote);
+		}
+		else if (quote == 1 && arr[temp] != '\'')
+		{
+			new[(*i_new)] = arr[temp];
+			(*i_new) = (*i_new) + 1;
 		}
 		else if (quote == 2 && arr[temp] == '\"')
 		{
+			//printf("quote:%d\n", *i_arr);
 			if (ft_strchr_do(arr, temp, (*i_arr)))
-				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
+				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new, quote);
 		}
 		else if (quote == 2 && arr[temp] != '\"')
 		{
@@ -222,7 +225,7 @@ void	replace_quote(char *arr, char *new,int *i_arr, int *i_new)
 		else if (quote == 0)
 		{
 			if (ft_strchr_do(arr, temp, (*i_arr)))
-				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new);
+				temp = check_envvar_qu(arr, new, temp, *i_arr, i_new, quote);
 			else
 			{
 				new[(*i_new)] = arr[temp];
