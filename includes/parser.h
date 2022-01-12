@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 14:26:37 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/12 18:32:06 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,21 @@ typedef enum e_token_types
 	T_PIPE	
 }	t_token_types;
 
+typedef struct s_quote
+{
+	int				sq;
+	int				dq;
+	int				state;
+	int				last_id;
+}	t_quote;
+
+typedef struct s_q
+{
+	int				b;
+	int				e;
+	int				q;
+}	t_q;
+
 typedef struct s_token
 {
 	int				type;
@@ -146,9 +161,15 @@ typedef enum e_ast_types
 t_token	*ms_tokenizer(char *line);
 t_token	*ft_newtoken(void *content);
 char	**ft_split_qu(char *s, char c);
+void	initial_quote(t_quote *quote);
+void	initial(char *new);
+int		ck_db(char *arr, int start, int end, char c);
+int		ft_strdb(char *s, char c);
+int		count_len(char *s);
+int		ft_strchr_do(char *arr, int start, int end);
+void	replace_quote(char *arr, char *new, int *i_arr, int *i_new);
 int		count_w_qu(char *s);
 int		replace_var(char *arr, char *new, int *i_new);
-int		len_w_qu(char *s, char c);
 int		sep(char s, char c);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 void	ms_free_tokens(t_token *tokens);

@@ -5,99 +5,91 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/29 09:26:04 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/10 15:38:38 by ifeelbored       ###   ########.fr       */
+/*   Created: 2022/01/12 14:04:13 by ifeelbored        #+#    #+#             */
+/*   Updated: 2022/01/12 18:38:42 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-typedef struct s_quote
+int	sep(char s, char c)
 {
-	int				sq;
-	int				dq;
-	int 			state;
-	int				last_id;
-} t_quote;
-
-void initial_quote(t_quote *quote)
-{
-	quote->sq = 0;
-	quote->dq = 0;
-	quote->last_id = 0;
+	if (s == c)
+		return (1);
+	return (0);
 }
-int	srch_sp_inqu(char *s, char c)
+
+int	count_len(char *s)
 {
-	int i;
+	int	len;
+	int	dq;
+	int	sq;
+
+	len = 0;
+	dq = 0;
+	sq = 0;
+	while (*s)
+	{
+		if (*s == '\"')
+			dq++;
+		if (*s == '\'')
+			sq++;
+		if (*s == ' ' && dq % 2 == 0 && sq % 2 == 0)
+			break ;
+		if (*s == ' ' && dq % 2 == 1 && sq % 2 == 2)
+			break ;
+		if (*s == ' ' && dq % 2 == 2 && sq % 2 == 1)
+			break ;
+		len++;
+		s++;
+	}
+	return (len);
+}
+
+int	ck_db(char *arr, int start, int end, char c)
+{
+	int	n;
+
+	n = 0;
+	while (arr[start] && start <= end)
+	{
+		if (arr[start] == c)
+			n++;
+		start++;
+	}
+	if (n == 1)
+		return (1);
+	return (0);
+}
+
+int	ft_strdb(char *s, char c)
+{
+	int	i;
+	int	y;
 
 	i = -1;
-	while(s[++i])
+	y = 0;
+	while (s[++i])
 	{
-		if(s[i] == ' ')
-			return (1);
-		else if (s[i] == c)
-			return (0);
+		if (s[i] == c)
+		{
+			while (s[++i])
+			{
+				if (s[i] == '$')
+					return (1);
+				if (s[i] == c)
+					return (0);
+			}
+		}
 	}
 	return (0);
 }
 
-t_quote	count_w_qu_2(t_quote *quote, char *s, int *count, int index)
+void	initial(char *new)
 {
-	if (quote->dq == 1 && sep(s[index], '\"') == 1)
-	{
-		quote->last_id=index+1;
-		if(srch_sp_inqu(&s[quote->last_id], '\"') == 0 && s[index + 1] == '\0')
-			(*count) = (*count) + 1;
-		initial_quote(quote);
-		quote->state = 0;
-	}
-	else if (quote->state == 2)
-		quote->state = 2;
-	else if (sep(s[index], '\"') == 1)
-	{	
-		quote->state = 2;
-		quote->dq++;
-	}
-	else if (sep(s[index], '\'') == 1)
-	{
-		quote->state = 2;
-		quote->sq++;
-	}
-	else
-		quote->state = 1;
-	return (*quote);
-}
+	int	i;
 
-int	count_w_qu(char *s)
-{
-	int	count;
-	int index;
-	t_quote quote;
-
-	count = 0;
-	index = -1;
-	initial_quote(&quote);
-	quote.state = 1;
-	while (s[++index])
-	{
-		if (quote.state < 2 && sep(s[index], ' ') == 1)
-		{
-			if (s[index -1]&& s[index -1] != ' ')
-				count++;
-			quote.state = 1;
-		}
-		else if (quote.sq == 1 && sep(s[index], '\'') == 1)
-		{
-			quote.last_id=index+1;
-			if(srch_sp_inqu(&s[quote.last_id], '\'') == 0 && s[index + 1] == '\0')
-				count++;	
-			initial_quote(&quote);
-			quote.state = 0;
-		}
-		else
-			quote = count_w_qu_2(&quote, s, &count, index);
-	}
-	if (quote.state == 1 || quote.state == 2)
-		count++;
-	return (count);
+	i = -1;
+	while (++i < 1000)
+		new[i] = '\0';
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
+#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/11 14:46:14 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/12 18:27:38 by ifeelbored       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,10 +39,12 @@ AR			= ar rcs
 ################################################################################
 SRCS		= srcs/main.c \
 			  srcs/parser/lexer/lexer.c \
+			  srcs/parser/lexer/count_wd.c \
 			  srcs/parser/lexer/split_qu.c \
+			  srcs/parser/lexer/split_qu1.c \
 			  srcs/parser/lexer/split_qu2.c \
+			  srcs/parser/lexer/split_qu3.c \
 			  srcs/parser/lexer/replace_var.c \
-			  srcs/parser/lexer/replace_var2.c \
 			  srcs/parser/parser/parser.c \
 			  srcs/parser/parser/utils/table_utils.c \
 			  srcs/parser/parser/utils/cleaning_utils.c \

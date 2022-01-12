@@ -1,15 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   replace_var2.c                                     :+:      :+:    :+:   */
+/*   split_qu1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/29 09:27:16 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/10 13:57:21 by ifeelbored       ###   ########.fr       */
+/*   Created: 2022/01/12 18:27:01 by ifeelbored        #+#    #+#             */
+/*   Updated: 2022/01/12 18:38:54 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parser.h"
 
-
+int	ft_strchr_do(char *arr, int start, int end)
+{
+	while (arr[start] && start <= end)
+	{
+		if (arr[start] == '$')
+			return (1);
+		start++;
+	}
+	return (0);
+}
