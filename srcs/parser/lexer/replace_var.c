@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/12 18:42:02 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/13 17:58:22 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,14 @@ int	replace_var(char *arr, char *new, int *i_new)
 	char	*newvar;
 	int		i;
 
+	if (*arr == '?')
+	{
+		replcace_var_2(new, "$?U^W7SuvelH7EbjFA6*Ku", i_new);
+		return (2);
+	}
 	len = env_len(arr);
-	if (!len)
-		return (0);
 	var = malloc((len + 1) * sizeof(char));
-	if (!var)
+	if (!var || !len)
 		return (0);
 	i = -1;
 	while (++i < len)

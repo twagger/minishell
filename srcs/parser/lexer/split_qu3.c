@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:22:12 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/12 18:38:23 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/13 17:56:16 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ck_envvar_qu(char *ar, char *new, int *i_new, t_q i)
 		{
 			len_var = replace_var(&ar[i.b + 1], new, i_new);
 			(*i_new) = (int)ft_strlen(new);
-			i.b = i.b + len_var + 1;
+			i.b = i.b + len_var;
 		}
 		else if ((ar[i.b] == '\'' && !ck_db(ar, tp, i.e, '\'') && i.q == 1) || \
 				(ar[i.b] == '\"' && !ck_db(ar, tp, i.e, '\"') && i.q == 2))

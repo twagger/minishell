@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/12 18:39:17 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/13 17:49:00 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	check_envvar(char *arr, char *new, int *i_arr, int *i_new)
 	if (arr[temp + 1])
 		len_var = replace_var(&arr[(temp) + 1], new, i_new);
 	(*i_new) = ft_strlen(new);
-	(*i_arr) = (*i_arr) + len_var + 1;
+	(*i_arr) = (*i_arr) + len_var;
 	return (len_var);
 }
 

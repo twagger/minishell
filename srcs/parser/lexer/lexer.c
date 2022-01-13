@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 14:34:58 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/12 18:38:00 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/13 17:59:57 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,18 +73,23 @@ t_token	*ft_newtoken(void *content)
 	return (re);
 }
 
-t_token	*ms_tokenizer(char *line)
+t_token	*ms_tokenizer(char *line, int exit_code)
 {
 	char	**res;
 	int		i;
 	t_token	*token;
 	t_token	*current;
+	char	*key;
 
+	key = "$?U^W7SuvelH7EbjFA6*Ku";
 	token = 0;
 	i = 0;
 	res = ft_split_qu(line, ' ');
 	while (res[i])
 	{
+		if (ft_strcmp_exit(res[i], key))
+			res[i] = re_exitcode(res[i], ft_itoa(exit_code), key);
+		printf("res2:%s\n", res[i]);
 		current = ft_newtoken(res[i]);
 		ft_tokenadd_back(&token, current);
 		i++;

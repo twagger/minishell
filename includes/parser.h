@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/12 18:32:06 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/13 16:17:07 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,8 +158,10 @@ typedef enum e_ast_types
 /*
 ** LEXER
 */
-t_token	*ms_tokenizer(char *line);
+t_token	*ms_tokenizer(char *line, int exit_code);
 t_token	*ft_newtoken(void *content);
+char	*re_exitcode(char *arr, char *exit_code, char *c);
+int		ft_strcmp_exit(char *s, char *c);
 char	**ft_split_qu(char *s, char c);
 void	initial_quote(t_quote *quote);
 void	initial(char *new);
