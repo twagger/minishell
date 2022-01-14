@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_qu3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:22:12 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/13 17:56:16 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/14 15:58:54 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,8 @@ void	replace_quote(char *arr, char *new, int *i_arr, int *i_new)
 {
 	int	qt;
 	int	temp;
-	int	start;
 
 	temp = (*i_arr);
-	start = (*i_new);
 	qt = if_quote_close(i_arr, ft_strlen(arr), arr);
 	while (temp < (*i_arr))
 	{

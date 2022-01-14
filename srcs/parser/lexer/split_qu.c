@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_qu.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/13 17:49:00 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/14 15:57:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,9 @@ int	check_each(char ***arr, int len, char *s, int index)
 void	ft_split_2_qu(char ***arr, char *s, int count_ws)
 {
 	int	index;
-	int	state;
 	int	len;
 
 	index = 0;
-	state = 0;
 	while (index < count_ws)
 	{
 		while (*s == ' ')
