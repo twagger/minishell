@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 12:46:19 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 14:40:09 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 16:24:31 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,13 @@ void	ms_reinit_keep_buffer(char **keep_buffer)
 {
 	free(*keep_buffer);
 	*keep_buffer = NULL;
+}
+
+int	ms_write_hd(int fd, char *file_content, int len)
+{
+	int ret;
+
+	ret = write(fd, file_content, len);
+	free(file_content);
+	return (ret);
 }

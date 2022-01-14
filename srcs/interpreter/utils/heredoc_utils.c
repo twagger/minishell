@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 09:16:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 15:38:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 16:17:46 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,10 @@ char	*ms_search_limiter(char *buffer, char *limiter)
 	if (p_limiter != buffer)
 	{
 		p_limiter = ft_strnstr(buffer, limiter_in, ft_strlen(buffer));
+		free(limiter_start);
+		free(limiter_in);
 		if (p_limiter)
-		{
-			free(limiter_start);
-			free(limiter_in);
 			return (p_limiter);
-		}
 		else
 			return (NULL);
 	}
