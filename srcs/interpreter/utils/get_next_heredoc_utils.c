@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 12:46:19 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 16:27:17 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 16:49:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,24 @@ int	ms_write_hd(int fd, char *file_content, int len)
 	ret = write(fd, file_content, len);
 	free(file_content);
 	return (ret);
+}
+
+int	ms_dollar_expansion(char **str)
+{
+	int		i;
+	char	*limiters;
+
+	i = -1;
+	limiters = "\"'\n\0";
+	while ((*str)[++i])
+	{
+		if ((*str)[i] == '$')
+		{
+			// search until next " or ' or \n or \0
+			// ms_get_env sur le mot resultant
+				// si null > enlever le $MOT de la chaine
+				// si pas null > replacer le $MOT dans la chaine
+		}
+	}
+	return (0);
 }
