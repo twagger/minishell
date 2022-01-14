@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 09:16:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 16:14:11 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 14:39:42 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,21 +131,11 @@ char	*ms_get_next_heredoc(char *limiter, int tofree)
 {
 	static char	*keep_buffer = NULL;
 	char		*p_limiter;
-	char		*tmp;
 	char		buffer[BUFFER_SIZE + 1];
 	int			ret;
 
-	if (tofree)
-	{
-		free(keep_buffer);
-		keep_buffer = NULL;
-	}
-	if (!keep_buffer)
-	{
-		keep_buffer = ms_init_keep_buffer();
-		if (!keep_buffer)
-			return (NULL);
-	}
+	if (ms_gnh_keep_buffer_management(tofree, &keep_buffer) == ERROR)
+		return (NULL);
 	p_limiter = ms_search_limiter(keep_buffer, limiter);
 	if (!p_limiter)
 	{
@@ -153,19 +143,13 @@ char	*ms_get_next_heredoc(char *limiter, int tofree)
 		while (ret >= 0)
 		{
 			buffer[ret] = 0;
-			tmp = keep_buffer;
-			keep_buffer = ft_strjoin(keep_buffer, buffer);
-			free(tmp);
-			p_limiter = ms_search_limiter(keep_buffer, limiter);
+			p_limiter = ms_join_and_check_bufs(&keep_buffer, buffer, limiter);
 			if (p_limiter || ret == 0)
 				return (ms_create_heredoc(&keep_buffer, p_limiter));
 			ret = read(0, buffer, BUFFER_SIZE + 1);
 		}
 		if (ret == ERROR)
-		{
-			free(keep_buffer);
-			keep_buffer = NULL;
-		}
+			ms_reinit_keep_buffer(&keep_buffer);
 	}
 	else
 		return (ms_create_heredoc(&keep_buffer, p_limiter));

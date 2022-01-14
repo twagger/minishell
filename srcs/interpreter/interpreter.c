@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 10:12:09 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 12:43:09 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,22 @@ int	ms_execute_ast(t_node *ast)
 	int	interrupt;
 
 	fd[0] = -1;
+	ret = 1;
 	interrupt = 0;
 	heredoc_fds = NULL;
 	if (ms_handle_heredoc(ast, &heredoc_fds, &interrupt) == ERROR)
 		return (ERROR);
-	if (interrupt)
-		return (ms_clear_heredoc(heredoc_fds, 1));
-	nb = ms_search_ast(ast, A_DLESS, 0);
-	if (nb && !heredoc_fds)
-		return (1);
-	nb = ms_search_ast(ast, A_PIPE, 0);
-	if (nb)
+	if (!interrupt)
 	{
-		ret = ms_exec_pipeline(ast, nb, heredoc_fds);
-		return (ms_clear_heredoc(heredoc_fds, ret));
+		nb = ms_search_ast(ast, A_PIPE, 0);
+		if (nb)
+			ret = ms_exec_pipeline(ast, nb, heredoc_fds);
+		else
+		{
+			ms_save_std_fd((int *)fd);
+			if (ms_do_redirections(ast, 0, heredoc_fds) != ERROR)
+				ret = ms_exec_simple_command(ast, fd);
+		}
 	}
-	ms_save_std_fd((int *)fd);
-	if (ms_do_redirections(ast, 0, heredoc_fds) == ERROR)
-		return (ms_clear_heredoc(heredoc_fds, 1));
-	ret = ms_exec_simple_command(ast, fd);
 	return (ms_clear_heredoc(heredoc_fds, ret));
 }

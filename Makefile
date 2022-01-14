@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
+#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/12 18:27:38 by ifeelbored       ###   ########.fr        #
+#    Updated: 2022/01/14 14:56:18 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,7 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/utils/error_utils.c \
 			  srcs/interpreter/utils/heredoc_utils.c \
 			  srcs/interpreter/utils/heredoc_sig_utils.c \
+			  srcs/interpreter/utils/get_next_heredoc_utils.c \
 			  srcs/history/raw_mode.c \
 			  srcs/history/readline.c \
 			  srcs/history/utils/readline_handlers.c \
@@ -83,6 +84,7 @@ SRCS		= srcs/main.c \
 			  srcs/builtins/export_2.c \
 			  srcs/builtins/export_3.c \
 			  srcs/builtins/unset.c \
+			  srcs/utils/main_utils.c \
 			  srcs/utils/env_utils.c \
 			  srcs/utils/str_utils.c
 

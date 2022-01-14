@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 12:20:13 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 15:00:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,6 @@ char	*ms_join_with_slash(char *s1, char *s2);
 */
 void	ms_free_str_array(char **str);
 void	*ms_free_str_array_null(char **str);
+int		ms_increment_shlvl(void);
 
 #endif

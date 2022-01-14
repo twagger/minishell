@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 10:37:04 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 14:40:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,17 @@ int		ms_get_exit_status(int status);
 void	ms_print_exec_error(char *cmd, int error_code);
 
 int		*ms_do_heredoc(t_node *tree, int nb, int *interrupt);
+char	*ms_init_keep_buffer(void);
+char	*ms_search_limiter(char *buffer, char *limiter);
 int		ms_clear_heredoc(int *heredoc_fds, int ret);
 char	*ms_get_next_heredoc(char *limiter, int tofree);
 void	ms_restore_default_signals(void);
 void	ms_activate_hd_signal_handler(void);
 int		ms_reopen_heredoc_fds(\
 	int fd, char *file_name, int *heredoc_fds, int num);
+int		ms_gnh_keep_buffer_management(int tofree, char **keep_buffer);
+char	*ms_join_and_check_bufs(\
+	char **keep_buffer, char *buffer, char *limiter);
+void	ms_reinit_keep_buffer(char **keep_buffer);
 
 #endif

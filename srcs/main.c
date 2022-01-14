@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 09:21:59 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 15:01:43 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,9 @@
 t_env	*g_envp = NULL;
 
 /*
-** SHELL LOOP
-** for DEBUG add part below after ast = ms_parser
+** SPECIAL STATUS
+** Display Quit if exit status == 131 and add new line if exit status > 128
 */
-
-static int	ms_increment_shlvl(void)
-{
-	int		ret;
-	char	*str_inc_level;
-	int		i_level;
-	char	*level;
-
-	ret = 0;
-	level = ms_getenv("SHLVL");
-	if (!level)
-		ret = ms_setenv("SHLVL", "2");
-	else
-	{
-		i_level = ft_atoi(level);
-		str_inc_level = ft_itoa(++i_level);
-		if (!str_inc_level)
-			return (ERROR);
-		ret = ms_setenv("SHLVL", str_inc_level);
-		free(str_inc_level);
-	}
-	return (ret);
-}
 
 static void	ms_display_special_status(int status)
 {
@@ -51,18 +28,52 @@ static void	ms_display_special_status(int status)
 		printf("\n");
 }
 
+/*
+** INIT LOOP
+** Init the parsing table and the main variables of minishell loop
+*/
+
+static int	ms_init_loop(\
+	t_history **histo, t_trans ***parsing_table, int *status)
+{
+	*histo = NULL;
+	*status = 0;
+	*parsing_table = ms_init_parsing_table();
+	if (!*parsing_table)
+		return (ERROR);
+	return (0);
+}
+
+/*
+** MINISHELL ROUTINE
+** parse / execute
+*/
+
+void	ms_routine(char *line, int *status, t_trans	**parsing_table)
+{
+	t_node	*ast;
+
+	ast = ms_parser(ms_tokenizer(line, *status), parsing_table);
+	if (!ast)
+		write(2, "minishell: syntax error\n", 24);
+	*status = ms_execute_ast(ast);
+	ms_clear_tree(&ast);
+	ms_display_special_status(*status);
+}
+
+/*
+** LOOP
+** display a prompt, get a command, execute it, loop
+*/
+
 static int	ms_loop(struct termios *termios)
 {
 	char		*line;
 	int			status;
-	t_node		*ast;
 	t_history	*histo;
 	t_trans		**parsing_table;
 
-	histo = NULL;
-	status = 0;
-	parsing_table = ms_init_parsing_table();
-	if (!parsing_table)
+	if (ms_init_loop(&histo, &parsing_table, &status) == ERROR)
 		status = ERROR;
 	while (status >= 0)
 	{
@@ -71,14 +82,7 @@ static int	ms_loop(struct termios *termios)
 		line = ms_readline(&histo);
 		ms_disable_raw_mode(termios);
 		if (line)
-		{
-			ast = ms_parser(ms_tokenizer(line, status), parsing_table);
-			if (!ast)
-				printf("minishell: syntax error\n");
-			status = ms_execute_ast(ast);
-			ms_clear_tree(&ast);
-			ms_display_special_status(status);
-		}
+			ms_routine(line, &status, parsing_table);
 		else
 			printf("\n");
 	}
@@ -86,6 +90,11 @@ static int	ms_loop(struct termios *termios)
 	ms_free_table(parsing_table);
 	return (status);
 }
+
+/*
+** MAIN
+** Minishell launcher, handle the env variables then launch the loop
+*/
 
 int	main(int ac, char **av, char **envp)
 {
