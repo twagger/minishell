@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 09:08:33 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 10:37:04 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int		ms_clear_heredoc(int *heredoc_fds, int ret);
 char	*ms_get_next_heredoc(char *limiter, int tofree);
 void	ms_restore_default_signals(void);
 void	ms_activate_hd_signal_handler(void);
-
+int		ms_reopen_heredoc_fds(\
+	int fd, char *file_name, int *heredoc_fds, int num);
 
 #endif

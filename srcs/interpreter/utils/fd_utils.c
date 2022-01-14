@@ -6,11 +6,27 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 09:08:21 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/26 15:29:15 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 10:52:17 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
+
+int	ms_reopen_heredoc_fds(int fd, char *file_name, int *heredoc_fds, int num)
+{
+	if (!close(fd))
+	{
+		fd = open(file_name, O_RDONLY);
+		if (fd > 0)
+		{
+			heredoc_fds[num] = fd;
+			free(file_name);
+			return (0);
+		}
+	}
+	free(file_name);
+	return (ERROR);
+}
 
 void	ms_save_std_fd(int *fd)
 {

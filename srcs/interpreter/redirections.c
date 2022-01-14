@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 11:05:38 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 18:01:51 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 10:28:37 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ms_handle_here_doc(int *hd_fds)
 		num = 0;
 	else
 		++num;
-	if (dup2(fd, 0) == ERROR)
+	if (dup2(fd, STDIN_FILENO) == ERROR)
 	{
 		perror("minishell");
 		return (ERROR);
@@ -51,7 +51,7 @@ static int	ms_handle_ret_append(t_node *node)
 		perror(node->right->right->data);
 		return (ERROR);
 	}
-	if (dup2(fd, 1) == ERROR)
+	if (dup2(fd, STDOUT_FILENO) == ERROR)
 	{
 		perror("minishell");
 		return (ERROR);
@@ -69,7 +69,7 @@ static int	ms_handle_ret_from(t_node *node)
 		perror(node->right->right->data);
 		return (ERROR);
 	}
-	if (dup2(fd, 0) == ERROR)
+	if (dup2(fd, STDIN_FILENO) == ERROR)
 	{
 		perror("minishell");
 		return (ERROR);
@@ -87,7 +87,7 @@ static int	ms_handle_ret_to(t_node *node)
 		perror(node->right->right->data);
 		return (ERROR);
 	}
-	if (dup2(fd, 1) == ERROR)
+	if (dup2(fd, STDOUT_FILENO) == ERROR)
 	{
 		perror("minishell");
 		return (ERROR);
