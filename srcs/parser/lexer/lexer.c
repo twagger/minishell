@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 14:34:58 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/14 10:09:43 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 16:27:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ t_token	*ms_tokenizer(char *line, int exit_code)
 	{
 		if (ft_strcmp_exit(res[i], key))
 			res[i] = re_exitcode(res[i], ft_itoa(exit_code), key);
-		//printf("res2:%s\n", res[i]);
 		current = ft_newtoken(res[i]);
 		ft_tokenadd_back(&token, current);
 		i++;
