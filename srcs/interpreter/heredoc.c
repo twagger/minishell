@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 17:08:54 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 12:25:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 15:10:49 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	ms_save_heredoc(char *limiter, int ret, int *heredoc_fds, int *num)
 	{
 		if (limiter)
 		{
-			if (*num == 1)
+			if (*num == 0)
 				file_content = ms_get_next_heredoc(limiter, 1);
 			else
 				file_content = ms_get_next_heredoc(limiter, 0);

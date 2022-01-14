@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 09:16:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 14:39:42 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 15:38:30 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,10 @@ char	*ms_create_heredoc(char **buffer, char *p_limiter)
 	else
 		l_limiter = (ft_strchr(p_limiter, '\n') - p_limiter) + 1;
 	if (p_limiter[0] == '\n')
-		l_limiter = (ft_strchr(p_limiter + 1, '\n') - p_limiter) + 2;
+		l_limiter = (ft_strchr(p_limiter + 1, '\n') - p_limiter);
 	if (*buffer)
 	{
-		result = ft_substr(*buffer, 0, (p_limiter - *buffer) + 1);
+		result = ft_substr(*buffer, 0, ft_strlen(*buffer) - l_limiter);
 		if (result)
 		{
 			tmp = *buffer;
@@ -146,7 +146,7 @@ char	*ms_get_next_heredoc(char *limiter, int tofree)
 			p_limiter = ms_join_and_check_bufs(&keep_buffer, buffer, limiter);
 			if (p_limiter || ret == 0)
 				return (ms_create_heredoc(&keep_buffer, p_limiter));
-			ret = read(0, buffer, BUFFER_SIZE + 1);
+			ret = read(0, buffer, BUFFER_SIZE);
 		}
 		if (ret == ERROR)
 			ms_reinit_keep_buffer(&keep_buffer);
