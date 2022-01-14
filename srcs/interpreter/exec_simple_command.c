@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 17:35:28 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 09:08:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,26 +78,14 @@ static int	ms_execute(char **args)
 ** The commands are searched only in a pipe command scope.
 */
 
-static char	**ms_visit(t_node *node, char **args, int exit_code)
+static char	**ms_visit(t_node *node, char **args)
 {
 	if (!args || !node || (node && node->type == A_PIPE))
 		return (args);
-	args = ms_visit(node->left, args, exit_code);
-	args = ms_visit(node->right, args, exit_code);
-	if (node->type == A_PARAM)
-	{
-		if (ft_strcmp(node->data, "$?") == 0)
-			args = ms_add_arg_back(args, ft_itoa(exit_code));
-		else
-			args = ms_add_arg_back(args, node->data);
-	}
-	else if (node->type == A_CMD)
-	{
-		if (ft_strcmp(node->data, "$?") == 0)
-			args = ms_add_arg_back(args, ft_itoa(exit_code));
-		else
-			args = ms_add_arg_back(args, node->data);
-	}
+	args = ms_visit(node->left, args);
+	args = ms_visit(node->right, args);
+	if (node->type == A_PARAM || node->type == A_CMD)
+		args = ms_add_arg_back(args, node->data);
 	return (args);
 }
 
@@ -109,13 +97,13 @@ static char	**ms_visit(t_node *node, char **args, int exit_code)
 ** it will then restore STDIN and STDOUT in case of a simple redir command.
 */
 
-int	ms_exec_simple_command(t_node *ast, int exit_code, int *fd)
+int	ms_exec_simple_command(t_node *ast, int *fd)
 {
 	char	**args;
 	int		ret;
 
 	ret = 0;
-	args = ms_visit(ast, ms_init_arg_array(), exit_code);
+	args = ms_visit(ast, ms_init_arg_array());
 	if (args)
 	{
 		if (args[0])
@@ -144,13 +132,13 @@ int	ms_exec_simple_command(t_node *ast, int exit_code, int *fd)
 ** not restore fds as every sub process ends and will return to minishell.
 */
 
-int	ms_exec_piped_command(t_node *ast, int exit_code)
+int	ms_exec_piped_command(t_node *ast)
 {
 	char	**args;
 	int		ret;
 
 	ret = 0;
-	args = ms_visit(ast, ms_init_arg_array(), exit_code);
+	args = ms_visit(ast, ms_init_arg_array());
 	if (args)
 	{
 		if (args[0])

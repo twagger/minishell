@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 17:27:34 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 09:08:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ms_search_ast(t_node *node, int needle, int nb)
 	return (nb);
 }
 
-int	ms_execute_ast(t_node *ast, int exit_code)
+int	ms_execute_ast(t_node *ast)
 {
 	int	ret;
 	int	nb;
@@ -69,12 +69,12 @@ int	ms_execute_ast(t_node *ast, int exit_code)
 	nb = ms_search_ast(ast, A_PIPE, 0);
 	if (nb)
 	{
-		ret = ms_exec_pipeline(ast, exit_code, nb, heredoc_fds);
+		ret = ms_exec_pipeline(ast, nb, heredoc_fds);
 		return (ms_clear_heredoc(heredoc_fds, ret));
 	}
 	ms_save_std_fd((int *)fd);
 	if (ms_do_redirections(ast, 0, heredoc_fds) == ERROR)
 		return (ms_clear_heredoc(heredoc_fds, 1));
-	ret = ms_exec_simple_command(ast, exit_code, fd);
+	ret = ms_exec_simple_command(ast, fd);
 	return (ms_clear_heredoc(heredoc_fds, ret));
 }

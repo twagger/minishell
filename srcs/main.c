@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/13 11:09:01 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/14 09:09:06 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	ms_loop(struct termios *termios)
 			ast = ms_parser(ms_tokenizer(line, status), parsing_table);
 			if (!ast)
 				printf("minishell: syntax error\n");
-			status = ms_execute_ast(ast, status);
+			status = ms_execute_ast(ast);
 			ms_clear_tree(&ast);
 			ms_display_special_status(status);
 		}

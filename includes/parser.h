@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/13 16:17:07 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/14 09:09:16 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,6 @@ void	ms_parser_cleaning(\
 */
 int		ms_add_tree(t_node **tree, t_stack **popped, int reduction);
 t_node	*ms_fix_param_types(t_node *tree);
-int		ms_execute_ast(t_node *ast, int exit_code);
+int		ms_execute_ast(t_node *ast);
 
 #endif

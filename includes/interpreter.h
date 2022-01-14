@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/11 17:30:35 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/14 09:08:33 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	ms_free_arg_array(char **array);
 int		ms_is_builtin(char *command);
 int		ms_execute_builtin(char **args);
 
-int		ms_exec_pipeline(t_node *ast, int exit_code, int nb, int *hd_fds);
-int		ms_exec_simple_command(t_node *ast, int exit_code, int *fd);
-int		ms_exec_piped_command(t_node *ast, int exit_code);
+int		ms_exec_pipeline(t_node *ast, int nb, int *hd_fds);
+int		ms_exec_simple_command(t_node *ast, int *fd);
+int		ms_exec_piped_command(t_node *ast);
 
 int		ms_do_redirections(t_node *node, int ret, int *hd_fds);
 void	ms_save_std_fd(int *fd);
