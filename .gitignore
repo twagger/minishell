@@ -8,7 +8,7 @@
 resources
 minishell
 ./bonus
-/tmp
+/tmp/*
 
 # Debug files
 *.dSYM/
