@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/04 15:42:53 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/15 09:33:53 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ static void	ms_export_2(char **av, int i)
 	{
 		if (!ms_is_param_ok(av[i]))
 		{
-			printf("Not a valid identifier\n");
+			printf("minishell: export: Not a valid identifier\n");
 			continue ;
 		}
 		if (ms_is_param_new(av[i], g_envp))
 		{
 			if (add_newenvp(av[i], &g_envp))
 			{
-				printf("Error happened while exporting var\n");
+				printf("minishell: export: Error happened while exporting\n");
 				continue ;
 			}
 		}
@@ -95,7 +95,7 @@ static void	ms_export_2(char **av, int i)
 		{
 			if (realloc_var(av[i], g_envp))
 			{
-				printf("Error happened while realloc var\n");
+				printf("minishell: export: Error happened while realloc\n");
 				continue ;
 			}
 		}

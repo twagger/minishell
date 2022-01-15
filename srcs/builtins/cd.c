@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 13:26:49 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 09:32:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	ms_go_home(void)
 	home = ms_getenv("HOME");
 	if (!home)
 	{
-		ft_putstr_fd("cd: error: HOME in undefined in PATH\n", 2);
+		ft_putstr_fd("minishell: cd: error: HOME in undefined in PATH\n", 2);
 		return (1);
 	}
 	else
