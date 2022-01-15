@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 15:01:43 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:32:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,10 @@ static int	ms_loop(struct termios *termios)
 	while (status >= 0)
 	{
 		if (ms_enable_raw_mode(termios) == ERROR)
-			return (ERROR);
+		{
+			status = ERROR;
+			break ;
+		}
 		line = ms_readline(&histo);
 		ms_disable_raw_mode(termios);
 		if (line)
@@ -106,7 +109,10 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	g_envp = init_env(envp);
 	if (g_envp == NULL || ms_increment_shlvl() == ERROR)
+	{
+		ms_clearenv();
 		return (EXIT_FAILURE);
+	}
 	term_type = ms_getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 	{

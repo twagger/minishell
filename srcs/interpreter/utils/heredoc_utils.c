@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 09:16:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 16:17:46 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:06:50 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ char	*ms_create_heredoc(char **buffer, char *p_limiter)
 {
 	int		l_limiter;
 	char	*result;
-	char	*tmp;
 
 	l_limiter = 0;
 	if (p_limiter == NULL)
@@ -98,14 +97,13 @@ char	*ms_create_heredoc(char **buffer, char *p_limiter)
 		result = ft_substr(*buffer, 0, ft_strlen(*buffer) - l_limiter);
 		if (result)
 		{
-			tmp = *buffer;
-			*buffer = ft_substr(*buffer, (p_limiter + l_limiter) - *buffer, \
-				ft_strchr(*buffer, 0) - (p_limiter + l_limiter));
-			free(tmp);
+			free(*buffer);
+			*buffer = NULL;
 			return (result);
 		}
 	}
 	free(*buffer);
+	*buffer = NULL;
 	return (NULL);
 }
 

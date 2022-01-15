@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 14:42:39 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:22:28 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,7 @@ static char	*ms_add_to_history(t_history **histo)
 	if ((*histo)->type != B_NEW)
 		(*histo)->type = B_HISTO_RESTORE;
 	if ((*histo)->data)
-		ms_histo_insert_front(histo, \
-			ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
+		ms_histo_insert_front(histo, ms_histo_new((*histo)->data), B_HISTO);
 	else
 		is_empty = 1;
 	ms_histo_clean(histo);
@@ -137,39 +136,6 @@ static char	*ms_add_to_history(t_history **histo)
 ** - Cursor movement
 ** - History
 */
-
-// char	*ms_readline(t_history **histo)
-// {
-// 	char	c[10];
-// 	int		ret;
-// 	int		is_ctrl;
-// 	int		cpos;
-
-// 	ms_init_readline(histo, &cpos);
-// 	while (1)
-// 	{
-// 		ret = read(STDIN_FILENO, c, 9);
-// 		if (ret == ERROR)
-// 			break ;
-// 		is_ctrl = ms_handle_ctrl_keys(histo, c[0]);
-// 		if (is_ctrl == CTRL_C)
-// 			return (NULL);
-// 		else if (is_ctrl == CTRL_D)
-// 			return (ms_add_to_history(histo));
-// 		c[ret] = '\0';
-// 		if (ret == 1)
-// 		{
-// 			ret = ms_handle_simple_char(histo, c[0], &cpos);
-// 			if (ret == ERROR)
-// 				return (NULL);
-// 			if (ret == LINE_END)
-// 				break ;
-// 		}
-// 		else if (ms_handle_escape_sequence(histo, c, &cpos) == ERROR)
-// 			return (NULL);
-// 	}
-// 	return (ms_add_to_history(histo));
-// }
 
 char	*ms_readline(t_history **histo)
 {

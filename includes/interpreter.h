@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 22:49:54 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:00:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int		ms_gnh_keep_buffer_management(int tofree, char **keep_buffer);
 char	*ms_join_and_check_bufs(\
 	char **keep_buffer, char *buffer, char *limiter);
 void	ms_reinit_keep_buffer(char **keep_buffer);
-int		ms_write_hd(int fd, char *file_content, int len);
+int		ms_write_hd(int fd, char **file_content, int len);
 int		ms_dollar_expansion(char **str);
 
 #endif

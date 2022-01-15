@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 09:28:51 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/16 15:46:59 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:21:41 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,12 @@ t_history	*ms_histo_new(char *data)
 	if (!new)
 		return (NULL);
 	new->type = B_NEW;
-	new->data = data;
+	new->data = ft_strdup(data);
+	if (data && !new->data)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->saved_data = NULL;
 	new->previous = NULL;
 	new->next = NULL;

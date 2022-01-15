@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 17:08:54 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 22:52:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:01:52 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	ms_save_heredoc(char *limiter, int ret, int *heredoc_fds, int *num)
 			else
 				file_content = ms_get_next_heredoc(limiter, 0);
 			if (file_content && !ms_dollar_expansion(&file_content)
-				&& ms_write_hd(fd, file_content, ft_strlen(file_content)) >= 0
+				&& ms_write_hd(fd, &file_content, ft_strlen(file_content)) >= 0
 				&& !ms_reopen_heredoc_fds(fd, file_name, heredoc_fds, *num))
 				return (0);
 		}

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 10:03:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:52:38 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	ms_command_launcher(char **args)
 	envp = ms_g_envp_to_envp();
 	if (!envp)
 		return (ERROR);
+	ms_clearenv();
 	ret = execve(args[0], args, envp);
 	ms_free_str_array(envp);
 	if (ret == ERROR)
