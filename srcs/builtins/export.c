@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 09:33:53 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:40:21 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	realloc_var(char *cmd, t_env *envp)
 			realloc_var_2(cmd, &envp);
 		envp = envp->next;
 	}
+	free(name);
 	return (0);
 }
 
