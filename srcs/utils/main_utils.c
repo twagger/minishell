@@ -6,11 +6,12 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:55:10 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 15:00:39 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 15:45:06 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "interpreter.h"
+#include "history.h"
 
 /*
 ** INCREMENT SHLVL
@@ -38,4 +39,44 @@ int	ms_increment_shlvl(void)
 		free(str_inc_level);
 	}
 	return (ret);
+}
+
+/*
+** GARBAGE COLLECTOR
+** Contains a pointer to what needs to be freed.
+** Used when fork to free everything before exit.
+*/
+
+t_garbage_coll	*ms_init_garbage_coll(\
+	t_history *histo, t_trans **ptable, t_node *tree)
+{
+	t_garbage_coll	*garcol;
+
+	garcol = (t_garbage_coll *)malloc(sizeof(*garcol));
+	if (!garcol)
+		return (NULL);
+	garcol->envp = NULL;
+	garcol->histo = histo;
+	garcol->ptable = ptable;
+	garcol->tree = tree;
+	return (garcol);
+}
+
+/*
+** EMPTY THE GARBAGE
+** Clear everything in the garbage
+*/
+
+void	ms_empty_garbage(t_garbage_coll *garcol)
+{
+	ms_clearenv();
+	if (garcol->envp)
+		ms_free_str_array(garcol->envp);
+	if (garcol->histo)
+		ms_histo_clear(garcol->histo);
+	if (garcol->ptable)
+		ms_free_table(garcol->ptable);
+	if (garcol->tree)
+		ms_clear_tree(&garcol->tree);
+	free(garcol);
 }

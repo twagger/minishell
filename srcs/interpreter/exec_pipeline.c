@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:32:22 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 09:10:12 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 15:47:10 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 */
 
 static int	ms_exec_pipe_sequence(\
-	t_node *node, t_pipe *pipe, int *hd_fds)
+	t_node *node, t_pipe *pipe, int *hd_fds, t_garbage_coll *garcol)
 {
 	int	ret;
 
@@ -28,7 +28,7 @@ static int	ms_exec_pipe_sequence(\
 	ms_connect_pipe(pipe);
 	if (ms_do_redirections(node, 0, hd_fds) == ERROR)
 		exit (1);
-	ret = ms_exec_piped_command(node);
+	ret = ms_exec_piped_command(node, garcol);
 	ms_free_pipe_list(pipe);
 	if (ret == ST_EXIT)
 		ret = 0;
@@ -45,14 +45,14 @@ static int	ms_exec_pipe_sequence(\
 */
 
 static pid_t	ms_visit(\
-	t_node *node, t_pipe *pipe, int *hd_fds)
+	t_node *node, t_pipe *pipe, int *hd_fds, t_garbage_coll *garcol)
 {
 	pid_t	pid;
 
 	if (!node)
 		return (0);
-	ms_visit(node->left, pipe, hd_fds);
-	ms_visit(node->right, pipe, hd_fds);
+	ms_visit(node->left, pipe, hd_fds, garcol);
+	ms_visit(node->right, pipe, hd_fds, garcol);
 	if (node->type == A_PIPE || node->type == ROOT)
 	{
 		pid = fork();
@@ -61,8 +61,8 @@ static pid_t	ms_visit(\
 		if (pid == 0)
 		{
 			if (node->type == ROOT)
-				exit(ms_exec_pipe_sequence(node, pipe, hd_fds));
-			exit(ms_exec_pipe_sequence(node->left, pipe, hd_fds));
+				exit(ms_exec_pipe_sequence(node, pipe, hd_fds, garcol));
+			exit(ms_exec_pipe_sequence(node->left, pipe, hd_fds, garcol));
 		}
 		else
 		{
@@ -83,7 +83,7 @@ static pid_t	ms_visit(\
 */
 
 static int	ms_pipeline_subshell(\
-	t_node *ast, int nb, int *hd_fds)
+	t_node *ast, int nb, int *hd_fds, t_garbage_coll *garcol)
 {
 	t_pipe	*pipe;
 	pid_t	wpid;
@@ -92,7 +92,7 @@ static int	ms_pipeline_subshell(\
 	pipe = ms_init_pipes(nb);
 	if (!pipe)
 		return (1);
-	wpid = ms_visit(ast, pipe, hd_fds);
+	wpid = ms_visit(ast, pipe, hd_fds, garcol);
 	ms_free_pipe_list(pipe);
 	if (wpid > 0 && waitpid(wpid, &status, 0) == ERROR)
 		return (1);
@@ -104,10 +104,11 @@ static int	ms_pipeline_subshell(\
 	return (ms_get_exit_status(status));
 }
 
-int	ms_exec_pipeline(t_node *ast, int nb, int *hd_fds)
+int	ms_exec_pipeline(t_node *ast, int nb, int *hd_fds, t_garbage_coll *garcol)
 {
 	pid_t	pid;
 	int		status;
+	int		ret;
 
 	if (ast)
 		ast->type = -2;
@@ -117,7 +118,9 @@ int	ms_exec_pipeline(t_node *ast, int nb, int *hd_fds)
 		return (ERROR);
 	if (pid == 0)
 	{
-		exit(ms_pipeline_subshell(ast, nb, hd_fds));
+		ret = ms_pipeline_subshell(ast, nb, hd_fds, garcol);
+		ms_empty_garbage(garcol);
+		exit(ret);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 09:09:16 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 15:54:36 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,9 @@ typedef enum e_rules
 # define RIGHT 1
 
 /*
-** STRUCTURES
+** ENUMS
 */
 
-/*
-** lexer
-*/
 typedef enum e_token_types
 {
 	T_END = -2,
@@ -80,67 +77,6 @@ typedef enum e_token_types
 	T_DGREAT,
 	T_PIPE	
 }	t_token_types;
-
-typedef struct s_quote
-{
-	int				sq;
-	int				dq;
-	int				state;
-	int				last_id;
-}	t_quote;
-
-typedef struct s_q
-{
-	int				b;
-	int				e;
-	int				q;
-}	t_q;
-
-typedef struct s_token
-{
-	int				type;
-	void			*value;
-	struct s_token	*next;
-}					t_token;
-
-/*
-** parser
-*/
-typedef struct s_trans
-{
-	int	state;
-	int	event;
-	int	action;
-	int	next;
-	int	nb_reduce;
-}		t_trans;
-
-typedef struct s_stack
-{
-	int				type;
-	int				state;
-	void			*data;
-	struct s_stack	*next;
-}	t_stack;
-
-/*
-** ast
-*/
-typedef struct s_node
-{
-	int				type;
-	int				reduc;
-	void			*data;
-	struct s_node	*left;
-	struct s_node	*right;
-	struct s_node	*next;
-}					t_node;
-
-typedef struct s_ast_builder
-{
-	t_node	**buffer;
-	t_node	*ast;
-}			t_ast_builder;
 
 typedef enum e_ast_types
 {
@@ -214,6 +150,6 @@ void	ms_parser_cleaning(\
 */
 int		ms_add_tree(t_node **tree, t_stack **popped, int reduction);
 t_node	*ms_fix_param_types(t_node *tree);
-int		ms_execute_ast(t_node *ast);
+int		ms_execute_ast(t_node *ast, t_garbage_coll *garcol);
 
 #endif

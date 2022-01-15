@@ -6,12 +6,11 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 14:32:50 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 15:52:24 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "history.h"
+#include "interpreter.h"
 
 t_env	*g_envp = NULL;
 
@@ -49,14 +48,21 @@ static int	ms_init_loop(\
 ** parse / execute
 */
 
-void	ms_routine(char *line, int *status, t_trans	**parsing_table)
+static void	ms_routine(\
+	char *line, int *status, t_trans **parsing_table, t_history *histo)
 {
-	t_node	*ast;
+	t_node			*ast;
+	t_garbage_coll	*garcol;
 
 	ast = ms_parser(ms_tokenizer(line, *status), parsing_table);
 	if (!ast)
 		write(2, "minishell: syntax error\n", 24);
-	*status = ms_execute_ast(ast);
+	garcol = ms_init_garbage_coll(histo, parsing_table, ast);
+	if (!garcol)
+		*status = ERROR;
+	else
+		*status = ms_execute_ast(ast, garcol);
+	free(garcol);
 	ms_clear_tree(&ast);
 	ms_display_special_status(*status);
 }
@@ -85,7 +91,7 @@ static int	ms_loop(struct termios *termios)
 		line = ms_readline(&histo);
 		ms_disable_raw_mode(termios);
 		if (line)
-			ms_routine(line, &status, parsing_table);
+			ms_routine(line, &status, parsing_table, histo);
 		else
 			printf("\n");
 	}
