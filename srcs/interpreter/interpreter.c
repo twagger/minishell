@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 15:44:00 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:17:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 ** to the right executer (pipeline, command, simple command)
 */
 
-static int	ms_handle_heredoc(t_node *ast, int **heredoc_fds, int *interrupt)
+static int	ms_handle_heredoc(\
+	t_node *ast, int **heredoc_fds, int *interrupt, t_garbage_coll *garcol)
 {
 	int	nb;
 
@@ -29,6 +30,7 @@ static int	ms_handle_heredoc(t_node *ast, int **heredoc_fds, int *interrupt)
 		*heredoc_fds = ms_do_heredoc(ast, nb, interrupt);
 		if (!*heredoc_fds)
 			return (ERROR);
+		garcol->heredoc_fds = *heredoc_fds;
 		ms_restore_default_signals();
 		dup2((*heredoc_fds)[nb], STDIN_FILENO);
 		close((*heredoc_fds)[nb]);
@@ -60,7 +62,7 @@ int	ms_execute_ast(t_node *ast, t_garbage_coll *garcol)
 	ret = 1;
 	interrupt = 0;
 	heredoc_fds = NULL;
-	if (ms_handle_heredoc(ast, &heredoc_fds, &interrupt) == ERROR)
+	if (ms_handle_heredoc(ast, &heredoc_fds, &interrupt, garcol) == ERROR)
 		return (ERROR);
 	if (!interrupt)
 	{

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:55:10 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 15:45:06 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:16:03 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ void	ms_empty_garbage(t_garbage_coll *garcol)
 		ms_free_table(garcol->ptable);
 	if (garcol->tree)
 		ms_clear_tree(&garcol->tree);
+	if (garcol->heredoc_fds)
+		free(garcol->heredoc_fds);
 	free(garcol);
 }

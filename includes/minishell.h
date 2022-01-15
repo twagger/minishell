@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 15:58:07 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:15:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ typedef struct s_garbage_coll
 	t_history	*histo;
 	t_trans		**ptable;
 	t_node		*tree;
+	int			*heredoc_fds;
 }				t_garbage_coll;
 
 extern t_env	*g_envp;
