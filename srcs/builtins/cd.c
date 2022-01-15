@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 09:32:36 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 10:25:46 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,11 @@ static char	*ms_build_curpath(char *input)
 	{
 		curpath = ms_set_cdpath_currpath(input);
 		if (!ft_strcmp(curpath, input))
+		{
+			tmp = curpath;
 			curpath = ms_join_with_slash(ms_getenv("PWD"), input);
+			free(tmp);
+		}
 	}
 	curpath = ms_convert_canonical(curpath);
 	tmp = curpath;
