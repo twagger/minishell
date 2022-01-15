@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:27:14 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:32:06 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	delete_var(char *name)
 		(g_envp) = tm->next;
 		free(tm->content);
 		free(tm->name);
+		free(tm);
 		return ;
 	}
 	while (tm != NULL && (ft_strncmp(name, tm->name, ft_strlen(tm->name)) != 0))
@@ -35,6 +36,7 @@ void	delete_var(char *name)
 	prev->next = tm->next;
 	free(tm->content);
 	free(tm->name);
+	free(tm);
 }
 
 void	if_var_exit(char *av)

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:23 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/27 18:30:50 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 10:52:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ms_echo(int ac, char **av)
 		if (first)
 			first = 0;
 	}
-	if (ac > 1 && !nl)
+	if (ac >= 1 && !nl)
 		ft_putchar_fd('\n', 1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 10:25:46 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:13:20 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static char	*ms_set_cdpath_currpath(char *rep)
 		free(trypath);
 	}
 	ms_free_str_array(cdpath);
+	printf("OK\n");
 	return (ft_strdup(rep));
 }
 

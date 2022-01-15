@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/01 22:55:51 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:34:35 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_env	*ft_envnew(char *envp)
 	{
 		free(key);
 		free(value);
+		free(re);
 		return (NULL);
 	}
 	re->name = key;
