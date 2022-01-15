@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:55:10 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 17:16:03 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:25:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_garbage_coll	*ms_init_garbage_coll(\
 	garcol->histo = histo;
 	garcol->ptable = ptable;
 	garcol->tree = tree;
+	garcol->heredoc_fds = NULL;
 	return (garcol);
 }
 
