@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 11:13:20 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:58:05 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ static char	*ms_set_cdpath_currpath(char *rep)
 		free(trypath);
 	}
 	ms_free_str_array(cdpath);
-	printf("OK\n");
 	return (ft_strdup(rep));
 }
 
@@ -82,7 +81,7 @@ static char	*ms_build_curpath(char *input)
 
 	if (input[0] == '/')
 		curpath = ft_strdup(input);
-	else if (!ft_strcmp(".", input) || !ft_strcmp("..", input))
+	else if (!ft_strncmp(".", input, 1) || !ft_strncmp("..", input, 2))
 		curpath = ms_join_with_slash(ms_getenv("PWD"), input);
 	else
 	{
