@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 10:01:48 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 23:07:00 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 11:34:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,12 @@ static t_env	*ms_envnew(char *name, char *value)
 	new->name = ft_strdup(name);
 	new->content = ft_strdup(value);
 	if (!new->content || !new->name)
+	{
+		free(new->name);
+		free(new->content);
+		free(new);
 		return (NULL);
+	}
 	return (new);
 }
 

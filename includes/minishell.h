@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/07 12:20:13 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:15:34 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,111 @@
 ** STRUCTURES
 */
 
+/*
+** history
+*/
+typedef struct s_history
+{
+	int					type;
+	char				*data;
+	char				*saved_data;
+	struct s_history	*previous;
+	struct s_history	*next;
+}						t_history;
+
 typedef struct s_env
 {
 	char			*name;
 	char			*content;
 	struct s_env	*next;
 }					t_env;
+
+/*
+** lexer
+*/
+typedef struct s_quote
+{
+	int				sq;
+	int				dq;
+	int				state;
+	int				last_id;
+}	t_quote;
+
+typedef struct s_q
+{
+	int				b;
+	int				e;
+	int				q;
+}	t_q;
+
+typedef struct s_token
+{
+	int				type;
+	void			*value;
+	struct s_token	*next;
+}					t_token;
+
+/*
+** parser
+*/
+typedef struct s_trans
+{
+	int	state;
+	int	event;
+	int	action;
+	int	next;
+	int	nb_reduce;
+}		t_trans;
+
+typedef struct s_stack
+{
+	int				type;
+	int				state;
+	void			*data;
+	struct s_stack	*next;
+}	t_stack;
+
+/*
+** ast
+*/
+typedef struct s_node
+{
+	int				type;
+	int				reduc;
+	void			*data;
+	struct s_node	*left;
+	struct s_node	*right;
+	struct s_node	*next;
+}					t_node;
+
+/*
+** interpreter
+*/
+typedef struct s_pipe
+{
+	int				fd[2];
+	int				is_curr_read;
+	int				is_curr_write;
+	struct s_pipe	*next;
+}					t_pipe;
+
+typedef enum e_pipe_ends
+{
+	READ_END,
+	WRITE_END
+}	t_pipe_ends;
+
+/*
+** garbage
+*/
+typedef struct s_garbage_coll
+{
+	char		**envp;
+	t_history	*histo;
+	t_trans		**ptable;
+	t_node		*tree;
+	int			*heredoc_fds;
+}				t_garbage_coll;
 
 extern t_env	*g_envp;
 
@@ -98,5 +197,6 @@ char	*ms_join_with_slash(char *s1, char *s2);
 */
 void	ms_free_str_array(char **str);
 void	*ms_free_str_array_null(char **str);
+int		ms_increment_shlvl(void);
 
 #endif

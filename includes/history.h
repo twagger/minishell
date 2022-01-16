@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:31:32 by twagner           #+#    #+#             */
-/*   Updated: 2021/11/26 20:40:55 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 15:55:57 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,6 @@
 # define B_HISTO_RESTORE 2
 # define CTRL_C 1
 # define CTRL_D 2
-
-/*
-** STRUCTURES
-*/
-
-typedef struct s_history
-{
-	int					type;
-	char				*data;
-	char				*saved_data;
-	struct s_history	*previous;
-	struct s_history	*next;
-}						t_history;
 
 /*
 ** FUNCTIONS

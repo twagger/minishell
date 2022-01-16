@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 10:03:30 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 16:02:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** The input of the simple command is an arg list with the command as last arg
 */
 
-static int	ms_command_launcher(char **args)
+static int	ms_command_launcher(char **args, t_garbage_coll *garcol)
 {
 	int		ret;
 	char	**envp;
@@ -28,8 +28,8 @@ static int	ms_command_launcher(char **args)
 	envp = ms_g_envp_to_envp();
 	if (!envp)
 		return (ERROR);
+	garcol->envp = envp;
 	ret = execve(args[0], args, envp);
-	ms_free_str_array(envp);
 	if (ret == ERROR)
 	{
 		if (errno == EAGAIN)
@@ -47,11 +47,12 @@ static int	ms_command_launcher(char **args)
 ** for interruption of child process.
 */
 
-static int	ms_execute(char **args)
+static int	ms_execute(char **args, t_garbage_coll *garcol)
 {
-	pid_t				pid;
-	pid_t				wpid;
-	int					status;
+	pid_t	pid;
+	pid_t	wpid;
+	int		status;
+	int		ret;
 
 	pid = fork();
 	if (pid == ERROR)
@@ -59,7 +60,10 @@ static int	ms_execute(char **args)
 	if (pid == 0)
 	{
 		ms_activate_signal_handler();
-		exit(ms_command_launcher(args));
+		ret = ms_command_launcher(args, garcol);
+		ms_free_str_array(args);
+		ms_empty_garbage(garcol);
+		exit(ret);
 	}
 	else
 	{
@@ -97,7 +101,7 @@ static char	**ms_visit(t_node *node, char **args)
 ** it will then restore STDIN and STDOUT in case of a simple redir command.
 */
 
-int	ms_exec_simple_command(t_node *ast, int *fd)
+int	ms_exec_simple_command(t_node *ast, int *fd, t_garbage_coll *garcol)
 {
 	char	**args;
 	int		ret;
@@ -111,7 +115,7 @@ int	ms_exec_simple_command(t_node *ast, int *fd)
 			if (ms_is_builtin(args[0]))
 				ret = ms_execute_builtin(args);
 			else
-				ret = ms_execute(args);
+				ret = ms_execute(args, garcol);
 			if (!ms_is_builtin(args[0]) && ret > 0 && ret < 128)
 				ms_print_exec_error(args[0], ret);
 		}
@@ -132,7 +136,7 @@ int	ms_exec_simple_command(t_node *ast, int *fd)
 ** not restore fds as every sub process ends and will return to minishell.
 */
 
-int	ms_exec_piped_command(t_node *ast)
+int	ms_exec_piped_command(t_node *ast, t_garbage_coll *garcol)
 {
 	char	**args;
 	int		ret;
@@ -146,7 +150,7 @@ int	ms_exec_piped_command(t_node *ast)
 			if (ms_is_builtin(args[0]))
 				ret = ms_execute_builtin(args);
 			else
-				ret = ms_command_launcher(args);
+				ret = ms_command_launcher(args, garcol);
 			if (ret > 0 && ret < 128)
 				ms_print_exec_error(args[0], ret);
 		}

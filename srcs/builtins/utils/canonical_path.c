@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 15:04:46 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 13:34:18 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 10:28:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	ms_pop_stack(t_list **stack)
 		return ;
 	else if (!(*stack)->next)
 	{
-		ft_lstdelone(*stack, NULL);
+		ft_lstdelone(*stack, free);
 		*stack = NULL;
 	}
 	else
@@ -39,7 +39,7 @@ static void	ms_pop_stack(t_list **stack)
 		begin = *stack;
 		while ((*stack)->next->next)
 			*stack = (*stack)->next;
-		ft_lstdelone((*stack)->next, NULL);
+		ft_lstdelone((*stack)->next, free);
 		(*stack)->next = NULL;
 		*stack = begin;
 	}
@@ -48,27 +48,31 @@ static void	ms_pop_stack(t_list **stack)
 static int	ms_add_stack(t_list **stack, char *component)
 {
 	t_list	*new;
+	char	*content;
 
-	new = ft_lstnew((void *)component);
+	content = ft_strdup(component);
+	if (!content)
+		return (ERROR);
+	new = ft_lstnew((void *)content);
 	if (!new)
-	{
-		ft_lstclear(stack, free);
+	{	
+		free(content);
 		return (ERROR);
 	}
 	ft_lstadd_back(stack, new);
 	return (0);
 }
 
-static char	*ms_stack_to_canonical_path(t_list *stack, char **components)
+static char	*ms_stack_to_canonical_path(t_list *stack)
 {
 	char	*canonical;
 	char	*tmp;
 	int		first;
+	t_list	*begin;
 
 	first = 2;
 	canonical = NULL;
-	if (!stack)
-		return (NULL);
+	begin = stack;
 	while (stack)
 	{
 		if (--first > 0)
@@ -80,10 +84,10 @@ static char	*ms_stack_to_canonical_path(t_list *stack, char **components)
 			free(tmp);
 		}
 		if (!canonical)
-			return (ms_canonical_cleaner(&stack, components, NULL));
+			return (ms_canonical_cleaner(&begin, NULL, NULL));
 		stack = stack->next;
 	}
-	ms_canonical_cleaner(&stack, components, NULL);
+	ms_canonical_cleaner(&begin, NULL, NULL);
 	return (canonical);
 }
 
@@ -117,6 +121,6 @@ char	*ms_convert_canonical(char *path)
 				return (ms_canonical_cleaner(&stack, components, path));
 		}
 	}
-	ms_canonical_cleaner(NULL, NULL, path);
-	return (ms_stack_to_canonical_path(stack, components));
+	ms_canonical_cleaner(NULL, components, path);
+	return (ms_stack_to_canonical_path(stack));
 }

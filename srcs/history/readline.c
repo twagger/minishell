@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 13:50:03 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 11:49:29 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:22:28 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,9 @@ static int	ms_handle_simple_char(t_history **histo, char c, int *cpos)
 {
 	int	where;
 
+	where = *cpos;
 	if (*cpos == (int)ft_strlen((*histo)->data))
 		where = -1;
-	else
-		where = *cpos;
 	if (ft_isprint(c))
 	{
 		++(*cpos);
@@ -119,8 +118,7 @@ static char	*ms_add_to_history(t_history **histo)
 	if ((*histo)->type != B_NEW)
 		(*histo)->type = B_HISTO_RESTORE;
 	if ((*histo)->data)
-		ms_histo_insert_front(histo, \
-			ms_histo_new(ft_strdup((*histo)->data)), B_HISTO);
+		ms_histo_insert_front(histo, ms_histo_new((*histo)->data), B_HISTO);
 	else
 		is_empty = 1;
 	ms_histo_clean(histo);
@@ -147,11 +145,9 @@ char	*ms_readline(t_history **histo)
 	int		cpos;
 
 	ms_init_readline(histo, &cpos);
-	while (1)
+	ret = read(STDIN_FILENO, c, 9);
+	while (ret >= 0)
 	{
-		ret = read(STDIN_FILENO, c, 9);
-		if (ret == ERROR)
-			break ;
 		is_ctrl = ms_handle_ctrl_keys(histo, c[0]);
 		if (is_ctrl == CTRL_C)
 			return (NULL);
@@ -159,15 +155,13 @@ char	*ms_readline(t_history **histo)
 			return (ms_add_to_history(histo));
 		c[ret] = '\0';
 		if (ret == 1)
-		{
 			ret = ms_handle_simple_char(histo, c[0], &cpos);
-			if (ret == ERROR)
-				return (NULL);
-			if (ret == LINE_END)
-				break ;
-		}
-		else if (ms_handle_escape_sequence(histo, c, &cpos) == ERROR)
+		if (ret == LINE_END)
+			break ;
+		if (ret == -1 || (ret > 1 \
+			&& ms_handle_escape_sequence(histo, c, &cpos) == ERROR))
 			return (NULL);
+		ret = read(STDIN_FILENO, c, 9);
 	}
 	return (ms_add_to_history(histo));
 }

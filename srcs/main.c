@@ -6,42 +6,22 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/01/16 10:35:10 by ifeelbored       ###   ########.fr       */
+=======
+/*   Updated: 2022/01/15 17:14:04 by twagner          ###   ########.fr       */
+>>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "history.h"
+#include "interpreter.h"
 
 t_env	*g_envp = NULL;
 
 /*
-** SHELL LOOP
-** for DEBUG add part below after ast = ms_parser
+** SPECIAL STATUS
+** Display Quit if exit status == 131 and add new line if exit status > 128
 */
-
-static int	ms_increment_shlvl(void)
-{
-	int		ret;
-	char	*str_inc_level;
-	int		i_level;
-	char	*level;
-
-	ret = 0;
-	level = ms_getenv("SHLVL");
-	if (!level)
-		ret = ms_setenv("SHLVL", "2");
-	else
-	{
-		i_level = ft_atoi(level);
-		str_inc_level = ft_itoa(++i_level);
-		if (!str_inc_level)
-			return (ERROR);
-		ret = ms_setenv("SHLVL", str_inc_level);
-		free(str_inc_level);
-	}
-	return (ret);
-}
 
 static void	ms_display_special_status(int status)
 {
@@ -51,26 +31,71 @@ static void	ms_display_special_status(int status)
 		printf("\n");
 }
 
+/*
+** INIT LOOP
+** Init the parsing table and the main variables of minishell loop
+*/
+
+static int	ms_init_loop(\
+	t_history **histo, t_trans ***parsing_table, int *status)
+{
+	*histo = NULL;
+	*status = 0;
+	*parsing_table = ms_init_parsing_table();
+	if (!*parsing_table)
+		return (ERROR);
+	return (0);
+}
+
+/*
+** MINISHELL ROUTINE
+** parse / execute
+*/
+
+static void	ms_routine(\
+	char *line, int *status, t_trans **parsing_table, t_history *histo)
+{
+	t_node			*ast;
+	t_garbage_coll	*garcol;
+
+	ast = ms_parser(ms_tokenizer(line, *status), parsing_table);
+	if (!ast)
+		write(2, "minishell: syntax error\n", 24);
+	garcol = ms_init_garbage_coll(histo, parsing_table, ast);
+	if (!garcol)
+		*status = ERROR;
+	else
+		*status = ms_execute_ast(ast, garcol);
+	free(garcol);
+	ms_clear_tree(&ast);
+	ms_display_special_status(*status);
+}
+
+/*
+** LOOP
+** display a prompt, get a command, execute it, loop
+*/
+
 static int	ms_loop(struct termios *termios)
 {
 	char		*line;
 	int			status;
-	t_node		*ast;
 	t_history	*histo;
 	t_trans		**parsing_table;
 
-	histo = NULL;
-	status = 0;
-	parsing_table = ms_init_parsing_table();
-	if (!parsing_table)
+	if (ms_init_loop(&histo, &parsing_table, &status) == ERROR)
 		status = ERROR;
 	while (status >= 0)
 	{
 		if (ms_enable_raw_mode(termios) == ERROR)
-			return (ERROR);
+		{
+			status = ERROR;
+			break ;
+		}
 		line = ms_readline(&histo);
 		ms_disable_raw_mode(termios);
 		if (line)
+<<<<<<< HEAD
 		{
 			ast = ms_parser(ms_tokenizer(line, status), parsing_table);
 			if (!ast)
@@ -79,6 +104,9 @@ static int	ms_loop(struct termios *termios)
 			//ms_clear_tree(&ast);
 			ms_display_special_status(status);
 		}
+=======
+			ms_routine(line, &status, parsing_table, histo);
+>>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 		else
 			printf("\n");
 	}
@@ -86,6 +114,11 @@ static int	ms_loop(struct termios *termios)
 	ms_free_table(parsing_table);
 	return (status);
 }
+
+/*
+** MAIN
+** Minishell launcher, handle the env variables then launch the loop
+*/
 
 int	main(int ac, char **av, char **envp)
 {
@@ -97,7 +130,10 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	g_envp = init_env(envp);
 	if (g_envp == NULL || ms_increment_shlvl() == ERROR)
+	{
+		ms_clearenv();
 		return (EXIT_FAILURE);
+	}
 	term_type = ms_getenv("TERM");
 	if (tgetent(NULL, term_type) != 1)
 	{

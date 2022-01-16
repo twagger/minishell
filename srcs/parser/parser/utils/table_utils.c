@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:53:25 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 10:55:52 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 14:38:39 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ms_create_all_transitions(int fd, t_trans **trans)
 	}
 	if (ret == ERROR)
 		return (ERROR);
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 t_trans	**ms_init_parsing_table(void)

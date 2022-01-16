@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:20 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 13:26:49 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 12:04:38 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	ms_go_home(void)
 	home = ms_getenv("HOME");
 	if (!home)
 	{
-		ft_putstr_fd("cd: error: HOME in undefined in PATH\n", 2);
+		ft_putstr_fd("minishell: cd: error: HOME in undefined in PATH\n", 2);
 		return (1);
 	}
 	else
@@ -45,6 +45,8 @@ static int	ms_go_home(void)
 			return (1);
 		}
 	}
+	ms_setenv("OLDPWD", ms_getenv("PWD"));
+	ms_setenv("PWD", home);
 	return (0);
 }
 
@@ -81,13 +83,17 @@ static char	*ms_build_curpath(char *input)
 
 	if (input[0] == '/')
 		curpath = ft_strdup(input);
-	else if (!ft_strcmp(".", input) || !ft_strcmp("..", input))
+	else if (!ft_strncmp(".", input, 1) || !ft_strncmp("..", input, 2))
 		curpath = ms_join_with_slash(ms_getenv("PWD"), input);
 	else
 	{
 		curpath = ms_set_cdpath_currpath(input);
 		if (!ft_strcmp(curpath, input))
+		{
+			tmp = curpath;
 			curpath = ms_join_with_slash(ms_getenv("PWD"), input);
+			free(tmp);
+		}
 	}
 	curpath = ms_convert_canonical(curpath);
 	tmp = curpath;

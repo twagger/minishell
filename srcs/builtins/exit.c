@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/01 10:29:48 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/15 12:19:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ static int	ms_exit_arg_errors(int ac, char **av)
 	{
 		if (ms_is_operand_ok(av[1]))
 			return (0);
-		ft_putstr_fd("exit: bad operand\n", 2);
+		ft_putstr_fd("minishell: exit: bad operand\n", 2);
 		return (ERROR);
 	}
 	if (ac > 2)
 	{
-		ft_putstr_fd("exit: too many arguments\n", 2);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (ERROR);
 	}
 	return (0);
@@ -67,10 +67,9 @@ int	ms_exit(int ac, char **av)
 		code = ft_atoi(av[1]);
 	if (ac == 2)
 	{
-		if (code >= 0 && code <= 255)
-			return (ST_EXIT + (code * -1));
-		else
-			return (EXIT_FAILURE);
+		if (code < 0)
+			code = 256 + (code % 256);
+		return (ST_EXIT + (code * -1));
 	}
 	return (ST_EXIT);
 }

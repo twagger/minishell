@@ -6,7 +6,11 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/01/16 22:32:50 by ifeelbored       ###   ########.fr       */
+=======
+/*   Updated: 2022/01/15 15:54:36 by twagner          ###   ########.fr       */
+>>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +68,9 @@ typedef enum e_rules
 # define RIGHT 1
 
 /*
-** STRUCTURES
+** ENUMS
 */
 
-/*
-** lexer
-*/
 typedef enum e_token_types
 {
 	T_END = -2,
@@ -81,6 +82,7 @@ typedef enum e_token_types
 	T_PIPE	
 }	t_token_types;
 
+<<<<<<< HEAD
 typedef struct s_cd
 {
 	char	*ar;
@@ -150,6 +152,8 @@ typedef struct s_ast_builder
 	t_node	*ast;
 }			t_ast_builder;
 
+=======
+>>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 typedef enum e_ast_types
 {
 	A_CMD = 0,
@@ -227,6 +231,6 @@ void	ms_parser_cleaning(\
 */
 int		ms_add_tree(t_node **tree, t_stack **popped, int reduction);
 t_node	*ms_fix_param_types(t_node *tree);
-int		ms_execute_ast(t_node *ast);
+int		ms_execute_ast(t_node *ast, t_garbage_coll *garcol);
 
 #endif
