@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 14:10:55 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/12 18:37:38 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/15 10:08:26 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_quote	count_w_qu_3(t_quote *quote, char *s, int *count, int index)
 
 t_quote	count_w_qu_2(t_quote *quote, char *s, int *count, int index)
 {
-	if (quote->dq == 1 && sep(s[index], '\"') == 1)
+	if (quote->dq == 1 && s[index] == '\"')
 	{
 		quote->last_id = index + 1;
 		if (srch_sp_inqu(&s[quote->last_id], '\"') == 0 && s[index + 1] == '\0')
@@ -60,12 +60,12 @@ t_quote	count_w_qu_2(t_quote *quote, char *s, int *count, int index)
 	}
 	else if (quote->state == 2)
 		quote->state = 2;
-	else if (sep(s[index], '\"') == 1)
+	else if (s[index] == '\"')
 	{	
 		quote->state = 2;
 		quote->dq++;
 	}
-	else if (sep(s[index], '\'') == 1)
+	else if (s[index] == '\'')
 	{
 		quote->state = 2;
 		quote->sq++;
@@ -87,13 +87,15 @@ int	count_w_qu(char *s)
 	quote.state = 1;
 	while (s[++index])
 	{
-		if (quote.state < 2 && sep(s[index], ' ') == 1)
+		if (quote.state < 2 && sep(s[index]) == 1)
 		{
-			if (s[index -1] && s[index -1] != ' ')
+			if (s[index -1] && s[index] == ' ' )
 				count++;
+			else if (s[index -1] && sep(s[index]) && !sep(s[index - 1]))
+				count = count + 2;
 			quote.state = 1;
 		}
-		else if (quote.sq == 1 && sep(s[index], '\'') == 1)
+		else if (quote.sq == 1 && s[index] == '\'')
 			quote = count_w_qu_3(&quote, s, &count, index);
 		else
 			quote = count_w_qu_2(&quote, s, &count, index);

@@ -6,43 +6,55 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 14:04:13 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/12 18:38:42 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/15 06:18:51 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-int	sep(char s, char c)
+int	sep(char s)
 {
-	if (s == c)
+	if (s == ' ' || s == '>' || s == '<' || s == '|')
 		return (1);
 	return (0);
+}
+
+int count_sep(char *s, int len)
+{
+	while(sep(*s))
+	{
+		s++;
+		len++;
+	}
+	return (len);
 }
 
 int	count_len(char *s)
 {
 	int	len;
-	int	dq;
-	int	sq;
+	t_quote	q;
+	int	i;
 
 	len = 0;
-	dq = 0;
-	sq = 0;
-	while (*s)
+	i = -1;
+	initial_quote(&q);
+	while (s[++i])
 	{
-		if (*s == '\"')
-			dq++;
-		if (*s == '\'')
-			sq++;
-		if (*s == ' ' && dq % 2 == 0 && sq % 2 == 0)
+		if (s[i] == '\"')
+			q.dq++;
+		if (s[i] == '\'')
+			q.sq++;
+		if (sep(s[i]) && q.dq % 2 == 0 && q.sq % 2 == 0)
 			break ;
-		if (*s == ' ' && dq % 2 == 1 && sq % 2 == 2)
+		if (sep(s[i]) && q.dq % 2 == 1 && q.sq % 2 == 2)
 			break ;
-		if (*s == ' ' && dq % 2 == 2 && sq % 2 == 1)
+		if (sep(s[i]) && q.dq % 2 == 2 && q.sq % 2 == 1)
 			break ;
 		len++;
-		s++;
 	}
+	if (sep(*s))
+		len = count_sep(s, len);
+	printf("len:%d\n", len);
 	return (len);
 }
 

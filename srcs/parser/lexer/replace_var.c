@@ -6,11 +6,12 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/13 17:58:22 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/16 23:54:17 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parser.h"
 
 int	env_len(char *c)
 {
@@ -39,29 +40,32 @@ void	replcace_var_2(char *new, char *newvar, int *i_new)
 		i++;
 	}
 	new[i] = '\0';
+	printf("replace:%s\n",new);
 }
 
-int	replace_var(char *arr, char *new, int *i_new)
+int	replace_var(t_cd cd, char *new, int *i_new)
 {
 	int		len;
 	char	*var;
 	char	*newvar;
 	int		i;
 
-	if (*arr == '?')
+	printf("Var:%s\n", cd.ar);
+	if (*(cd.ar) == '?')
 	{
-		replcace_var_2(new, "$?U^W7SuvelH7EbjFA6*Ku", i_new);
-		return (2);
+		replcace_var_2(new, cd.code, i_new);
+		return (1);
 	}
-	len = env_len(arr);
+	len = env_len(cd.ar);
 	var = malloc((len + 1) * sizeof(char));
 	if (!var || !len)
 		return (0);
 	i = -1;
 	while (++i < len)
-		var[i] = arr[i];
+		var[i] = cd.ar[i];
 	var[i] = '\0';
 	newvar = ms_getenv(var);
+	printf("new:%s\n", newvar);
 	if (newvar)
 		replcace_var_2(new, newvar, i_new);
 	if (var)

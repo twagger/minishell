@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 14:34:58 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/14 10:09:43 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/16 21:54:16 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_tokenadd_back(t_token **lst, t_token *new)
 	current->next = new;
 }
 
-t_token	*ft_newtoken(void *content)
+t_token	*ft_newtoken(void *content, int c)
 {
 	t_token		*re;
 
@@ -69,32 +69,48 @@ t_token	*ft_newtoken(void *content)
 		return (0);
 	re->value = content;
 	re->type = (int)catego_toketype(content);
+	re->qt_rm = c;
 	re->next = 0;
 	return (re);
 }
 
 t_token	*ms_tokenizer(char *line, int exit_code)
 {
-	char	**res;
-	int		i;
-	t_token	*token;
-	t_token	*current;
-	char	*key;
+	//int		i;
+	t_token	*all;
+	t_token *current;
+	int len ;
+	char *exit;
 
-	key = "$?U^W7SuvelH7EbjFA6*Ku";
-	token = 0;
-	i = 0;
-	res = ft_split_qu(line, ' ');
-	while (res[i])
+	all = 0;
+	exit = ft_itoa(exit_code);
+	// key = "$?U^W7SuvelH7EbjFA6*Ku";
+	//i = 0;
+	//token = ft_split_qu(line, exit_code);
+	// while (res[i])
+	// {
+	// 	if (ft_strcmp_exit(res[i], key))
+	// 		res[i] = re_exitcode(res[i], ft_itoa(exit_code), key);
+	// 	printf("res2:%s\n", res[i]);
+	// 	current = ft_newtoken(res[i]);
+	// 	ft_tokenadd_back(&token, current);
+	// 	i++;
+	// }
+	//free(res);
+	while (*line)
 	{
-		if (ft_strcmp_exit(res[i], key))
-			res[i] = re_exitcode(res[i], ft_itoa(exit_code), key);
-		//printf("res2:%s\n", res[i]);
-		current = ft_newtoken(res[i]);
-		ft_tokenadd_back(&token, current);
-		i++;
+		while (*line == ' ' && *line)
+			line++;
+		len = count_len(line);
+		if (!len)
+			break ;
+		current = check_each(len, line, exit);
+		printf("current:%s, %d\n", (char*)current->value, current->qt_rm);
+		ft_tokenadd_back(&all, current);
+		line = line + len;
 	}
-	free(res);
-	ft_tokenadd_back(&token, ft_newtoken(NULL));
-	return (token);
+	ft_tokenadd_back(&all, ft_newtoken(NULL, 0));
+	if (exit)
+		free(exit);
+	return (all);
 }

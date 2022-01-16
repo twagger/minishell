@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:22:12 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/13 17:56:16 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/16 23:51:45 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,26 +57,26 @@ int	if_quote_close(int *start, int len, char *s)
 	return (0);
 }
 
-int	ck_envvar_qu(char *ar, char *new, int *i_new, t_q i)
+int	ck_envvar_qu(t_cd c, char *new, int *i_new, t_q i)
 {
 	int	len_var;
 	int	tp;
 
 	tp = i.b;
-	while (ar[i.b] && i.b < i.e)
+	while (c.ar[i.b] && i.b < i.e)
 	{
-		if (ar[i.b] == '$' && ar[i.b + 1])
+		if (c.ar[i.b] == '$' && c.ar[i.b + 1])
 		{
-			len_var = replace_var(&ar[i.b + 1], new, i_new);
+			len_var = replace_var((t_cd){&c.ar[i.b+1], c.code}, new, i_new);
 			(*i_new) = (int)ft_strlen(new);
-			i.b = i.b + len_var;
+			i.b = i.b + len_var + 1;
 		}
-		else if ((ar[i.b] == '\'' && !ck_db(ar, tp, i.e, '\'') && i.q == 1) || \
-				(ar[i.b] == '\"' && !ck_db(ar, tp, i.e, '\"') && i.q == 2))
+		else if ((c.ar[i.b] == '\'' && !ck_db(c.ar, tp, i.e, '\'') && i.q == 1) || \
+				(c.ar[i.b] == '\"' && !ck_db(c.ar, tp, i.e, '\"') && i.q == 2))
 			i.b++;
 		else
 		{
-			new[*i_new] = ar[i.b];
+			new[*i_new] = c.ar[i.b];
 			i.b++;
 			(*i_new) = (*i_new) + 1;
 		}		
@@ -86,52 +86,59 @@ int	ck_envvar_qu(char *ar, char *new, int *i_new, t_q i)
 	return (i.b);
 }
 
-int	replace_quote_2(char *arr, char *new, int *i_new, t_q index)
+int	replace_quote_2(t_cd cd, char *new, int *i_new, t_q index)
 {
-	if ((index.q == 1 && arr[index.b] != '\'') || \
-		(index.q == 2 && arr[index.b] != '\"'))
+	if ((index.q == 1 && cd.ar[index.b] != '\'') || \
+		(index.q == 2 && cd.ar[index.b] != '\"'))
 	{
-		new[(*i_new)] = arr[index.b];
+		printf("1\n");
+		new[(*i_new)] = cd.ar[index.b];
 		(*i_new) = (*i_new) + 1;
 	}
-	else if (index.q == 2 && arr[index.b] == '\"')
+	else if (index.q == 2 && cd.ar[index.b] == '\"')
 	{
-		if (ft_strchr_do(arr, index.b, index.e))
-			index.b = ck_envvar_qu(arr, new, i_new, index);
+		printf("2\n");
+		if (ft_strchr_do(cd.ar, index.b, index.e))
+			index.b = ck_envvar_qu(cd, new, i_new, index);
 	}
 	else if (index.q == 0)
 	{
-		if (ft_strchr_do(arr, index.b, index.e))
-			index.b = ck_envvar_qu(arr, new, i_new, index);
+		if (ft_strchr_do(cd.ar, index.b, index.e))
+			index.b = ck_envvar_qu(cd, new, i_new, index);
 		else
 		{
-			new[(*i_new)] = arr[index.b];
+			new[(*i_new)] = cd.ar[index.b];
 			(*i_new) = (*i_new) + 1;
 		}
 	}
 	return (index.b);
 }
 
-void	replace_quote(char *arr, char *new, int *i_arr, int *i_new)
+int	replace_quote(t_cd cd, char *new, int *i_arr, int *i_new)
 {
 	int	qt;
 	int	temp;
 	int	start;
+	int if_qu;
 
+	printf("Replace_quote:%s\n", cd.ar);
 	temp = (*i_arr);
 	start = (*i_new);
-	qt = if_quote_close(i_arr, ft_strlen(arr), arr);
+	qt = if_quote_close(i_arr, ft_strlen(cd.ar), cd.ar);
+	if (qt == 1 || qt == 2)
+		if_qu = 1;
 	while (temp < (*i_arr))
 	{
-		if (qt == 1 && arr[temp] == '\'')
+		if (qt == 1 && cd.ar[temp] == '\'')
 		{
-			if (!ft_strdb(arr, '\'') && ft_strchr_do(arr, temp, (*i_arr)))
-				temp = ck_envvar_qu(arr, new, i_new, (t_q){temp, *i_arr, qt});
+			if (!ft_strdb(cd.ar, '\'') && ft_strchr_do(cd.ar, temp, (*i_arr)))
+				temp = ck_envvar_qu(cd, new, i_new, (t_q){temp, *i_arr, qt});
 		}
 		else
-			temp = replace_quote_2(arr, new, i_new, (t_q){temp, (*i_arr), qt});
+			temp = replace_quote_2(cd, new, i_new, (t_q){temp, (*i_arr), qt});
 		temp++;
 	}
 	new[(*i_new) + 1] = '\0';
 	(*i_new) = ft_strlen(new);
+	return (if_qu);
 }
