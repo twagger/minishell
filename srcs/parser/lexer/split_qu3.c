@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:22:12 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/17 00:12:44 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 11:47:41 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ int	ck_envvar_qu(t_cd c, char *new, int *i_new, t_q i)
 	{
 		if (c.ar[i.b] == '$' && c.ar[i.b + 1])
 		{
-			len_var = replace_var((t_cd){&c.ar[i.b+1], c.code}, new, i_new);
+			len_var = replace_var((t_cd){&c.ar[i.b + 1], c.code}, new, i_new);
 			(*i_new) = (int)ft_strlen(new);
 			i.b = i.b + len_var + 1;
 		}
-		else if ((c.ar[i.b] == '\'' && !ck_db(c.ar, tp, i.e, '\'') && i.q == 1) || \
-				(c.ar[i.b] == '\"' && !ck_db(c.ar, tp, i.e, '\"') && i.q == 2))
+		else if ((c.ar[i.b] == '\'' && !db(c.ar, tp, i.e, '\'') && i.q == 1) || \
+				(c.ar[i.b] == '\"' && !db(c.ar, tp, i.e, '\"') && i.q == 2))
 			i.b++;
 		else
 		{
@@ -91,13 +91,11 @@ int	replace_quote_2(t_cd cd, char *new, int *i_new, t_q index)
 	if ((index.q == 1 && cd.ar[index.b] != '\'') || \
 		(index.q == 2 && cd.ar[index.b] != '\"'))
 	{
-		printf("1\n");
 		new[(*i_new)] = cd.ar[index.b];
 		(*i_new) = (*i_new) + 1;
 	}
 	else if (index.q == 2 && cd.ar[index.b] == '\"')
 	{
-		printf("2\n");
 		if (ft_strchr_do(cd.ar, index.b, index.e))
 			index.b = ck_envvar_qu(cd, new, i_new, index);
 	}
@@ -119,9 +117,8 @@ int	replace_quote(t_cd cd, char *new, int *i_arr, int *i_new)
 	int	qt;
 	int	temp;
 	int	start;
-	int if_qu;
+	int	if_qu;
 
-	printf("Replace_quote:%s\n", cd.ar);
 	temp = (*i_arr);
 	start = (*i_new);
 	qt = if_quote_close(i_arr, ft_strlen(cd.ar), cd.ar);

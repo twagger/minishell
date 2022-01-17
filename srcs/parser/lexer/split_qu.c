@@ -6,11 +6,31 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/17 00:12:39 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 11:51:05 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+int	ft_strchr_do(char *arr, int start, int end)
+{
+	while (arr[start] && start <= end)
+	{
+		if (arr[start] == '$')
+			return (1);
+		start++;
+	}
+	return (0);
+}
+
+void	initial(char *new)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 1000)
+		new[i] = '\0';
+}
 
 int	check_envvar(t_cd cd, char *new, int *i_arr, int *i_new)
 {
@@ -50,7 +70,7 @@ t_token	*check_quote(char *arr, int *if_qu, char *code)
 		new[i_new] = '\0';
 	}
 	try = ft_strdup(new);
-		token = ft_newtoken(try, *if_qu);
+	token = ft_newtoken(try, *if_qu);
 	if (arr)
 		free(arr);
 	return (token);
@@ -58,10 +78,10 @@ t_token	*check_quote(char *arr, int *if_qu, char *code)
 
 t_token	*check_each(int len, char *s, char *code)
 {
-	int	i;
-	char *arr;
-	int if_qu;
-	t_token *current;
+	int		i;
+	char	*arr;
+	int		if_qu;
+	t_token	*current;
 
 	i = 0;
 	if_qu = 0;
@@ -76,37 +96,4 @@ t_token	*check_each(int len, char *s, char *code)
 	arr[i] = '\0';
 	current = check_quote(arr, &if_qu, code);
 	return (current);
-}
-void printf_token(t_token *token)
-{
-	while(token->next)
-	{
-		printf("value:%s, %d\n", token->value, token->qt_rm);
-		token = token->next;
-	}
-	printf("value:%s, %d\n", token->value, token->qt_rm);
-}
-
-t_token	*ft_split_qu(char *s, char *code)
-{
-	t_token	*all;
-	t_token *current;
-	int len ;
-
-	if (!s)
-		return (0);
-	all = 0;
-	while (*s)
-	{
-		while (*s == ' ' && *s)
-			s++;
-		len = count_len(s);
-		if (!len)
-			break ;
-		current = check_each(len, s, code);
-		printf("current:%s, %d\n", (char*)current->value, current->qt_rm);
-		ft_tokenadd_back(&all, current);
-		s = s + len;
-	}
-	return (all);
 }

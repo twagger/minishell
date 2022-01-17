@@ -6,11 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/01/16 10:35:10 by ifeelbored       ###   ########.fr       */
-=======
-/*   Updated: 2022/01/15 17:14:04 by twagner          ###   ########.fr       */
->>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
+/*   Updated: 2022/01/17 10:08:53 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,18 +91,7 @@ static int	ms_loop(struct termios *termios)
 		line = ms_readline(&histo);
 		ms_disable_raw_mode(termios);
 		if (line)
-<<<<<<< HEAD
-		{
-			ast = ms_parser(ms_tokenizer(line, status), parsing_table);
-			if (!ast)
-				printf("minishell: syntax error\n");
-			status = ms_execute_ast(ast);
-			//ms_clear_tree(&ast);
-			ms_display_special_status(status);
-		}
-=======
 			ms_routine(line, &status, parsing_table, histo);
->>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 		else
 			printf("\n");
 	}

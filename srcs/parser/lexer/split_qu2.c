@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 14:04:13 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/17 00:12:41 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 11:48:15 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	sep(char s)
 	return (0);
 }
 
-int count_sep(char *s, int len)
+int	count_sep(char *s, int len)
 {
-	while(sep(*s))
+	while (sep(*s) && (*s) != ' ')
 	{
 		s++;
 		len++;
@@ -31,9 +31,9 @@ int count_sep(char *s, int len)
 
 int	count_len(char *s)
 {
-	int	len;
+	int		len;
 	t_quote	q;
-	int	i;
+	int		i;
 
 	len = 0;
 	i = -1;
@@ -54,11 +54,10 @@ int	count_len(char *s)
 	}
 	if (sep(*s))
 		len = count_sep(s, len);
-	printf("len:%d\n", len);
 	return (len);
 }
 
-int	ck_db(char *arr, int start, int end, char c)
+int	db(char *arr, int start, int end, char c)
 {
 	int	n;
 
@@ -93,13 +92,4 @@ int	ft_strdb(char *s, char c)
 		}
 	}
 	return (0);
-}
-
-void	initial(char *new)
-{
-	int	i;
-
-	i = -1;
-	while (++i < 1000)
-		new[i] = '\0';
 }

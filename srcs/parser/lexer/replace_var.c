@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/16 23:54:17 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 10:27:50 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	replcace_var_2(char *new, char *newvar, int *i_new)
 		i++;
 	}
 	new[i] = '\0';
-	printf("replace:%s\n",new);
 }
 
 int	replace_var(t_cd cd, char *new, int *i_new)
@@ -50,7 +49,6 @@ int	replace_var(t_cd cd, char *new, int *i_new)
 	char	*newvar;
 	int		i;
 
-	printf("Var:%s\n", cd.ar);
 	if (*(cd.ar) == '?')
 	{
 		replcace_var_2(new, cd.code, i_new);
@@ -65,7 +63,6 @@ int	replace_var(t_cd cd, char *new, int *i_new)
 		var[i] = cd.ar[i];
 	var[i] = '\0';
 	newvar = ms_getenv(var);
-	printf("new:%s\n", newvar);
 	if (newvar)
 		replcace_var_2(new, newvar, i_new);
 	if (var)
