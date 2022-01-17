@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
+#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/17 11:51:35 by ifeelbored       ###   ########.fr        #
+#    Updated: 2022/01/17 19:12:15 by twagner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ SRCS		= srcs/main.c \
 			  srcs/interpreter/utils/heredoc_utils.c \
 			  srcs/interpreter/utils/heredoc_sig_utils.c \
 			  srcs/interpreter/utils/get_next_heredoc_utils.c \
-			  srcs/interpreter/utils/dollar_expansion.c \
+			  srcs/interpreter/utils/param_expansion.c \
 			  srcs/history/raw_mode.c \
 			  srcs/history/readline.c \
 			  srcs/history/utils/readline_handlers.c \

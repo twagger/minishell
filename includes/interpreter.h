@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 15:54:48 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 19:09:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char			*ms_join_and_check_bufs(\
 	char **keep_buffer, char *buffer, char *limiter);
 void			ms_reinit_keep_buffer(char **keep_buffer);
 int				ms_write_hd(int fd, char **file_content, int len);
-int				ms_dollar_expansion(char **str);
+int				ms_param_expansion(char **str, int to_expand);
 
 t_garbage_coll	*ms_init_garbage_coll(\
 	t_history *histo, t_trans **ptable, t_node *tree);
