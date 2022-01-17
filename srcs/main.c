@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 10:08:53 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 19:56:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,14 @@ static void	ms_routine(\
 	t_garbage_coll	*garcol;
 
 	ast = ms_parser(ms_tokenizer(line, *status), parsing_table);
-	if (!ast)
-		write(2, "minishell: syntax error\n", 24);
 	garcol = ms_init_garbage_coll(histo, parsing_table, ast);
 	if (!garcol)
 		*status = ERROR;
+	if (!ast)
+	{
+		write(2, "minishell: syntax error\n", 24);
+		*status = 1;
+	}
 	else
 		*status = ms_execute_ast(ast, garcol);
 	free(garcol);
