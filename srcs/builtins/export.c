@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 18:28:10 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 23:32:12 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,30 +77,8 @@ int	realloc_var(char *cmd, t_env *envp)
 
 static void	ms_export_2(char **av, int i)
 {
-	while (av[++i])
-	{
-		if (!ms_is_param_ok(av[i]) || !ft_isdigit(ft_atoi(av[i])))
-		{
-			printf("minishell: export: Not a valid identifier\n");
-			continue ;
-		}
-		if (ms_is_param_new(av[i], g_envp))
-		{
-			if (add_newenvp(av[i], &g_envp))
-			{
-				printf("minishell: export: Error happened while exporting\n");
-				continue ;
-			}
-		}
-		else
-		{
-			if (realloc_var(av[i], g_envp))
-			{
-				printf("minishell: export: Error happened while realloc\n");
-				continue ;
-			}
-		}
-	}
+	if (realloc_var(av[i], g_envp))
+		printf("minishell: export: error happened while realloc\n");
 }
 
 int	ms_export(int ac, char **av)
@@ -109,6 +87,25 @@ int	ms_export(int ac, char **av)
 
 	(void)ac;
 	i = 0;
-	ms_export_2(av, i);
+	while (av[++i])
+	{
+		if (!ms_is_param_ok(av[i]))
+		{
+			printf("minishell: export: not a valid identifier\n");
+			continue ;
+		}
+		if (!ft_strchr(av[i], '='))
+			continue ;
+		if (ms_is_param_new(av[i], g_envp))
+		{
+			if (add_newenvp(av[i], &g_envp))
+			{
+				printf("minishell: export: error happened while exporting\n");
+				continue ;
+			}
+		}
+		else
+			ms_export_2(av, i);
+	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:38:56 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/15 09:23:05 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 23:23:05 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,8 @@ static int	ms_is_param_ok_2(char *param)
 
 int	ms_is_param_ok(char	*param)
 {
-	if (ft_strlen(param) < 2)
-		return (0);
-	if (!ft_strchr(param, '='))
+	if ((!ft_isalnum(param[0]) && param[0] != '_') || \
+		ft_isdigit(param[0]))
 		return (0);
 	if (!if_str_in_str(param, "+="))
 	{
