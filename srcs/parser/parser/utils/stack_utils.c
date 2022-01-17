@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:56:52 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 13:36:36 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 19:03:40 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ t_node	*ms_stack_to_node(t_stack *popped)
 			node->reduc = popped->type;
 		}
 		node->data = popped->data;
+		node->qt_rm = popped->qt_rm;
 		popped->data = NULL;
 		node->left = NULL;
 		node->right = NULL;

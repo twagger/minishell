@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dollar_expansion.c                                 :+:      :+:    :+:   */
+/*   param_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 20:25:08 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/14 23:00:18 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 19:13:01 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*ms_update_hd(char *before, char *expanded, char *after, int len)
 	return (result);
 }
 
-int	ms_dollar_expansion(char **str)
+int	ms_param_expansion(char **str, int to_expand)
 {
 	int		i;
 	int		len;
@@ -77,7 +77,7 @@ int	ms_dollar_expansion(char **str)
 	char	*tmp;
 
 	i = -1;
-	while ((*str)[++i])
+	while (!to_expand && (*str)[++i])
 	{
 		if ((*str)[i] == '$')
 		{

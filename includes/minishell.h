@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 10:10:00 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/17 19:58:02 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct s_stack
 {
 	int				type;
 	int				state;
+	int				qt_rm;
 	void			*data;
 	struct s_stack	*next;
 }	t_stack;
@@ -123,6 +124,7 @@ typedef struct s_node
 {
 	int				type;
 	int				reduc;
+	int				qt_rm;
 	void			*data;
 	struct s_node	*left;
 	struct s_node	*right;

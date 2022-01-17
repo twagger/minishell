@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 17:08:54 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 14:01:52 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 19:14:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*ms_tmp_filename(int num)
 	return (NULL);
 }
 
-static int	ms_save_heredoc(char *limiter, int ret, int *heredoc_fds, int *num)
+static int	ms_save_heredoc(t_node *node, int ret, int *heredoc_fds, int *num)
 {
 	int			fd;
 	char		*file_name;
@@ -41,13 +41,13 @@ static int	ms_save_heredoc(char *limiter, int ret, int *heredoc_fds, int *num)
 	fd = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	if (fd > 0)
 	{
-		if (limiter)
+		if (node->data)
 		{
 			if (*num == 0)
-				file_content = ms_get_next_heredoc(limiter, 1);
+				file_content = ms_get_next_heredoc(node->data, 1);
 			else
-				file_content = ms_get_next_heredoc(limiter, 0);
-			if (file_content && !ms_dollar_expansion(&file_content)
+				file_content = ms_get_next_heredoc(node->data, 0);
+			if (file_content && !ms_param_expansion(&file_content, node->qt_rm)
 				&& ms_write_hd(fd, &file_content, ft_strlen(file_content)) >= 0
 				&& !ms_reopen_heredoc_fds(fd, file_name, heredoc_fds, *num))
 				return (0);
@@ -62,7 +62,7 @@ static int	ms_visit_heredoc(t_node *node, int ret, int *heredoc_fds, int *num)
 	if (!node || ret == ERROR)
 		return (ret);
 	if (node->type == A_LIMITER)
-		ret = ms_save_heredoc(node->data, ret, heredoc_fds, num);
+		ret = ms_save_heredoc(node, ret, heredoc_fds, num);
 	ret = ms_visit_heredoc(node->left, ret, heredoc_fds, num);
 	ret = ms_visit_heredoc(node->right, ret, heredoc_fds, num);
 	return (ret);

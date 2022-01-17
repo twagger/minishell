@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 14:55:15 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/08 15:16:10 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 19:04:54 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	ms_push_input(t_stack **stack, t_token *input)
 	if (!new)
 		return (ERROR);
 	new->type = input->type;
+	new->qt_rm = input->qt_rm;
 	new->state = -1;
 	new->data = input->value;
 	input->value = NULL;
