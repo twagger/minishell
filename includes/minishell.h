@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:53 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 17:15:34 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 10:10:00 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,14 @@ typedef struct s_env
 /*
 ** lexer
 */
+
+typedef struct s_cd
+{
+	char	*ar;
+	char	*code;
+
+}	t_cd;
+
 typedef struct s_quote
 {
 	int				sq;
@@ -84,6 +92,7 @@ typedef struct s_token
 {
 	int				type;
 	void			*value;
+	int				qt_rm;
 	struct s_token	*next;
 }					t_token;
 

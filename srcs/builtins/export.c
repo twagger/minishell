@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 11:40:21 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/17 18:28:10 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	ms_export_2(char **av, int i)
 {
 	while (av[++i])
 	{
-		if (!ms_is_param_ok(av[i]))
+		if (!ms_is_param_ok(av[i]) || !ft_isdigit(ft_atoi(av[i])))
 		{
 			printf("minishell: export: Not a valid identifier\n");
 			continue ;

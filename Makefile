@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
+#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/14 20:27:18 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/17 11:51:35 by ifeelbored       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,6 @@ SRCS		= srcs/main.c \
 			  srcs/parser/lexer/lexer.c \
 			  srcs/parser/lexer/count_wd.c \
 			  srcs/parser/lexer/split_qu.c \
-			  srcs/parser/lexer/split_qu1.c \
 			  srcs/parser/lexer/split_qu2.c \
 			  srcs/parser/lexer/split_qu3.c \
 			  srcs/parser/lexer/replace_var.c \
@@ -88,6 +87,8 @@ SRCS		= srcs/main.c \
 			  srcs/utils/main_utils.c \
 			  srcs/utils/env_utils.c \
 			  srcs/utils/str_utils.c
+	
+
 
 OBJS		= $(SRCS:.c=.o)
 

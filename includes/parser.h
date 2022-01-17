@@ -6,11 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 21:55:55 by twagner           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/01/16 22:32:50 by ifeelbored       ###   ########.fr       */
-=======
-/*   Updated: 2022/01/15 15:54:36 by twagner          ###   ########.fr       */
->>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
+/*   Updated: 2022/01/17 18:35:39 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,78 +78,6 @@ typedef enum e_token_types
 	T_PIPE	
 }	t_token_types;
 
-<<<<<<< HEAD
-typedef struct s_cd
-{
-	char	*ar;
-	char	*code;
-
-}	t_cd;
-
-typedef struct s_quote
-{
-	int				sq;
-	int				dq;
-	int				state;
-	int				last_id;
-}	t_quote;
-
-typedef struct s_q
-{
-	int				b;
-	int				e;
-	int				q;
-}	t_q;
-
-typedef struct s_token
-{
-	int				type;
-	void			*value;
-	int				qt_rm;
-	struct s_token	*next;
-}					t_token;
-
-/*
-** parser
-*/
-typedef struct s_trans
-{
-	int	state;
-	int	event;
-	int	action;
-	int	next;
-	int	nb_reduce;
-}		t_trans;
-
-typedef struct s_stack
-{
-	int				type;
-	int				state;
-	void			*data;
-	struct s_stack	*next;
-}	t_stack;
-
-/*
-** ast
-*/
-typedef struct s_node
-{
-	int				type;
-	int				reduc;
-	void			*data;
-	struct s_node	*left;
-	struct s_node	*right;
-	struct s_node	*next;
-}					t_node;
-
-typedef struct s_ast_builder
-{
-	t_node	**buffer;
-	t_node	*ast;
-}			t_ast_builder;
-
-=======
->>>>>>> d0be14e1ff52f84ee256005de7610575217eecd8
 typedef enum e_ast_types
 {
 	A_CMD = 0,
@@ -172,26 +96,18 @@ typedef enum e_ast_types
 */
 t_token	*ms_tokenizer(char *line, int exit_code);
 t_token	*ft_newtoken(void *content, int c);
-char	*re_exitcode(char *arr, char *exit_code, char *c);
-int		ft_strcmp_exit(char *s, char *c);
-//char	**ft_split_qu(char *s);
-//t_token	*ft_split_qu(char *s);
+void	ft_tokenadd_back(t_token **lst, t_token *new);
+void	ms_free_tokens(t_token *tokens);
 t_token	*check_each(int len, char *s, char *code);
 void	initial_quote(t_quote *quote);
 void	initial(char *new);
-int		ck_db(char *arr, int start, int end, char c);
+int		db(char *arr, int start, int end, char c);
 int		ft_strdb(char *s, char c);
 int		count_len(char *s);
 int		ft_strchr_do(char *arr, int start, int end);
-//void	replace_quote(char *arr, char *new, int *i_arr, int *i_new);
-//int	replace_quote(char *arr, char *new, int *i_arr, int *i_new);
 int		replace_quote(t_cd cd, char *new, int *i_arr, int *i_new);
-int	replace_var(t_cd cd, char *new, int *i_new);
-int		count_w_qu(char *s);
-//int		replace_var(char *arr, char *new, int *i_new);
+int		replace_var(t_cd cd, char *new, int *i_new);
 int		sep(char s);
-void	ft_tokenadd_back(t_token **lst, t_token *new);
-void	ms_free_tokens(t_token *tokens);
 
 /*
 ** PARSER
