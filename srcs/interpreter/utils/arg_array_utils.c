@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:02:55 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/30 15:10:10 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 15:56:14 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,38 @@ char	**ms_init_arg_array(void)
 		return (NULL);
 	*array = NULL;
 	return (array);
+}
+
+/*
+** ARGS[0] EXPANDED
+** If args[0] is from an expanded token, we should split it
+*/
+
+char	**ms_add_expanded_cmd(char **args, t_node *node)
+{
+	int		i;
+	int		j;
+	char	**splitted;
+
+	splitted = ft_split(node->data, ' ');
+	if (!splitted)
+		return (NULL);
+	i = -1;
+	while (splitted[++i])
+	{
+		args = ms_add_arg_back(args, splitted[i]);
+		if (!args)
+		{
+			j = -1;
+			while (splitted[++j])
+				free(splitted[j]);
+			free(splitted);
+			return (NULL);
+		}
+	}
+	j = -1;
+	while (splitted[++j])
+		free(splitted[j]);
+	free(splitted);
+	return (args);
 }

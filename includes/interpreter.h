@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 09:33:35 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 19:09:18 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 15:41:31 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int				ms_getbin_path(char **bin);
 char			**ms_init_arg_array(void);
 char			**ms_add_arg_back(char **array, char *data);
 void			ms_free_arg_array(char **array);
+char			**ms_add_expanded_cmd(char **args, t_node *node);
 
 int				ms_is_builtin(char *command);
 int				ms_execute_builtin(char **args);

@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:55:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/18 12:03:17 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 15:56:25 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,13 @@ static char	**ms_visit(t_node *node, char **args)
 	args = ms_visit(node->left, args);
 	args = ms_visit(node->right, args);
 	if (node->type == A_PARAM || node->type == A_CMD)
-		args = ms_add_arg_back(args, node->data);
+	{
+		if (node->type == A_CMD && ft_strchr(node->data, ' ')
+			&& node->qt_rm == 0)
+			args = ms_add_expanded_cmd(args, node);
+		else
+			args = ms_add_arg_back(args, node->data);
+	}
 	return (args);
 }
 
