@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:38:56 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/17 23:23:05 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/18 04:34:56 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,29 @@ int	ms_is_param_new(char *param, t_env *envp)
 		envp = envp->next;
 	}
 	return (1);
+}
+
+t_env	*ft_envnew_1(char *envp)
+{
+	t_env		*re;
+	char		*key;
+	char		*value;
+
+	re = (t_env *)malloc(sizeof(*re));
+	if (!re)
+		return (NULL);
+	key = ft_substr(envp, 0, ft_strchr(envp, '+') - envp);
+	value = ft_substr(envp, ft_strchr(envp, '=') - envp + 1, \
+		ft_strlen(envp) - ft_strlen(key) - 1);
+	if (!key || !value)
+	{
+		free(key);
+		free(value);
+		free(re);
+		return (NULL);
+	}
+	re->name = key;
+	re->content = value;
+	re->next = 0;
+	return (re);
 }

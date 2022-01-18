@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/17 11:51:05 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/18 05:23:55 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ int	check_envvar(t_cd cd, char *new, int *i_arr, int *i_new)
 		temp++;
 	if (cd.ar[temp + 1])
 		len_var = replace_var((t_cd){&cd.ar[(temp) + 1], cd.code}, new, i_new);
+	else
+	{
+		new[0] = '$';
+		new[1] = '\0';
+		len_var = 4;
+	}
 	(*i_new) = ft_strlen(new);
 	(*i_arr) = (*i_arr) + len_var + 1;
 	return (len_var);

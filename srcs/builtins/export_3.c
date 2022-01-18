@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/15 11:34:35 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 04:32:37 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,10 @@ int	add_newenvp(char *cmd, t_env **envp)
 {
 	t_env	*new;
 
-	new = ft_envnew(cmd);
+	if (!(ft_strchr(cmd, '+')))
+		new = ft_envnew(cmd);
+	else
+		new = ft_envnew_1(cmd);
 	if (!new)
 		return (1);
 	ft_envadd(envp, new);

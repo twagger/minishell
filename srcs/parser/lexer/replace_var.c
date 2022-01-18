@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 17:59:52 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/18 05:05:15 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	env_len(char *c)
 	len = 0;
 	if (!*c)
 		return (0);
+	if (ft_isdigit(c[0]))
+		return (1);
 	while (c[len])
 	{
 		if (ft_isalnum(c[len]) || c[len] == '_')

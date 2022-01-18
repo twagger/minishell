@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 11:32:06 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 04:43:01 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,13 @@ int	ms_unset(int ac, char **av)
 	(void)ac;
 	i = 0;
 	while (av[++i])
+	{
+		if (!av[i][0])
+		{
+			printf("minishell: unset: not a valid identifier\n");
+			continue ;
+		}
 		if_var_exit(av[i]);
+	}
 	return (0);
 }
