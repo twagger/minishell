@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 19:56:00 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 09:53:15 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	ms_display_special_status(int status)
 {
 	if (status == 131)
 		printf("Quit : %i\n", status - 128);
-	else if (status > 128)
+	else if (status > 128 && status != 258)
 		printf("\n");
 }
 
@@ -61,7 +61,7 @@ static void	ms_routine(\
 	if (!ast)
 	{
 		write(2, "minishell: syntax error\n", 24);
-		*status = 1;
+		*status = 258;
 	}
 	else
 		*status = ms_execute_ast(ast, garcol);
