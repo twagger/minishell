@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 15:42:00 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 09:35:58 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 09:19:19 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,9 @@
 void	ms_print_exec_error(char *cmd, int error_code)
 {
 	if (error_code == 127)
-		printf("minishell: %s: command not found\n", cmd);
+	{
+		write(2, "minishell: ", 11);
+		write(2, cmd, strlen(cmd));
+		write(2, ": command not found\n", 20);
+	}
 }
