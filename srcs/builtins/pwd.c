@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:33 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/15 11:35:45 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/18 12:29:18 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ int	ms_pwd(int ac, char **av)
 		return (2);
 	}
 	path = getcwd(NULL, 0);
+	if (!path)
+	{
+		printf("minishell: pwd: Error\n");
+		return (1);
+	}
 	printf("%s\n", path);
 	free(path);
 	return (0);
