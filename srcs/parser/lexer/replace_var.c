@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/18 05:05:15 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/18 11:15:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,13 @@ int	replace_var(t_cd cd, char *new, int *i_new)
 	if (!var || !len)
 		return (0);
 	if (len < 0)
+	{
+		free(var);
 		return (replcace_var_2(new, "$", i_new, 0));
+	}
 	i = -1;
-	while (++i < len)
+	while (++i < len + 1)
 		var[i] = cd.ar[i];
-	var[i] = '\0';
 	newvar = ms_getenv(var);
 	if (var)
 		free(var);
