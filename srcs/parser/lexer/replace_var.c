@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 13:57:26 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/18 11:15:55 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/19 20:58:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ int	replace_var(t_cd cd, char *new, int *i_new)
 		return (replcace_var_2(new, "$", i_new, 0));
 	}
 	i = -1;
-	while (++i < len + 1)
+	while (++i < len)
 		var[i] = cd.ar[i];
+	var[i] = 0;
 	newvar = ms_getenv(var);
-	if (var)
-		free(var);
+	free(var);
 	if (newvar)
 		replcace_var_2(new, newvar, i_new, len);
 	return (len);
