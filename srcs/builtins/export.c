@@ -6,79 +6,69 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/18 00:19:16 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/19 23:07:01 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strduplen(char *s, size_t len)
+void	printf_list(t_env *ev)
 {
-	size_t	i;
-	char	*arr;
-
-	arr = (char *)malloc((len + 1) * sizeof(char));
-	if (!arr)
-		return (0);
-	i = 0;
-	while (i < len)
+	while (ev)
 	{
-		arr[i] = s[i];
-		i++;
+		if (ev->if_env == 1)
+			printf("declare -x %s=\"%s\"\n", ev->name, ev->content);
+		else
+			printf("declare -x %s\n", ev->name);
+		ev = ev->next;
 	}
-	arr[i] = '\0';
-	return (arr);
 }
 
-int	realloc_var_2(char *cmd, t_env **envp)
+int	add_newenvp_local(char *av, t_env **envp)
 {
-	char		*content;
+	t_env		*re;
+	char		*key;
+	char		*value;
 
-	if (ft_strchr(cmd, '+'))
-	{
-		content = ft_strjoin((*envp)->content, ft_strchr(cmd, '=') + 1);
-		if (!content)
-			return (1);
-		free((*envp)->content);
-		(*envp)->content = content;
-	}
-	else
-	{
-		content = ft_strdup(ft_strchr(cmd, '=') + 1);
-		if (!content)
-			return (1);
-		free((*envp)->content);
-		(*envp)->content = content;
-	}
-	return (0);
-}
-
-int	realloc_var(char *cmd, t_env *envp)
-{
-	long	len;
-	char	*name;
-
-	len = 0;
-	len = ft_strchr(cmd, '+') - cmd;
-	if (len < 0)
-		len = ft_strchr(cmd, '=') - cmd;
-	name = ft_strduplen(cmd, (size_t)len);
-	if (!name)
+	re = (t_env *)malloc(sizeof(*re));
+	if (!re)
 		return (1);
-	while (envp)
+	key = ft_strdup(av);
+	value = NULL;
+	if (!key)
 	{
-		if (ft_strncmp(name, envp->name, len + 1) == 0)
-			realloc_var_2(cmd, &envp);
-		envp = envp->next;
+		free(key);
+		free(re);
+		return (1);
 	}
-	free(name);
+	re->name = key;
+	re->next = 0;
+	re->content = 0;
+	re->if_env = 0;
+	ft_envadd(envp, re);
 	return (0);
 }
 
 static void	ms_export_2(char **av, int i)
 {
-	if (realloc_var(av[i], g_envp))
+	if (ms_is_param_new(av[i], g_envp))
+	{
+		if (!ft_strchr(av[i], '='))
+		{
+			add_newenvp_local(av[i], &g_envp);
+			return ;
+		}
+		if (add_newenvp(av[i], &g_envp))
+		{
+			printf("minishell: export: error happened while exporting\n");
+			return ;
+		}
+	}
+	else if (realloc_var(av[i], g_envp))
+	{
 		printf("minishell: export: error happened while realloc\n");
+		return ;
+	}
 }
 
 int	ms_export(int ac, char **av)
@@ -94,18 +84,9 @@ int	ms_export(int ac, char **av)
 			printf("minishell: export: not a valid identifier\n");
 			continue ;
 		}
-		if (!ft_strchr(av[i], '='))
-			continue ;
-		if (ms_is_param_new(av[i], g_envp))
-		{
-			if (add_newenvp(av[i], &g_envp))
-			{
-				printf("minishell: export: error happened while exporting\n");
-				continue ;
-			}
-		}
-		else
-			ms_export_2(av, i);
+		ms_export_2(av, i);
 	}
+	if (!av[1])
+		printf_list(g_envp);
 	return (0);
 }

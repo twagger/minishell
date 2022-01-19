@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:25 by twagner           #+#    #+#             */
-/*   Updated: 2021/12/29 15:24:13 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/19 22:44:13 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	printf_out_env(void)
 	temp = g_envp;
 	while (temp)
 	{
-		printf("%s=%s\n", temp->name, temp->content);
+		if (temp->if_env == 1)
+			printf("%s=%s\n", temp->name, temp->content);
 		temp = temp->next;
 	}
 }

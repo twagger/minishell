@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:38:56 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/18 04:34:56 by wlo              ###   ########.fr       */
+/*   Updated: 2022/01/19 22:50:02 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	ms_is_param_new(char *param, t_env *envp)
 	return (1);
 }
 
-t_env	*ft_envnew_1(char *envp)
+t_env	*ft_envnew_1(char *envp, int if_env)
 {
 	t_env		*re;
 	char		*key;
@@ -124,5 +124,6 @@ t_env	*ft_envnew_1(char *envp)
 	re->name = key;
 	re->content = value;
 	re->next = 0;
+	re->if_env = if_env;
 	return (re);
 }

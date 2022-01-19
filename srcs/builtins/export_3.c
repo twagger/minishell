@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:39:32 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/18 04:32:37 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/19 23:00:44 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_envadd(t_env **lst, t_env *new)
 	current->next = new;
 }
 
-t_env	*ft_envnew(char *envp)
+t_env	*ft_envnew(char *envp, int if_env)
 {
 	t_env		*re;
 	char		*key;
@@ -66,6 +66,7 @@ t_env	*ft_envnew(char *envp)
 	re->name = key;
 	re->content = value;
 	re->next = 0;
+	re->if_env = if_env;
 	return (re);
 }
 
@@ -77,7 +78,7 @@ t_env	*init_env(char **envp)
 	list = NULL;
 	while (*envp)
 	{
-		new = ft_envnew(*envp);
+		new = ft_envnew(*envp, 1);
 		if (!new)
 			return (NULL);
 		ft_envadd(&list, new);
@@ -91,9 +92,9 @@ int	add_newenvp(char *cmd, t_env **envp)
 	t_env	*new;
 
 	if (!(ft_strchr(cmd, '+')))
-		new = ft_envnew(cmd);
+		new = ft_envnew(cmd, 1);
 	else
-		new = ft_envnew_1(cmd);
+		new = ft_envnew_1(cmd, 1);
 	if (!new)
 		return (1);
 	ft_envadd(envp, new);

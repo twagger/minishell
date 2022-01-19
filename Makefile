@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: twagner <twagner@student.42.fr>            +#+  +:+       +#+         #
+#    By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/01 15:32:48 by twagner           #+#    #+#              #
-#    Updated: 2022/01/17 19:12:15 by twagner          ###   ########.fr        #
+#    Updated: 2022/01/19 22:56:40 by ifeelbored       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,6 +81,7 @@ SRCS		= srcs/main.c \
 			  srcs/builtins/exit.c \
 			  srcs/builtins/pwd.c \
 			  srcs/builtins/export.c \
+			  srcs/builtins/export_1.c \
 			  srcs/builtins/export_2.c \
 			  srcs/builtins/export_3.c \
 			  srcs/builtins/unset.c \
