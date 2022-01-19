@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/19 23:07:01 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/19 23:22:32 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,11 @@ int	add_newenvp_local(char *av, t_env **envp)
 {
 	t_env		*re;
 	char		*key;
-	char		*value;
 
 	re = (t_env *)malloc(sizeof(*re));
 	if (!re)
 		return (1);
 	key = ft_strdup(av);
-	value = NULL;
 	if (!key)
 	{
 		free(key);
