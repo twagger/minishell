@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_qu.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 16:01:04 by wlo               #+#    #+#             */
-/*   Updated: 2022/01/18 10:56:44 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/20 10:39:47 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,11 @@ t_token	*check_quote(char *arr, int *if_qu, char *code)
 			new[i_new++] = arr[i_arr++];
 		new[i_new] = '\0';
 	}
+	free(arr);
+	if (!ft_strcmp(new, "\0"))
+		return (NULL);
 	try = ft_strdup(new);
 	token = ft_newtoken(try, *if_qu);
-	if (arr)
-		free(arr);
 	return (token);
 }
 
