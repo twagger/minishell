@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:36 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/20 17:31:55 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 21:51:53 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,20 @@ int	is_param_ok(char	*param)
 int	ms_unset(int ac, char **av)
 {
 	int	i;
+	int	re_va;
 
 	(void)ac;
 	i = 0;
+	re_va = 0;
 	while (av[++i])
 	{
 		if (!av[i][0] || !is_param_ok(av[i]))
 		{
+			re_va = 1;
 			printf("minishell: unset: not a valid identifier\n");
 			continue ;
 		}
 		if_var_exit(av[i]);
 	}
-	return (0);
+	return (re_va);
 }

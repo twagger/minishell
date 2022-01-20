@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/20 16:13:07 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 21:49:34 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,16 @@ static void	ms_export_2(char **av, int i)
 int	ms_export(int ac, char **av)
 {
 	int		i;
+	int		re_va;
 
 	(void)ac;
 	i = 0;
+	re_va = 0;
 	while (av[++i])
 	{
 		if (!ms_is_param_ok(av[i]))
 		{
+			re_va = 1;
 			printf("minishell: export: not a valid identifier\n");
 			continue ;
 		}
@@ -88,5 +91,5 @@ int	ms_export(int ac, char **av)
 	}
 	if (!av[1])
 		printf_list(g_envp);
-	return (0);
+	return (re_va);
 }
