@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 22:53:17 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/20 16:12:34 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 21:38:08 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ int	realloc_var_2(char *cmd, t_env **envp)
 	if (ft_strchr(cmd, '+'))
 	{
 		content = ft_strjoin((*envp)->content, ft_strchr(cmd, '=') + 1);
-		if (!(*envp)->content)
+		if ((*envp)->content)
 			free((*envp)->content);
 		(*envp)->content = content;
 	}
 	else
 	{
 		content = ft_strdup(ft_strchr(cmd, '=') + 1);
-		if (!(*envp)->content)
+		if ((*envp)->content)
 			free((*envp)->content);
 		(*envp)->content = content;
 	}
