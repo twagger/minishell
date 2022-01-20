@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 10:03:30 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/17 18:07:59 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 20:26:12 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	ms_is_builtin(char *command)
 {
-	if (ft_strncmp(command, "cd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "env", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "echo", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "pwd", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "exit", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "export", ft_strlen(command)) == 0 || \
-		ft_strncmp(command, "unset", ft_strlen(command)) == 0)
+	if (ft_strcmp(command, "cd") == 0 || \
+		ft_strcmp(command, "env") == 0 || \
+		ft_strcmp(command, "echo") == 0 || \
+		ft_strcmp(command, "pwd") == 0 || \
+		ft_strcmp(command, "exit") == 0 || \
+		ft_strcmp(command, "export") == 0 || \
+		ft_strcmp(command, "unset") == 0)
 		return (1);
 	return (0);
 }
