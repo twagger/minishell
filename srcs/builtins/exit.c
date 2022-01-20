@@ -6,7 +6,7 @@
 /*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:28 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/20 19:52:20 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/20 20:52:55 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	ms_is_operand_numeric(char *str)
 	ret = 1;
 	sign = 1;
 	result = 0;
-	if (strlen(str) > 20)
+	if (ft_strlen(str) > 20)
 		return (0);
 	if (*str == '+' || *str == '-')
 	{
