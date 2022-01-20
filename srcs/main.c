@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
+/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 12:14:41 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/20 10:17:34 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 20:18:00 by twagner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,15 @@ static void	ms_routine(\
 {
 	t_node			*ast;
 	t_garbage_coll	*garcol;
+	t_token			*input;
 
-	ast = ms_parser(ms_tokenizer(line, *status), parsing_table);
+	input = ms_tokenizer(line, *status);
+	if (input && input->type == -2)
+	{
+		ms_clear_input(input);
+		return ;
+	}
+	ast = ms_parser(input, parsing_table);
 	garcol = ms_init_garbage_coll(histo, parsing_table, ast);
 	if (!garcol)
 		*status = ERROR;
