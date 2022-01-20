@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: twagner <twagner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/19 23:22:32 by twagner          ###   ########.fr       */
+/*   Updated: 2022/01/20 15:13:49 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	ms_export_2(char **av, int i)
 			add_newenvp_local(av[i], &g_envp);
 			return ;
 		}
-		if (add_newenvp(av[i], &g_envp))
+		else if (add_newenvp(av[i], &g_envp))
 		{
 			printf("minishell: export: error happened while exporting\n");
 			return ;
