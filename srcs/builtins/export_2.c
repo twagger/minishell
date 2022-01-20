@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 17:38:56 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/01/19 22:50:02 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 16:13:36 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,14 @@ int	ms_is_param_new(char *param, t_env *envp)
 
 	if (ft_strchr(param, '+'))
 		pos_equal = ft_strchr(param, '+') - param;
-	else
+	else if (ft_strchr(param, '='))
 		pos_equal = ft_strchr(param, '=') - param;
+	else
+		pos_equal = ft_strlen(param);
 	while (envp)
 	{
 		if (ft_strncmp(param, envp->name, ft_strlen(envp->name)) == 0)
-		{
+		{	
 			if (pos_equal != ft_strlen(envp->name))
 				return (1);
 			return (0);

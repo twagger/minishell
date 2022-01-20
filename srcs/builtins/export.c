@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 11:44:31 by twagner           #+#    #+#             */
-/*   Updated: 2022/01/20 15:13:49 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/01/20 16:13:07 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ static void	ms_export_2(char **av, int i)
 			return ;
 		}
 	}
+	else if (!ft_strchr(av[i], '='))
+		return ;
 	else if (realloc_var(av[i], g_envp))
 	{
 		printf("minishell: export: error happened while realloc\n");
