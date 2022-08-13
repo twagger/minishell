@@ -39,6 +39,8 @@ Below is a global view of the parser. We will detail these parts in the next ste
 
 ![LR Parser Schema](doc/img/LRParser.png)
 
+<br />
+
 ## Lexer - Lexical analysis
 
 ![LR Parser Schema](doc/img/Lexer.png)
@@ -48,6 +50,8 @@ The work of the lexical analyser or **lexer** is to identify token in the input 
 For bash, you can find some documentation about token recognition online : [Shell token recognition (opengroup.org)](https://pubs.opengroup.org/onlinepubs/9699919799.2018edition/utilities/V3_chap02.html#tag_18_03)
 
 > **NOTE :** Working with token instead of "words" will be much more comfortable when it will come to recognize grammar structure into the command line.
+
+<br />
 
 ## Parser - Syntax analysis
 
@@ -90,6 +94,8 @@ io_here			: DLESS here_end
 here_end		: WORD
 				;
 ```
+
+<br />
 
 ## Parsing table
 
@@ -215,11 +221,15 @@ For example, the line :
 ```
 can be read : `When you are in the STATE 0, if the token you read from input is a WORD, you must SHIFT this token from the input into the stack, then change the STATE to 1`. The last "-1" just means that the last parameter is not relevant for this line.
 
+<br />
+
 # Interpreter
 
 ## Interpreter principle
 
 the principle of the interpretor is to browse the tree in POST ORDER, and to collect the right information in the right order to execute commands and pipes and redirection.
+
+<br />
 
 ## Tree visit
 
@@ -246,6 +256,8 @@ the tree should be something like :
 
 ![POST ORDER Visit real](doc/img/post_order-real.png)
 
+<br />
+
 ## Pipeline execution
 
 Useful document: 
@@ -263,11 +275,14 @@ When we browse a part of the tree from the root or from a pipe, we consider that
 Before launching a command, we have of course to create a pipe between this command and the previous and/or next one.
 This is done by connecting the **STDOUT** of a command to the **STDIN** of the next command. We use [pipe](https://man7.org/linux/man-pages/man2/pipe.2.html) and [dup2](https://man7.org/linux/man-pages/man2/dup.2.html) for that.
 
+<br />
+
 ## Redirection
 
 The redirection is done in this project with **dup** and **dup2**.
 Nothing too difficult but you need to think about saving STDIN and STDOUT if you execute the redirection within the main process (for builtins when you are not in a pipeline for example).
 
+<br />
 
 # Installation
 
