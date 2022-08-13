@@ -4,42 +4,28 @@ This project is about creating a shell called **Minishell** based on [bash](http
 
 Minishell should be able to parse commands (simple commands, pipes, redirections), execute them properly, handle environment variables, keep an history of the commands and of course handle all kind of errors and interruptions.
 
+⚠️ **Before even starting** to work on a shell which should reproduce the behavior of bash, I highly recommend reading the [bash manual](https://linux.die.net/man/1/bash). ⚠️
+
 # Table of Contents
-1. [Read first](#read-first)
-2. [Parser](#parser)
+1. [Parser](#parser)
 	- [LR Parser principle](#lr-parser-principle)
 	- [Lexer - Lexical analysis](#lexer---lexical-analysis)
-	- [Parser : Syntax analysis](#parser---syntax-analysis)
-	- [The grammar](#the-grammar)
-	- [Parser : Parsing table](#parser---parsing-table)
-	- [Syntax Tree](#syntax-tree)
-3. [Interpreter](#interpreter)
+	- [Parser - Syntax analysis](#parser---syntax-analysis)
+	- [Parsing table](#parsing-table)
+2. [Interpreter](#interpreter)
 	- [Interpreter principle](#interpreter-principle) 
 	- [Tree visit](#tree-visit)
 	- [Pipeline execution](#pipeline-execution)
 	- [Redirection](#redirection)
-4. [Builtins](#builtins)
-	- [Builtin principle](#builtins-principle) 
-	- [Environment](#environment)
-5. [History and line management](#history-and-line-management)
-	- [History principle](#history-principle) 
 
-# Minishell
-
-## Read first
-Before even starting to work on a shell which should reproduce the behavior of bash, I highly recommend reading the [bash manual](https://linux.die.net/man/1/bash).
-
-> **NOTE :** The manual helps to understand the concepts of grammar, pipelines, commands, environment, ... This is a great help when it comes to working on the rest of the project afterwards.
-
-
-## Parser
+# Parser
 The parser is the part of the program responsible to **read, understand and translate** a command to a format the interpreter is able to work with. It is also responsible to **check the validity** of the input regarding a defined set of **rules** and to rise an error if the command is not valid.
 
 Some interesting reads on the subject :
 * [Guide to parsing (tomassetti.me)](https://tomassetti.me/guide-parsing-algorithms-terminology/)
 * [Parsing explained (computerphile)](https://www.youtube.com/watch?v=bxpc9Pp5pZM&ab_channel=Computerphile)
 
-### LR Parser principle
+## LR Parser principle
 After some research, we decided to set up an LR parser (LR for **L**eft-to-right, **R**ightmost derivation in reverse : reads input text from left to right without backing up, and produces a rightmost derivation in reverse).
 
 The LR Parser is a **bottom-up parser**. That means that it will try to **recognize the input's lowest-level small details first**, before its mid-level structures, and leaving the highest-level overall structure of the command line to last.
@@ -53,7 +39,7 @@ Below is a global view of the parser. We will detail these parts in the next ste
 
 ![LR Parser Schema](doc/img/LRParser.png)
 
-### Lexer - Lexical analysis
+## Lexer - Lexical analysis
 
 ![LR Parser Schema](doc/img/Lexer.png)
 
@@ -63,9 +49,8 @@ For bash, you can find some documentation about token recognition online : [Shel
 
 > **NOTE :** Working with token instead of "words" will be much more comfortable when it will come to recognize grammar structure into the command line.
 
-### Parser - Syntax analysis
+## Parser - Syntax analysis
 
-### The grammar
 An important step for parsing is to define the set of grammar rules you will try to match your command line with.
 
 As the project consists of creating a simple shell based on bash, we chose to simplify the shell grammar available [here](https://pubs.opengroup.org/onlinepubs/9699919799.2018edition/utilities/V3_chap02.html#tag_18_10) :
@@ -106,7 +91,7 @@ here_end		: WORD
 				;
 ```
 
-### Parser - Parsing table
+## Parsing table
 
 In order to create the **parsing table**, we used a specific program called **Bison**. Bison is the [GNU](https://fr.wikipedia.org/wiki/GNU) version of yacc. It is a parser generator that can generate c code from a grammar.
 
@@ -230,14 +215,13 @@ For example, the line :
 ```
 can be read : `When you are in the STATE 0, if the token you read from input is a WORD, you must SHIFT this token from the input into the stack, then change the STATE to 1`. The last "-1" just means that the last parameter is not relevant for this line.
 
+# Interpreter
 
-### Syntax tree
-## Interpreter
-### Interpreter principle
+## Interpreter principle
 
 the principle of the interpretor is to browse the tree in POST ORDER, and to collect the right information in the right order to execute commands and pipes and redirection.
 
-### Tree visit
+## Tree visit
 
 We chose to visit the tree in POST ORDER, that means that we will start at the root of the tree, the explore left branch to the bottom, then right, and then have an action on the current node.
 
@@ -262,7 +246,7 @@ the tree should be something like :
 
 ![POST ORDER Visit real](doc/img/post_order-real.png)
 
-### Pipeline execution
+## Pipeline execution
 
 Useful document: 
 * [Shell implementation of pipelines (uleth.ca)](https://www.cs.uleth.ca/~holzmann/C/system/shell_does_pipeline.pdf).
@@ -279,47 +263,13 @@ When we browse a part of the tree from the root or from a pipe, we consider that
 Before launching a command, we have of course to create a pipe between this command and the previous and/or next one.
 This is done by connecting the **STDOUT** of a command to the **STDIN** of the next command. We use [pipe](https://man7.org/linux/man-pages/man2/pipe.2.html) and [dup2](https://man7.org/linux/man-pages/man2/dup.2.html) for that.
 
-### Redirection
+## Redirection
 
 The redirection is done in this project with **dup** and **dup2**.
 Nothing too difficult but you need to think about saving STDIN and STDOUT if you execute the redirection within the main process (for builtins when you are not in a pipeline for example).
 
-## Builtins
-### Builtin principle
-### Environment
 
-## History and line management
-
-For the history management, we did use Termios and Termcaps. the main behaviour that we want to achieve is :
-* Press UP arrow arrow display the previous command
-* Press UP arrow again to display the command before that
-* Press UP / DOWN arrow to navigate within the previous commands
-* You can change a previous command by navigating to the command and modifying it (if you then execute it, it will save it as a new previous command)
-* When you go back to the line you where typing, you still can complete the command
-* When you type CTRL+C, it stops the current typing and display a new prompte
-* When you type CTRL+D on a new line it exits Minishell
-
-To do that we have to :
-* Manage what is happening when you **type certain keys** (Up and Down Arrows, Ctrl+C, Ctrl+D, Ctrl+/)
-* Handle the **cursor movement** (Left arrow, Right arrow, End, Home, Backspace, Del)
-* **Save command lines** into a buffer
-* **Display command lines** into the terminal
-* Remove caracters from a line in the terminal
-
-### History principle
-
-* Everything I type on the keyboard is saved to a buffer
-* The buffer is attached to a linked list as the first element and tagged as "temporary"
-* Everytime I type on the keyboard, if this is a standard ascii character, it is added to the current buffer and the line is refreshed on the terminal
-* If it is a "special key", a specific action is launched
-	* UP and DOWN arrow : change the current buffer moving into the linked list of history and refresh the line on the terminal
-	* LEFT, RIGHT, END, HOME : Move the cursor
-	* BACKSPACE, DEL : Remove a character from the current buffer and refresh the line on the terminal
-	* Enter : **IF** the current buffer is temporary, set it as a non temporary in the hystory linked list. If it is an old one, duplicate it and set it as the new "first" item of the linked list.
-
-
-
-## Installation
+# Installation
 
 Clone the repository:
 ```sh
@@ -334,7 +284,7 @@ Launch **minishell**
 $> ./minishell
 ```
 
-## Author
+# Author
 
 👨 **Thomas WAGNER**
 
