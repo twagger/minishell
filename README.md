@@ -299,7 +299,7 @@ Launch **minishell**
 ./minishell
 ```
 
-# Author
+# Authors
 
 👨 **Thomas WAGNER**
 
