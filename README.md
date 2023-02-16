@@ -288,15 +288,15 @@ Nothing too difficult but you need to think about saving STDIN and STDOUT if you
 
 Clone the repository:
 ```sh
-$> git clone git@github.com:twagger/minishell.git
+git clone git@github.com:twagger/minishell.git
 ```
 Make to create the **minishell** program:
 ```sh
-$> make
+make
 ```
 Launch **minishell**
 ```sh
-$> ./minishell
+./minishell
 ```
 
 # Author
